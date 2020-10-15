@@ -57,8 +57,6 @@ else:
     region           = Config.region
     name             = Config.name
 
-OWNERS.append(283867737820889089)
-
 EXTENSIONS = list(EXTENSIONS)
 
 BOT_NAME_TAG_VER = "%s%s | %s" %(BOT_NAME, BOT_TAG, BOT_VER)
