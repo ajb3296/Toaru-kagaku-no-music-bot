@@ -4,3 +4,4 @@ lavalink
 psutil
 requests
 lxml
+PyNaCl
