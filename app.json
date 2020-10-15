@@ -1,0 +1,74 @@
+{
+    "name": "디스코드 음악봇",
+    "description": "디스코드 음악봇입니다! 멜론재생 명령어는 어떤 과학의 음악봇이 공식봇이 되거나 깃허브 Star 수가 100개 넘어갈때 공개하겠습니다.",
+    "keywords": [
+      "discord",
+      "best",
+      "music",
+      "bot",
+      ""
+    ],
+    "repository": "https://github.com/NewPremium/Toaru-kagaku-no-music-bot",
+    "env": {
+      "ENV": {
+        "description": "ANYTHING 으로 설정하면 환경변수가 활성화됩니다. 하지만 여기서 무엇을 설정해야 하는지 알기 위해서는 코드를 이해해야 합니다!",
+        "value": "ANYTHING"
+      },
+      "TOKEN": {
+        "description": "당신의 봇 토큰을 입력하세요.",
+        "value": ""
+      },
+      "EXTENSIONS": {
+        "description": "추가할 모듈들을 입력하세요(잘 모르시면 절대 바꾸지 마세요!).",
+        "value": "owners help other ping about music"
+      },
+      "OWNER_ID": {
+        "description": "봇 소유자의 ID 를 입력하세요(정수값), 만약 여러명이라면 공백으로 구분된 목록을 입력하세요.",
+        "value": "283867737820889089"
+      },
+      "commandInt": {
+        "description": "명령인자를 입력하세요.",
+        "value": "!"
+      },
+      "BOT_NAME": {
+        "description": "봇 이름을 입력하세요.",
+        "value": ""
+      },
+      "BOT_TAG": {
+        "description": "봇 태그를 입력하세요.",
+        "value": "#"
+      },
+      "BOT_VER": {
+        "description": "봇 버전을 입력하세요.",
+        "value": "V.2.0"
+      },
+      "BOT_ID": {
+        "description": "봇 ID를 입력하세요.",
+        "value": ""
+      },
+      "color_code": {
+        "description": "Embed에 사용할 색상코드를 입력하세요.",
+        "value": "0xc68e6e"
+      },
+      "AboutBot": {
+        "description": "Bot에 관한 정보를 입력하세요(about 명령어에 사용됩니다.).",
+        "value": "이 봇은 어떤 과학의 음악봇의 코드를 사용했으며 [이곳](<%s>)"
+      },
+      "host": {
+        "description": "Lavalink 에 사용할 host 링크를 입력해 주세요(잘 모르시면 바꾸지 마세요!).",
+        "value": "0.0.0.0"
+      },
+      "psw": {
+        "description": "Heroku 계정 비밀번호를 입력해 주세요. 이는 Lavalink에 필수적입니다.",
+        "value": ""
+      },
+      "region": {
+        "description": "Lavalink 유튜브 리전을 선택해 주세요(권장 : en)",
+        "value": "en"
+      },
+      "name": {
+        "description": "Heroku 계정 이름 입력해 주세요. 이는 Lavalink에 필수적입니다.",
+        "value": ""
+      }
+    }
+  }

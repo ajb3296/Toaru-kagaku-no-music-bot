@@ -1,0 +1,6 @@
+discord
+BeautifulSoup4
+lavalink
+psutil
+requests
+lxml
