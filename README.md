@@ -2,7 +2,7 @@
 
 ## Heroku Deploy
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/NewPremium/Toaru-kagaku-no-music-bot)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/NewPremium/Toaru-kagaku-no-music-bot/tree/main)
 
 ## Note
 
