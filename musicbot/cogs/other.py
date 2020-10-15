@@ -27,13 +27,15 @@ class Other (commands.Cog) :
         embed=discord.Embed(title="**Java 버전**", description="```%s```" %res, color=color_code)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
-
+        
+    '''
     @commands.command (name = 'uptime', aliases = ['업타임'])
     async def uptime(self, ctx):
         res = subprocess.check_output("uptime", shell=True, encoding='utf-8')
         embed=discord.Embed(title="**Uptime**", description="```%s```" %res.replace(',  ', '\n').replace(', ', '\n').replace(': ', ' : ')[1:], color=color_code)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
+    '''
 
 def setup (bot) :
     bot.add_cog (Other (bot))
