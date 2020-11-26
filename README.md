@@ -1,5 +1,6 @@
 # Toaru-kagaku-no-music-bot
 ## 현재 개발중이므로 헤로쿠에서 작동하지 않습니다!
+일반 컴퓨터에서는 잘 굴러갑니다 :)
 ## Heroku Deploy
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/NewPremium/Toaru-kagaku-no-music-bot/tree/main)
