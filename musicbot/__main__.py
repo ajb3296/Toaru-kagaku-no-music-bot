@@ -40,7 +40,8 @@ class Toaru_kagaku_no_music_bot (commands.Bot) :
     def __init__ (self) :
 
         super().__init__ (
-            command_prefix=commandInt
+            command_prefix=commandInt,
+            intents=intents
         )
         self.remove_command("help")
 
@@ -71,5 +72,6 @@ class Toaru_kagaku_no_music_bot (commands.Bot) :
         else :
             await self.process_commands (message)
 
+intents = discord.Intents(messages=True, guilds=True, members=True)
 bot = Toaru_kagaku_no_music_bot ()
 bot.run (TOKEN, bot=True)
