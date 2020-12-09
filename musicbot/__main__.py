@@ -72,6 +72,10 @@ class Toaru_kagaku_no_music_bot (commands.Bot) :
         else :
             await self.process_commands (message)
 
-intents = discord.Intents(messages=True, guilds=True, members=True)
+intents = discord.Intents.default()
+intents.messages = True
+intents.guilds = True
+intents.members = True
+
 bot = Toaru_kagaku_no_music_bot ()
 bot.run (TOKEN, bot=True)
