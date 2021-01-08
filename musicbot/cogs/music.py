@@ -113,7 +113,7 @@ class Music(commands.Cog):
             player.add(requester=ctx.author.id, track=track)
         embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed, mention_author=True)
         if not player.is_playing:
             await player.play()
 
