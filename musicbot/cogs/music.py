@@ -73,7 +73,11 @@ class Music(commands.Cog):
             return await ctx.send(embed=embed)
 
     @commands.command(aliases=['p', '재생', 'ㅔ', 'add'])
-    async def play(self, ctx, *, query: str):
+    async def play(self, ctx, *, query: str = None):
+        if query == None and ctx.message.reference is not None:
+            query = await self.bot.get_channel(ctx.message.reference.channel_id).fetch_message(ctx.message.reference.message_id)
+            query = query.content
+        
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         query = query.strip('<>')
         if not url_rx.match(query):
