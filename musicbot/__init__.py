@@ -83,7 +83,8 @@ lavalink:
       http: true
       local: false
     bufferDurationMs: 400
-    youtubePlaylistLoadLimit: 3
+    youtubePlaylistLoadLimit: 6
+    playerUpdateInterval: 5
     youtubeSearchEnabled: true
     soundcloudSearchEnabled: true
     gc-warnings: true
@@ -95,6 +96,7 @@ metrics:
 
 sentry:
   dsn: ""
+  environment: ""
 
 logging:
   file:
