@@ -144,7 +144,7 @@ class Owners (commands.Cog) :
             except:
                 break
         embed.add_field(name="​", value=srvr, inline=False)
-        embed.set_footer(text=f"{str(arg)}/{str(allpage)} | {BOT_NAME_TAG_VER}")
+        embed.set_footer(text=f"{str(arg)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
         await ctx.send(embed = embed)
 
     @commands.command (name = 'modules', aliases = ['모듈리스트', '모듈', 'module'])
