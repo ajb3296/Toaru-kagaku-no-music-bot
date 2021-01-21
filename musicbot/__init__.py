@@ -19,26 +19,26 @@ ENV = bool(os.environ.get('ENV', False))
 if ENV:
     TOKEN            = os.environ.get('TOKEN', None)
     try:
-        EXTENSIONS = set(str(x) for x in os.environ.get("EXTENSIONS", 'owners help other ping about music melon').split())
+        EXTENSIONS   = set(str(x) for x in os.environ.get("EXTENSIONS", 'owners help other ping about music melon').split())
     except ValueError:
         raise Exception("모듈 목록이 올바르지 않습니다.")
     try:
-        OWNERS = set(int(x) for x in os.environ.get("OWNERS", "").split())
+        OWNERS       = set(int(x) for x in os.environ.get("OWNERS", "").split())
     except ValueError:
         raise Exception("OWNERS 사용자 목록에 올바른 정수가 없습니다.")
-    commandInt       = os.environ.get('commandInt', None)
+    commandInt       = os.environ.get('commandInt', "/")
     BOT_NAME         = os.environ.get('BOT_NAME', None)
-    BOT_TAG          = os.environ.get('BOT_TAG', None)
+    BOT_TAG          = os.environ.get('BOT_TAG', "#1234")
     BOT_VER          = os.environ.get('BOT_VER', None)
     try:
-        BOT_ID           = int(os.environ.get('BOT_ID', None))
+        BOT_ID       = int(os.environ.get('BOT_ID', None))
     except ValueError:
         raise Exception("BOT_ID에 올바른 정수가 없습니다.")
-    color_code       = os.environ.get('color_code', None)
+    color_code       = int(os.environ.get('color_code', 0xc68e6e))
     AboutBot         = os.environ.get('AboutBot', None)
-    host             = os.environ.get('host', None)
+    host             = os.environ.get('host', "0.0.0.0")
     psw              = os.environ.get('psw', None)
-    region           = os.environ.get('region', None)
+    region           = os.environ.get('region', "en")
     name             = os.environ.get('name', None)
 
 else:
