@@ -5,3 +5,5 @@ psutil
 requests
 lxml
 PyNaCl
+chardet
+aiohttp
