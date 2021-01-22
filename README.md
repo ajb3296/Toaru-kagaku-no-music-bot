@@ -7,7 +7,7 @@
 
 ## Note
 
-[Lavalink Download](https://github.com/Frederikam/Lavalink/releases)
+[Lavalink Download](https://github.com/Frederikam/Lavalink/releases)<br>
 [Lavalink Download(for arm or 32bit)](https://github.com/Cog-Creators/Lavalink-Jars/releases)
 
 * 이 프로그램은 [GNU GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.html) 을 따릅니다.
