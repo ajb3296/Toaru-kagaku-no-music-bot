@@ -69,5 +69,13 @@
         "description": "Heroku 계정 이름 입력해 주세요. 이는 Lavalink에 필수적입니다.",
         "value": ""
       }
-    }
+    },
+    "buildpacks": [
+      {
+        "url": "heroku/python"
+      },
+      {
+        "url": "heroku/java"
+      }
+    ]
   }
