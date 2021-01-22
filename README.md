@@ -7,7 +7,8 @@
 
 ## Note
 
-[Lavalink Download](https://github.com/Cog-Creators/Lavalink-Jars/releases)
+[Lavalink Download](https://github.com/Frederikam/Lavalink/releases)
+[Lavalink Download(for arm or 32bit)](https://github.com/Cog-Creators/Lavalink-Jars/releases)
 
 * 이 프로그램은 [GNU GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.html) 을 따릅니다.
 * `멜론재생`, `빌보드재생` 명령어는 이 레포지스터리 Star 100개 이상 혹은 [어떤 과학의 음악봇](https://discord.com/oauth2/authorize?client_id=714140461840728144&permissions=3165184&scope=bot) 이 공식봇이 된다면 공개하겠습니다. [어떤 과학의 음악봇](https://discord.com/oauth2/authorize?client_id=714140461840728144&permissions=3165184&scope=bot) 에서 `멜론재생`, `빌보드재생` 명령어를 체험해 보실 수 있습니다.
