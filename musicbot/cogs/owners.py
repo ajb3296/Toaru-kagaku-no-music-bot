@@ -194,6 +194,8 @@ class Owners (commands.Cog) :
         memorystr = str(round((psutil.virtual_memory().used / (1024.0 ** 3)), 1)) + "GB" + " / " + str(round((psutil.virtual_memory().total / (1024.0 ** 3)), 1)) + "GB"
         embed.add_field(name="Memory Usage", value=memorystr, inline=False)
         embed.add_field(name="Python Ver", value=("%s %s") %(platform.python_implementation(), platform.python_version()), inline=False)
+        embed.add_field(name="Discord.py Ver", value=discord.__version__, inline=False)
+        embed.add_field(name="Lavalink.py Ver", value=lavalink.__version__, inline=False)
         embed.add_field(name="Ping", value=str(round(self.bot.latency * 1000)) + "ms", inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
