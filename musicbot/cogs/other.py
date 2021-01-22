@@ -14,7 +14,7 @@ class Other (commands.Cog) :
     def __init__ (self, bot) :
         self.bot = bot
     
-    @commands.command (name = '초대', aliases = ['invite'])
+    @commands.command (name = '초대', aliases = ['invite', 'ㅊㄷ'])
     async def invite(self, ctx):
         link = 'https://discord.com/oauth2/authorize?client_id=%s&permissions=3165184&scope=bot' %BOT_ID
         embed=discord.Embed(title="**절 당신이 관리하는 서버에 초대해주시다니!**", description="정말 감사합니다! [여기](<%s>)를 눌러 서버에 초대해주세요!" %link, color=color_code)
