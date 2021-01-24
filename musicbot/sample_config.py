@@ -24,7 +24,7 @@ class Config(object):
     # Music
     host = "0.0.0.0"
     psw = "컴퓨터 비밀번호"
-    region = "en"
+    region = "eu"
     name = "컴퓨터 아이디"
 
     color_code = 0xc68e6e # 색상코드
