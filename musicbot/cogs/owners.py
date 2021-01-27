@@ -108,7 +108,7 @@ class Owners (commands.Cog) :
     @commands.command ()
     @is_owner()
     async def 서버목록(self, ctx, arg : int = None) :
-        # 페이지 지정값이 없거나 총 서버수가 10 이하일 경우
+        # 페이지 지정값이 없고, 총 서버수가 10 이하일 경우
         if arg == None and len(self.bot.guilds) <= 10:
             embed = discord.Embed(title = f"{BOT_NAME} (이)가 들어가 있는 서버목록", description=f"**{len(self.bot.guilds)}개**의 서버, **{len(self.bot.users)}명**의 유저",color=color_code)
             srvr = str()
