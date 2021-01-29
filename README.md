@@ -13,7 +13,8 @@
 
 ### 참고
 
-https://github.com/fxrcha/PythonLavalink
+* [lavalink.py](https://github.com/Devoxin/Lavalink.py)
+* https://github.com/fxrcha/PythonLavalink
 
 ## How to install
 
