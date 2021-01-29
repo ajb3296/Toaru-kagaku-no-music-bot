@@ -130,17 +130,33 @@ class Music(commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
 
+    @commands.command(aliases=['탐색'])
+    async def seek(self, ctx, *, seconds: int):
+        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+        track_time = player.position + (seconds * 1000)
+        await player.seek(track_time)
+        embed=discord.Embed(title=f'**:clock: | {lavalink.utils.format_time(track_time)} 으로 이동합니다!**', description='', color=self.normal_color)
+        embed.set_footer(text=BOT_NAME_TAG_VER)
+        await ctx.send(embed=embed)
+
     @commands.command(aliases=['forceskip', '스킵', 's', 'ㄴ'])
-    async def skip(self, ctx):
+    async def skip(self, ctx, arg: int = None):
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         if not player.is_playing:
             embed=discord.Embed(title=self.not_playing, description='', color=self.normal_color)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.send(embed=embed)
-        embed=discord.Embed(title="**:track_next: | 다음곡으로 넘어갑니다!**", description='', color=self.normal_color)
-        embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.send(embed=embed)
-        await player.skip()
+        if arg == None:
+            embed=discord.Embed(title="**:track_next: | 다음곡으로 넘어갑니다!**", description='', color=self.normal_color)
+            embed.set_footer(text=BOT_NAME_TAG_VER)
+            await ctx.send(embed=embed)
+            await player.skip()
+        else:
+            for i in range(arg):
+                await player.skip()
+            embed=discord.Embed(title=f"**:track_next: | {arg}개의 곡을 건너뛰었어요!**", description='', color=self.normal_color)
+            embed.set_footer(text=BOT_NAME_TAG_VER)
+            await ctx.send(embed=embed)
 
     @commands.command(aliases=['중지', '정지'])
     async def stop(self, ctx, arg: int = None):
