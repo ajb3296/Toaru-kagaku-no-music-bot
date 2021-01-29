@@ -130,15 +130,6 @@ class Music(commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=['탐색'])
-    async def seek(self, ctx, *, seconds: int):
-        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
-        track_time = player.position + (seconds * 1000)
-        await player.seek(track_time)
-        embed=discord.Embed(title=f'**:clock: | {lavalink.utils.format_time(track_time)} 으로 이동합니다!**', description='', color=self.normal_color)
-        embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.send(embed=embed)
-
     @commands.command(aliases=['forceskip', '스킵', 's', 'ㄴ'])
     async def skip(self, ctx, arg: int = None):
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
