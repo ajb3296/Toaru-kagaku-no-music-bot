@@ -144,6 +144,10 @@ class Music(commands.Cog):
             await player.skip()
         else:
             for i in range(arg):
+                if not player.current:
+                    embed=discord.Embed(title=f"**:track_next: | {i}개의 곡을 건너뛰었어요!**", description='', color=self.normal_color)
+                    embed.set_footer(text=BOT_NAME_TAG_VER)
+                    return await ctx.send(embed=embed)
                 await player.skip()
             embed=discord.Embed(title=f"**:track_next: | {arg}개의 곡을 건너뛰었어요!**", description='', color=self.normal_color)
             embed.set_footer(text=BOT_NAME_TAG_VER)
