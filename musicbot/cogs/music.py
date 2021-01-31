@@ -63,7 +63,7 @@ class Music(commands.Cog):
     async def connect(self, ctx):
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         if not player.is_connected:
-            await self.connect_to(ctx.guild.id, ctx.author.voice.channel.id)
+            #await self.connect_to(ctx.guild.id, ctx.author.voice.channel.id)
             embed=discord.Embed(title=":white_check_mark: | 음성 채널에 접속했어요!", description='', color=self.normal_color)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.send(embed=embed)
