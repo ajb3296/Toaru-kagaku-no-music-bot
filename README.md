@@ -38,6 +38,7 @@ class Development(Config):
     BOT_NAME = "봇 이름"
     BOT_TAG = "#봇태그"
     BOT_VER = "버전"
+    BOT_ID = 봇아이디
     AboutBot = f"""봇 정보(about 명령어)에 넣을 말"""
 
     # Music

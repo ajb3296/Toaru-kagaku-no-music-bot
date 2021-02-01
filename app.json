@@ -41,6 +41,10 @@
         "description": "봇 버전을 입력하세요.",
         "value": "V.2.0"
       },
+      "BOT_ID": {		
+        "description": "봇 ID를 입력하세요.",		
+        "value": ""		
+      },
       "color_code": {
         "description": "Embed에 사용할 색상코드를 입력하세요.",
         "value": "0xc68e6e"
