@@ -8,6 +8,7 @@ from musicbot.utils.misc import footer
 from musicbot import LOGGER, OWNERS, color_code, BOT_NAME,BOT_NAME_TAG_VER, EXTENSIONS
 import platform
 import psutil
+import lavalink
 
 def insert_returns(body):
     if isinstance(body[-1], ast.Expr):

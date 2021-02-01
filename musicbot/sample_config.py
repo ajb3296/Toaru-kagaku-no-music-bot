@@ -18,7 +18,6 @@ class Config(object):
     BOT_NAME = "봇 이름"
     BOT_TAG = "#태그"
     BOT_VER = "버전"
-    BOT_ID = 123456789      # 봇 아이디
     AboutBot = f"""봇 정보"""
 
     # Music

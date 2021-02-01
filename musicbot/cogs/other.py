@@ -1,13 +1,9 @@
 import discord
 import asyncio
 from discord.ext import commands
-from musicbot.utils.crawler import getReqTEXT
-from bs4 import BeautifulSoup
-from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code, BOT_NAME, BOT_ID
-import random
+from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code
+import lavalink
 import platform
-import psutil
-from musicbot.utils.misc import footer
 import subprocess
 
 class Other (commands.Cog) :
@@ -16,7 +12,7 @@ class Other (commands.Cog) :
     
     @commands.command (name = '초대', aliases = ['invite', 'ㅊㄷ'])
     async def invite(self, ctx):
-        link = 'https://discord.com/oauth2/authorize?client_id=%s&permissions=3165184&scope=bot' %BOT_ID
+        link = 'https://discord.com/oauth2/authorize?client_id=%s&permissions=3165184&scope=bot' %self.bot.user.id
         embed=discord.Embed(title="**절 당신이 관리하는 서버에 초대해주시다니!**", description="정말 감사합니다! [여기](<%s>)를 눌러 서버에 초대해주세요!" %link, color=color_code)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)

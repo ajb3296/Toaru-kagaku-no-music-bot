@@ -10,7 +10,7 @@ from musicbot.lavalinkstart import child_process
 from discord.ext import commands
 from musicbot.utils import *
 
-from musicbot import LOGGER, TOKEN, EXTENSIONS, OWNERS, commandInt, BOT_NAME, BOT_TAG, BOT_VER, BOT_ID, BOT_NAME_TAG_VER, color_code
+from musicbot import LOGGER, TOKEN, EXTENSIONS, commandInt, BOT_NAME_TAG_VER
 
 async def status_task():
     while True:
