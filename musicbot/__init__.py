@@ -40,6 +40,7 @@ if ENV:
     psw              = os.environ.get('psw', None)
     region           = os.environ.get('region', "en")
     name             = os.environ.get('name', None)
+    port             = int(os.environ.get('port', 2333))
 
 else:
     from musicbot.config import Development as Config
@@ -58,6 +59,7 @@ else:
     psw              = Config.psw
     region           = Config.region
     name             = Config.name
+    port             = Config.port
 
 EXTENSIONS = list(EXTENSIONS)
 
@@ -65,7 +67,7 @@ BOT_NAME_TAG_VER = "%s%s | %s" %(BOT_NAME, BOT_TAG, BOT_VER)
 
 f = open("application.yml", 'w')
 f.write(f"""server:
-  port: 2333
+  port: {port}
   address: {host}
 spring:
   main:

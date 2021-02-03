@@ -26,6 +26,7 @@ class Config(object):
     psw = "컴퓨터 비밀번호"
     region = "eu"
     name = "컴퓨터 아이디"
+    port = 2333
 
     color_code = 0xc68e6e # 색상코드
 

@@ -5,7 +5,7 @@ import lavalink
 import asyncio
 import json
 from discord.ext import commands
-from musicbot import LOGGER, BOT_ID, color_code, BOT_NAME_TAG_VER, host, psw, region, name
+from musicbot import LOGGER, BOT_ID, color_code, BOT_NAME_TAG_VER, host, psw, region, name, port
 from musicbot.utils.crawler import getReqTEXT
 from bs4 import BeautifulSoup
 
@@ -31,7 +31,7 @@ class Music(commands.Cog):
         self.header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko'}
         if not hasattr(bot, 'lavalink'):  # This ensures the client isn't overwritten during cog reloads.
             bot.lavalink = lavalink.Client(self._)
-            bot.lavalink.add_node(host, 2333, psw, region, name)  # Host, Port, Password, Region, Name
+            bot.lavalink.add_node(host, port, psw, region, name)  # Host, Port, Password, Region, Name
             bot.add_listener(bot.lavalink.voice_update_handler, 'on_socket_response')
         bot.lavalink.add_event_hook(self.track_hook)
 
