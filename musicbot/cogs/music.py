@@ -336,7 +336,7 @@ class Music(commands.Cog):
 
     async def ensure_voice(self, ctx):
         player = self.bot.lavalink.player_manager.create(ctx.guild.id, endpoint=str(ctx.guild.region))
-        should_connect = ctx.command.name in ('play', 'melonplay', 'connect', 'find',)
+        should_connect = ctx.command.name in ('play', 'melonplay', 'connect', 'find')
 
         if not ctx.author.voice or not ctx.author.voice.channel:
             raise commands.CommandInvokeError('먼저 음성 채널에 들어와주세요.')
@@ -347,6 +347,7 @@ class Music(commands.Cog):
             if not permissions.connect or not permissions.speak:  
                 raise commands.CommandInvokeError(':warning: | 권한이 없어요! (Connect, Speak 권한을 주세요!)')
             player.store('channel', ctx.channel.id)
+            player.fetch('channel')
             await self.connect_to(ctx.guild.id, str(ctx.author.voice.channel.id))
         else:
             if int(player.channel_id) != ctx.author.voice.channel.id:
