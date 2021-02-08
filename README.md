@@ -14,7 +14,8 @@
 ### 참고
 
 * [lavalink.py](https://github.com/Devoxin/Lavalink.py)
-* https://github.com/fxrcha/PythonLavalink
+* [PythonLavalink](https://github.com/fxrcha/PythonLavalink)
+* [EZPaginator](https://github.com/khk4912/EZPaginator)
 
 ## How to install
 
