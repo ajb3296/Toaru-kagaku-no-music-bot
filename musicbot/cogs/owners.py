@@ -112,7 +112,7 @@ class Owners (commands.Cog) :
     async def 서버목록(self, ctx) :
         # 페이지 지정값이 없고, 총 서버수가 10 이하일 경우
         if len(self.bot.guilds) <= 10:
-            embed = discord.Embed(title = f"{BOT_NAME} (이)가 들어가 있는 서버목록", description=f"**{len(self.bot.guilds)}개**의 서버, **{len(self.bot.users)}명**의 유저",color=color_code)
+            embed = discord.Embed(title = f"{BOT_NAME} (이)가 들어가 있는 서버목록", description=f"**{len(self.bot.guilds)}개**의 서버, **{len(self.bot.users)}명**의 유저", color = self.color)
             srvr = str()
             for i in self.bot.guilds:
                 srvr = srvr + f"**{i}** - **{i.member_count}명**\n"
@@ -121,7 +121,6 @@ class Owners (commands.Cog) :
             return await ctx.send(embed = embed)
 
         # 서버수가 10개 이상일 경우
-
         # 총 페이지수 계산
         botguild = self.bot.guilds
         allpage = math.ceil(len(botguild) / 10)
@@ -135,9 +134,9 @@ class Owners (commands.Cog) :
             for a in range(numa, numb):
                 try:
                     srvr = srvr + f"**{botguild[a]}** - **{botguild[a].member_count}명**\n"
-                except:
+                except IndexError:
                     break
-            embed1 = discord.Embed(title=f"{BOT_NAME} (이)가 들어가 있는 서버목록", description=f"**{len(botguild)}개**의 서버, **{len(self.bot.users)}명**의 유저\n\n{srvr}")
+            embed1 = discord.Embed(title=f"{BOT_NAME} (이)가 들어가 있는 서버목록", description=f"**{len(botguild)}개**의 서버, **{len(self.bot.users)}명**의 유저\n\n{srvr}", color = self.color)
             embed1.set_footer(text=f"페이지 {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
             if not chack:
                 msg = await ctx.send(embed=embed1)
