@@ -9,6 +9,7 @@ from musicbot import LOGGER, OWNERS, color_code, BOT_NAME,BOT_NAME_TAG_VER, EXTE
 import platform
 import psutil
 import lavalink
+from EZPaginator import Paginator
 
 def insert_returns(body):
     if isinstance(body[-1], ast.Expr):
@@ -108,9 +109,9 @@ class Owners (commands.Cog) :
 
     @commands.command ()
     @is_owner()
-    async def 서버목록(self, ctx, arg : int = None) :
+    async def 서버목록(self, ctx) :
         # 페이지 지정값이 없고, 총 서버수가 10 이하일 경우
-        if arg == None and len(self.bot.guilds) <= 10:
+        if len(self.bot.guilds) <= 10:
             embed = discord.Embed(title = f"{BOT_NAME} (이)가 들어가 있는 서버목록", description=f"**{len(self.bot.guilds)}개**의 서버, **{len(self.bot.users)}명**의 유저",color=color_code)
             srvr = str()
             for i in self.bot.guilds:
@@ -120,33 +121,31 @@ class Owners (commands.Cog) :
             return await ctx.send(embed = embed)
 
         # 서버수가 10개 이상일 경우
-        embed = discord.Embed(title = f"{BOT_NAME} (이)가 들어가 있는 서버목록", description=f"**{len(self.bot.guilds)}개**의 서버, **{len(self.bot.users)}명**의 유저",color=color_code)
-        srvr = str()
-
-        # 서버 수가 10개 이상이면서 명령어에 페이지 지정값이 없을 경우 첫번째 페이지를 알려준다.
-        if arg == None:
-            arg = 1
-
-        numb = (10 * arg)
-        numa = numb - 10
 
         # 총 페이지수 계산
-        allpage = math.ceil(len(self.bot.guilds) / 10)
+        botguild = self.bot.guilds
+        allpage = math.ceil(len(botguild) / 10)
 
-        # 입력값이 올바르지 않을 경우
-        if allpage < arg or 0 >= arg:
-            embed=discord.Embed(title = "올바른 값을 입력해 주세요!", color=color_code)
-            embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.send(embed = embed)
+        embeds = []
+        chack = False
+        for i in range(1, allpage+1):
+            srvr = ""
+            numb = (10 * i)
+            numa = numb - 10
+            for a in range(numa, numb):
+                try:
+                    srvr = srvr + f"**{botguild[a]}** - **{botguild[a].member_count}명**\n"
+                except:
+                    break
+            embed1 = discord.Embed(title=f"{BOT_NAME} (이)가 들어가 있는 서버목록", description=f"**{len(botguild)}개**의 서버, **{len(self.bot.users)}명**의 유저\n\n{srvr}")
+            embed1.set_footer(text=f"페이지 {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
+            if not chack:
+                msg = await ctx.send(embed=embed1)
+                chack = True
+            embeds.append(embed1)
 
-        for a in range(numa, numb):
-            try:
-                srvr = srvr + f"**{self.bot.guilds[a]}** - **{self.bot.guilds[a].member_count}명**\n"
-            except:
-                break
-        embed.add_field(name="​", value=srvr, inline=False)
-        embed.set_footer(text=f"페이지 {str(arg)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
-        await ctx.send(embed = embed)
+        page = Paginator(bot=self.bot, message=msg, embeds=embeds, use_extend=True)
+        await page.start()
 
     @commands.command (name = 'modules', aliases = ['모듈리스트', '모듈', 'module'])
     @is_owner()
