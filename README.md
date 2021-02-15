@@ -1,8 +1,8 @@
 # Toaru-kagaku-no-music-bot
 ## Heroku Deploy
 
-<img src="https://github.com/NewPremium/Toaru-kagaku-no-music-bot/blob/master/image/sorry_lavalink.py_dev.jpg?raw=true" width="170"></img>
-~~하지말라는건 구태여 하는게 재밌는것~~
+<img src="https://github.com/NewPremium/Toaru-kagaku-no-music-bot/blob/main/image/sorry_lavalink.py_dev.jpg?raw=true" width="170"></img>
+<br>~~하지말라는건 구태여 하는게 재밌는것~~
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/NewPremium/Toaru-kagaku-no-music-bot/tree/main)
 
