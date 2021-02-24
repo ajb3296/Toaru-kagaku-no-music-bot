@@ -319,7 +319,7 @@ class Music(commands.Cog):
             if not should_connect:
                 raise commands.CommandInvokeError(':warning: | 음성 채널에 연결되어 있지 않아요!')
             permissions = ctx.author.voice.channel.permissions_for(ctx.me)
-            if not permissions.connect or not permissions.speak: 
+            if not permissions.connect or not permissions.speak:
                 raise commands.CommandInvokeError(':warning: | 권한이 없어요! (Connect, Speak 권한을 주세요!)')
             player.store('channel', ctx.channel.id)
             player.fetch('channel')

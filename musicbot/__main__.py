@@ -43,7 +43,7 @@ class Toaru_kagaku_no_music_bot (commands.Bot) :
         # Lavalink Download
 
         LOGGER.info("Lavalink Downloading...")
-        request.urlretrieve(f"https://github.com/Cog-Creators/Lavalink-Jars/releases/latest/download/Lavalink.jar", "Lavalink.jar")
+        request.urlretrieve("https://github.com/Cog-Creators/Lavalink-Jars/releases/latest/download/Lavalink.jar", "Lavalink.jar")
 
         process = multiprocessing.Process(target=child_process)
         process.start()
@@ -60,7 +60,7 @@ class Toaru_kagaku_no_music_bot (commands.Bot) :
             afk = False
         )
         bot.loop.create_task(status_task())
-    
+
     async def on_message (self, message) :
         if message.author.bot :
             return

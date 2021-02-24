@@ -158,7 +158,7 @@ class Owners (commands.Cog) :
         embed.add_field(name=modulenum, value=e1, inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
-        
+
     @commands.command()
     @is_owner()
     async def shell(self, ctx, *arg) :
@@ -171,16 +171,16 @@ class Owners (commands.Cog) :
             footer(embed)
             await ctx.send(embed=embed)
 
-        except (discord.errors.HTTPException) :
+        except (discord.errors.HTTPException):
             cmd = " ".join(arg[:])
             res = subprocess.check_output(cmd, shell=True, encoding='utf-8')
             await ctx.send(f"```{res}```")
-         
-        except (subprocess.CalledProcessError) :
+
+        except (subprocess.CalledProcessError):
             embed=discord.Embed(title="**커맨드 오류!**", description="커맨드 명령어 처리 도중 에러가 발생했어요.", color=self.color)
             footer(embed)
             await ctx.send(embed=embed)
-            
+
     @commands.command (name = 'serverinfo', aliases = ['서버현황', '서버상태', '서버'])
     @is_owner()
     async def serverinfo(self, ctx) :

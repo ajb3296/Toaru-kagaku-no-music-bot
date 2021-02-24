@@ -37,11 +37,11 @@
 
 1. `musicbot` 폴더 안에 `config.py` 파일을 만든다.
 2. `config.py` 파일을 아래와 같이 작성한다.
-```
+```python
 from musicbot.sample_config import Config
 
 class Development(Config):
-    TOKEN = '봇 토큰'
+    TOKEN = '토큰'
     OWNERS = [관리자 디스코드 아이디]
     commandInt = "명령인자"
     BOT_NAME = "봇 이름"

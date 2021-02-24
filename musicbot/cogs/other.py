@@ -15,7 +15,7 @@ class Other (commands.Cog) :
         embed=discord.Embed(title="**절 당신이 관리하는 서버에 초대해주시다니!**", description="정말 감사합니다! [여기](<%s>)를 눌러 서버에 초대해주세요!" %link, color=color_code)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
-        
+
     @commands.command (name = 'javaver', aliases = ['java', 'javaversion', '자바', '자바버전'])
     async def javaver(self, ctx):
         res = subprocess.check_output("java --version", shell=True, encoding='utf-8')
