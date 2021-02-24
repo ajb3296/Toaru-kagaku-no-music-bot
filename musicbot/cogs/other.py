@@ -22,7 +22,7 @@ class Other (commands.Cog) :
         embed=discord.Embed(title="**Java 버전**", description="```%s```" %res, color=color_code)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
-        
+
     @commands.command (name = 'softver', aliases = ['버전'])
     async def softver(self, ctx) :
         embed=discord.Embed(title="**관련 모듈 버전**", color=color_code)

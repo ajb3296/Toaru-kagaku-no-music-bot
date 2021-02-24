@@ -209,7 +209,7 @@ class Owners (commands.Cog) :
                 try:
                     target_channel = self.bot.get_channel(a.id)
                     await target_channel.send(embed=embed)
-                
+
                 except Exception:
                     pass
                 else:
