@@ -1,6 +1,6 @@
 {
     "name": "디스코드 음악봇",
-    "description": "디스코드 음악봇입니다! 멜론재생 명령어는 어떤 과학의 음악봇이 공식봇이 되거나 깃허브 Star 수가 100개 넘어갈때 공개하겠습니다.",
+    "description": "디스코드 음악봇입니다!",
     "keywords": [
       "discord",
       "best",
@@ -62,8 +62,8 @@
         "value": ""
       },
       "region": {
-        "description": "Lavalink 유튜브 리전을 선택해 주세요(권장 : en)",
-        "value": "en"
+        "description": "Lavalink 유튜브 리전을 선택해 주세요(권장 : eu)",
+        "value": "eu"
       },
       "name": {
         "description": "Heroku 계정 이름 입력해 주세요. 이는 Lavalink에 필수적입니다.",
