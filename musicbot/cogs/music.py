@@ -214,7 +214,7 @@ class Music(commands.Cog):
             embed=discord.Embed(title=f'{volicon} | {player.volume}% 로 설정되어 있습니다', description='', color=self.normal_color)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.send(embed=embed)
-        elif volume > 1000 or volume < 1:
+        if volume > 1000 or volume < 1:
             embed=discord.Embed(title=':loud_sound: | 음량은 1% ~ 1000% 까지로 한정되어 있습니다!', description='기본값 : 100%', color=self.normal_color)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.send(embed=embed)

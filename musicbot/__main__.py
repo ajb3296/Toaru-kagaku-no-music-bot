@@ -62,10 +62,9 @@ class Toaru_kagaku_no_music_bot (commands.Bot) :
         bot.loop.create_task(status_task())
 
     async def on_message (self, message) :
-        if message.author.bot :
+        if message.author.bot:
             return
-        else :
-            await self.process_commands (message)
+        await self.process_commands (message)
 
 intents = discord.Intents.default()
 intents.messages = True

@@ -34,7 +34,7 @@ class Other (commands.Cog) :
 
     @commands.command (name = 'uptime', aliases = ['업타임'])
     async def uptime(self, ctx):
-        res = subprocess.check_output("uptime", shell=True, encoding='utf-8')
+        res = subprocess.check_output("uptime", shell=False, encoding='utf-8')
         embed=discord.Embed(title="**Uptime**", description="```%s```" %res.replace(',  ', '\n').replace(', ', '\n').replace(': ', ' : ')[1:], color=color_code)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
