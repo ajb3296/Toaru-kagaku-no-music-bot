@@ -34,7 +34,6 @@ async def status_task():
 
 class Toaru_kagaku_no_music_bot (commands.Bot) :
     def __init__ (self) :
-
         super().__init__ (
             command_prefix=commandInt,
             intents=intents

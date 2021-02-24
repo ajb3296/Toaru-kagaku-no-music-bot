@@ -55,7 +55,7 @@
       },
       "host": {
         "description": "Lavalink 에 사용할 host 링크를 입력해 주세요(잘 모르시면 바꾸지 마세요!).",
-        "value": "0.0.0.0"
+        "value": "localhost"
       },
       "psw": {
         "description": "Heroku 계정 비밀번호를 입력해 주세요. 이는 Lavalink에 필수적입니다.",

@@ -36,7 +36,7 @@ if ENV:
         raise Exception("BOT_ID에 올바른 정수가 없습니다.")
     color_code       = int(os.environ.get('color_code', "0xc68e6e"), 0)
     AboutBot         = os.environ.get('AboutBot', None)
-    host             = os.environ.get('host', "0.0.0.0")
+    host             = os.environ.get('host', "localhost")
     psw              = os.environ.get('psw', None)
     region           = os.environ.get('region', "en")
     name             = os.environ.get('name', None)

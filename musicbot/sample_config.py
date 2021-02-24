@@ -5,7 +5,7 @@ if not __name__.endswith("sample_config"):
     quit(1)
 
 class Config(object):
-    TOKEN = '봇 토큰'
+    TOKEN = 'token'
     EXTENSIONS = ['owners',
                 'help',
                 'other',
@@ -22,7 +22,7 @@ class Config(object):
     AboutBot = f"""봇 정보"""
 
     # Music
-    host = "0.0.0.0"
+    host = "localhost"
     psw = "컴퓨터 비밀번호"
     region = "eu"
     name = "컴퓨터 아이디"
