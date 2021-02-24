@@ -29,7 +29,7 @@ async def status_task():
                 afk = False
             )
             await asyncio.sleep(10)
-        except:
+        except Exception:
             pass
 
 class Toaru_kagaku_no_music_bot (commands.Bot) :

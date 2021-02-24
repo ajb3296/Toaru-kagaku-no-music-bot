@@ -26,7 +26,7 @@ def is_owner():
     async def predicate(ctx):
         return ctx.author.id in OWNERS
     return commands.check(predicate)
-    
+
 class Owners (commands.Cog) :
     def __init__ (self, bot) :
         self.bot = bot

@@ -22,7 +22,7 @@ class About (commands.Cog) :
         embed.add_field(name="음악 재생 서버 수", value=player_server_count, inline=True)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
-        
+
 def setup (bot) :
     bot.add_cog (About (bot))
     LOGGER.info('About loaded!')

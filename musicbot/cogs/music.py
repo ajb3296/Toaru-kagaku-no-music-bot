@@ -2,7 +2,6 @@ import math
 import re
 import discord
 import lavalink
-import asyncio
 from discord.ext import commands
 from musicbot import LOGGER, BOT_ID, color_code, BOT_NAME_TAG_VER, host, psw, region, name, port
 
@@ -73,7 +72,7 @@ class Music(commands.Cog):
         if query is None and ctx.message.reference is not None:
             query = await self.bot.get_channel(ctx.message.reference.channel_id).fetch_message(ctx.message.reference.message_id)
             query = query.content
-        
+
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         query = query.strip('<>')
         if not url_rx.match(query):
@@ -320,7 +319,7 @@ class Music(commands.Cog):
             if not should_connect:
                 raise commands.CommandInvokeError(':warning: | 음성 채널에 연결되어 있지 않아요!')
             permissions = ctx.author.voice.channel.permissions_for(ctx.me)
-            if not permissions.connect or not permissions.speak:  
+            if not permissions.connect or not permissions.speak: 
                 raise commands.CommandInvokeError(':warning: | 권한이 없어요! (Connect, Speak 권한을 주세요!)')
             player.store('channel', ctx.channel.id)
             player.fetch('channel')

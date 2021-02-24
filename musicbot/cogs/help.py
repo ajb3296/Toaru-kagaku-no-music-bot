@@ -70,7 +70,6 @@ class Help (commands.Cog) :
                 embed.add_field(name=f"`{commandInt}help dev`", value=">>> 개발자님이 사용가능한 명령어들을 보내드려요!", inline=False)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.send(embed=embed)
-            
 
 def setup (bot) :
     bot.add_cog (Help (bot))
