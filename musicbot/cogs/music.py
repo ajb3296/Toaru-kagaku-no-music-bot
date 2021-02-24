@@ -67,14 +67,13 @@ class Music(commands.Cog):
             embed=discord.Embed(title=":white_check_mark: | 음성 채널에 접속했어요!", description='', color=self.normal_color)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.send(embed=embed)
-        else:
-            embed=discord.Embed(title=":white_check_mark: | 이미 음성 채널에 접속해 있어요!", description='', color=self.normal_color)
-            embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.send(embed=embed)
+        embed=discord.Embed(title=":white_check_mark: | 이미 음성 채널에 접속해 있어요!", description='', color=self.normal_color)
+        embed.set_footer(text=BOT_NAME_TAG_VER)
+        return await ctx.send(embed=embed)
 
     @commands.command(aliases=['p', '재생', 'ㅔ', 'add'])
     async def play(self, ctx, *, query: str = None):
-        if query == None and ctx.message.reference is not None:
+        if query is None and ctx.message.reference is not None:
             query = await self.bot.get_channel(ctx.message.reference.channel_id).fetch_message(ctx.message.reference.message_id)
             query = query.content
         
@@ -101,7 +100,7 @@ class Music(commands.Cog):
             tracks = results['tracks']
             trackcount = 0
             for track in tracks:
-                if not trackcount == 1:
+                if trackcount != 1:
                     info = track['info']
                     trackcount = 1
                 player.add(requester=ctx.author.id, track=track)
@@ -137,7 +136,7 @@ class Music(commands.Cog):
             embed=discord.Embed(title=self.not_playing, description='', color=self.normal_color)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.send(embed=embed)
-        if arg == None:
+        if arg is None:
             embed=discord.Embed(title="**:track_next: | 다음곡으로 넘어갑니다!**", description='', color=self.normal_color)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.send(embed=embed)
@@ -299,7 +298,7 @@ class Music(commands.Cog):
         while True:
             results = await player.node.get_tracks(query)
             if not results or not results['tracks']:
-                if not search_count == 3:
+                if search_count != 3:
                     search_count += 1
                 else:
                     embed=discord.Embed(title="음악을 찾을 수 없어요...", description='', color=self.normal_color)

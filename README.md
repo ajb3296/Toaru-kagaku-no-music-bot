@@ -1,4 +1,9 @@
 # Toaru-kagaku-no-music-bot
+
+<a href="https://discord.gg/etzmFDGFVg"><img src="https://img.shields.io/discord/803935936219578368?color=7289da&logo=discord&logoColor=white" alt="Discord server" /></a>
+<a href="https://discord.com/oauth2/authorize?client_id=714140461840728144&permissions=3165184&scope=bot"><img src="https://api.koreanbots.dev/widget/bots/servers/714140461840728144.svg" alt="Server count" /></a>
+<a href="https://www.codefactor.io/repository/github/newpremium/toaru-kagaku-no-music-bot/overview/main"><img src="https://www.codefactor.io/repository/github/newpremium/toaru-kagaku-no-music-bot/badge/main" alt="CodeFactor" /></a>
+
 ## Heroku Deploy
 
 <img src="https://github.com/NewPremium/Toaru-kagaku-no-music-bot/blob/main/image/sorry_lavalink.py_dev.jpg?raw=true" width="300"></img>

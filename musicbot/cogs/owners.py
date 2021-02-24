@@ -211,7 +211,7 @@ class Owners (commands.Cog) :
                     target_channel = self.bot.get_channel(a.id)
                     await target_channel.send(embed=embed)
                 
-                except:
+                except Exception:
                     pass
                 else:
                     LOGGER.info(f"{a} ({a.id}) 서버에 공지 전송 완료!")
