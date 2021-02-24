@@ -1,14 +1,10 @@
 import discord
 import asyncio
-import logging
-import sys
 import time
-import os
 from urllib import request
 import multiprocessing
 from musicbot.lavalinkstart import child_process
 from discord.ext import commands
-from musicbot.utils import *
 
 from musicbot import LOGGER, TOKEN, EXTENSIONS, commandInt, BOT_NAME_TAG_VER
 

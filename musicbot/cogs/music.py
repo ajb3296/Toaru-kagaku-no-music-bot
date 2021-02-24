@@ -3,11 +3,8 @@ import re
 import discord
 import lavalink
 import asyncio
-import json
 from discord.ext import commands
 from musicbot import LOGGER, BOT_ID, color_code, BOT_NAME_TAG_VER, host, psw, region, name, port
-from musicbot.utils.crawler import getReqTEXT
-from bs4 import BeautifulSoup
 
 async def volumeicon(vol : int):
     if vol >= 1 and vol <= 10:
@@ -151,27 +148,7 @@ class Music(commands.Cog):
             embed=discord.Embed(title=f"**:track_next: | {arg}개의 곡을 건너뛰었어요!**", description='', color=self.normal_color)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.send(embed=embed)
-
-    @commands.command(aliases=['중지', '정지'])
-    async def stop(self, ctx, arg: int = None):
-        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
-        if not player.is_playing:
-            embed=discord.Embed(title=self.not_playing, description='', color=self.normal_color)
-            embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.send(embed=embed)
-        if not arg == None:
-            arg1 = arg * 60
-            embed=discord.Embed(title=":stop_button: | %s 분 후 자동 음악종료가 예약되었습니다!" %arg, description='', color=self.normal_color)
-            embed.set_footer(text=BOT_NAME_TAG_VER)
-            await ctx.send(embed=embed)
-            await asyncio.sleep(arg1)
-        player.queue.clear()
-        await player.stop()
-        embed=discord.Embed(title=":stop_button: | 음악을 끄고 재생목록을 제거했어요!", description='', color=self.normal_color)
-        embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.send(embed=embed)
-
-
+            
     @commands.command(aliases=['np', 'n', 'playing', '현재재생중', 'ㅜ', 'ㅞ', 'ㅜㅔ'])
     async def now(self, ctx):
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
@@ -315,7 +292,7 @@ class Music(commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=['dc', '연결해제', '나가', 'ㅇㅊ'])
+    @commands.command(aliases=['dc', '연결해제', '나가', 'ㅇㅊ', 'stop', '중지', '정지']])
     async def disconnect(self, ctx):
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         if not player.is_connected:

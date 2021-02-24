@@ -1,5 +1,4 @@
 import discord
-import asyncio
 from discord.ext import commands
 from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code, commandInt, BOT_NAME, OWNERS, EXTENSIONS
 

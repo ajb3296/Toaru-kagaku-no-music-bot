@@ -2,7 +2,6 @@ import discord
 import subprocess
 import ast
 import math
-import asyncio
 from discord.ext import commands
 from musicbot.utils.misc import footer
 from musicbot import LOGGER, OWNERS, color_code, BOT_NAME,BOT_NAME_TAG_VER, EXTENSIONS

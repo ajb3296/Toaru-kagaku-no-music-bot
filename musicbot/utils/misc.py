@@ -1,5 +1,4 @@
 import datetime
-import discord
 from musicbot import BOT_NAME_TAG_VER
 
 def footer (embed) :
