@@ -31,7 +31,7 @@ class Other (commands.Cog) :
         embed.add_field(name="Lavalink.py Ver", value=lavalink.__version__, inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
-        
+
     @commands.command (name = 'uptime', aliases = ['업타임'])
     async def uptime(self, ctx):
         res = subprocess.check_output("uptime", shell=True, encoding='utf-8')
