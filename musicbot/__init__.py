@@ -31,8 +31,8 @@ if ENV:
     BOT_TAG          = os.environ.get('BOT_TAG', "#1234")
     BOT_VER          = os.environ.get('BOT_VER', None)
     try:		
-        BOT_ID       = int(os.environ.get('BOT_ID', None))		
-    except ValueError:		
+        BOT_ID       = int(os.environ.get('BOT_ID', None))	
+    except ValueError:
         raise Exception("BOT_ID에 올바른 정수가 없습니다.")
     color_code       = int(os.environ.get('color_code', "0xc68e6e"), 0)
     AboutBot         = os.environ.get('AboutBot', None)

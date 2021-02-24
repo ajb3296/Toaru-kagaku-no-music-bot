@@ -148,7 +148,7 @@ class Music(commands.Cog):
             embed=discord.Embed(title=f"**:track_next: | {arg}개의 곡을 건너뛰었어요!**", description='', color=self.normal_color)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.send(embed=embed)
-            
+
     @commands.command(aliases=['np', 'n', 'playing', '현재재생중', 'ㅜ', 'ㅞ', 'ㅜㅔ'])
     async def now(self, ctx):
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
@@ -292,7 +292,7 @@ class Music(commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=['dc', '연결해제', '나가', 'ㅇㅊ', 'stop', '중지', '정지']])
+    @commands.command(aliases=['dc', '연결해제', '나가', 'ㅇㅊ', 'stop', '중지', '정지'])
     async def disconnect(self, ctx):
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         if not player.is_connected:
