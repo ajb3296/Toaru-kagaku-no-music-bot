@@ -34,6 +34,26 @@ class Music(commands.Cog):
     def cog_unload(self):
         self.bot.lavalink._event_hooks.clear()
 
+    @commands.Cog.listener()
+    async def on_voice_state_update(self, member, before, after):
+        if after.channel is None:
+            voice_channel = self.bot.get_channel(int(before.channel.id))
+            player = self.bot.lavalink.player_manager.get(int(voice_channel.guild.id))
+            try:
+                members = voice_channel.members
+                mem = []
+                if not members == []:                                            
+                    for m in members:
+                        mem.append(m.id)
+                    if self.bot.user.id in mem:
+                        if len(members) <= 1:
+                            player.queue.clear()
+                            await player.stop()
+                            await self.connect_to(voice_channel.guild.id, None)
+                            LOGGER.info(f"{voice_channel} 음성채널에 봇만 남았으므로 자동 연결해제")
+            except Exception as a:
+                print(a)
+
     async def cog_before_invoke(self, ctx):
         guild_check = ctx.guild is not None
         if guild_check:
