@@ -53,7 +53,6 @@ class Development(Config):
 
     # Music
     psw = "컴퓨터 비밀번호"
-    name = "컴퓨터 이름"
 ```
 `sample_config.py`를 **참고** 하여 만드시면 됩니다.<br>
 3. `python -m musicbot` 명령어를 실행한다.

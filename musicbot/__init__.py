@@ -39,7 +39,6 @@ if ENV:
     host             = os.environ.get('host', "localhost")
     psw              = os.environ.get('psw', None)
     region           = os.environ.get('region', "en")
-    name             = os.environ.get('name', None)
     port             = int(os.environ.get('port', 2333))
 
 else:
@@ -58,7 +57,6 @@ else:
     host             = Config.host
     psw              = Config.psw
     region           = Config.region
-    name             = Config.name
     port             = Config.port
 
 EXTENSIONS = list(EXTENSIONS)

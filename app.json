@@ -65,10 +65,6 @@
         "description": "Lavalink 유튜브 리전을 선택해 주세요(권장 : eu)",
         "value": "eu"
       },
-      "name": {
-        "description": "Heroku 계정 이름 입력해 주세요. 이는 Lavalink에 필수적입니다.",
-        "value": ""
-      },
       "port": {
         "description": "Lavalink 에 사용할 port 번호를 입력해 주세요. (잘 모르시면 바꾸지 마세요!)",
         "value": "2333"
