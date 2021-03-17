@@ -42,11 +42,14 @@ class Music(commands.Cog):
             try:
                 members = voice_channel.members
                 mem = []
-                if not members == []:                                            
+                nobot = []
+                if not members == []:
                     for m in members:
                         mem.append(m.id)
+                        if not m.bot:
+                            nobot.append(m.id)
                     if self.bot.user.id in mem:
-                        if len(members) <= 1:
+                        if len(nobot) <= 1:
                             player.queue.clear()
                             await player.stop()
                             await self.connect_to(voice_channel.guild.id, None)
