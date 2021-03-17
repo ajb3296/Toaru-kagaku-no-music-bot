@@ -49,7 +49,7 @@ class Music(commands.Cog):
                         if not m.bot:
                             nobot.append(m.id)
                     if self.bot.user.id in mem:
-                        if len(nobot) <= 1:
+                        if len(nobot) == 0:
                             player.queue.clear()
                             await player.stop()
                             await self.connect_to(voice_channel.guild.id, None)
