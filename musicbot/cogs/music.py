@@ -1,9 +1,13 @@
-import math
+import os
 import re
+import math
 import discord
 import lavalink
+from bs4 import BeautifulSoup
 from discord.ext import commands
-from musicbot import LOGGER, BOT_ID, color_code, BOT_NAME_TAG_VER, host, psw, region, name, port
+from EZPaginator import Paginator
+from musicbot.utils.crawler import getReqTEXT
+from musicbot import LOGGER, BOT_ID, color_code, BOT_NAME_TAG_VER, host, psw, region, port
 
 async def volumeicon(vol : int):
     if vol >= 1 and vol <= 10:
@@ -136,6 +140,284 @@ class Music(commands.Cog):
         embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.reply(embed=embed, mention_author=True)
+        if not player.is_playing:
+            await player.play()
+
+    @commands.command(aliases=['리스트', '재생목록'])
+    async def list(self, ctx, *, arg: str = None):
+        anilistpath = "musicbot/anilist"
+
+        # 파일 목록
+        files = []
+        for file in os.listdir(anilistpath):
+            if file.endswith(".txt"):
+                files.append(file.replace(".txt", ""))
+        # 정렬
+        file = sorted(files)
+        # 재생목록 총 개수
+        if arg == "-a":
+            embed=discord.Embed(title="리스트 개수", description=f"재생목록이 총 {len(files)}개 있습니다.",  color=self.normal_color)
+            embed.set_footer(text=BOT_NAME_TAG_VER)
+            return await ctx.send(embed=embed)
+
+        if arg == None:
+            arg = 1
+
+        try:
+            arg1 = int(arg)
+
+        # 리스트 재생
+        except ValueError:
+            embed=discord.Embed(title="리스트 찾는 중...", color=self.normal_color)
+            embed.set_footer(text=BOT_NAME_TAG_VER)
+            playmsg = await ctx.send(embed=embed)
+
+            try:
+                f = open(f"{anilistpath}/{arg}.txt", 'r')
+                list_str = f.read()
+                f.close()
+            
+            except:
+                embed=discord.Embed(title="해당 리스트는 존재하지 않습니다.", description=arg, color=self.normal_color)
+                embed.set_footer(text=BOT_NAME_TAG_VER)
+                return await playmsg.edit(embed=embed)
+            
+            player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+            music_list = list_str.split('\n')
+            passmusic = "없음"
+            playmusic = "없음"
+            trackcount = 0
+
+            loading_dot_count = 0
+            for music in music_list:
+                if not music == "":
+                    # ... 개수 변경
+                    loading_dot = ""
+                    loading_dot_count += 1
+                    if loading_dot_count == 4:
+                        loading_dot_count = 1
+                    for a in range(0, loading_dot_count):
+                        loading_dot = loading_dot + "."
+
+                    embed=discord.Embed(title=f"음악 추가중{loading_dot}", description=music, color=self.normal_color)
+                    embed.set_footer(text=BOT_NAME_TAG_VER)
+                    await playmsg.edit(embed=embed)
+
+                    query = music.strip('<>')
+                    if not url_rx.match(query):
+                        query = f'ytsearch:{query}'
+
+                    nofind = 0
+                    while True:
+                        results = await player.node.get_tracks(query)
+                        if results['loadType'] == 'PLAYLIST_LOADED' or not results or not results['tracks']:
+                            if nofind < 3:
+                                nofind += 1
+                            elif nofind == 3:
+                                if passmusic == "없음":
+                                    passmusic = music
+                                else:
+                                    passmusic = f"{passmusic}\n{music}"
+                        else:
+                            break
+
+                    track = results['tracks'][0]
+                    if playmusic == "없음":
+                        playmusic = music
+                    else:
+                        playmusic = f"{playmusic}\n{music}"
+                    if not trackcount == 1:
+                        info = track['info']
+                        trackcount = 1
+                    track = lavalink.models.AudioTrack(track, ctx.author.id, recommended=True)
+                    player.add(requester=ctx.author.id, track=track)
+
+            embed=discord.Embed(title=":arrow_forward: | 음악 재생!", description='', color=self.normal_color)
+            embed.add_field(name="재생한 음악", value = playmusic, inline=False)
+            embed.add_field(name="찾지 못한 음악", value = passmusic, inline=False)
+            embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
+            embed.set_footer(text=BOT_NAME_TAG_VER)
+            await playmsg.edit(embed=embed)
+            if not player.is_playing:
+                await player.play()
+
+        # 리스트 목록
+        else:
+            # 총 리스트 수가 10 이하일 경우
+            if len(file) <= 10:
+                embed=discord.Embed(title="**재생목록 리스트**", description="\n".join(file), color=color_code)
+                embed.set_footer(text=BOT_NAME_TAG_VER)
+                return await playmsg.edit(embed=embed)
+
+            # 총 페이지수 계산
+            allpage = math.ceil(len(file) / 15)
+
+            embeds = []
+            chack = False
+            for i in range(1, allpage+1):
+                filelist = ""
+                numb = (15 * i)
+                numa = numb - 15
+                for a in range(numa, numb):
+                    try:
+                        filelist = filelist + f"{file[a]}\n"
+                    except IndexError:
+                        break
+                embed1 = discord.Embed(title="**재생목록 리스트**", description=filelist, color=color_code)
+                embed1.set_footer(text=f"페이지 {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
+                if not chack:
+                    msg = await ctx.send(embed=embed1)
+                    chack = True
+                embeds.append(embed1)
+            
+            page = Paginator(bot=self.bot, message=msg, embeds=embeds, use_extend=True)
+            await page.start()
+
+    @commands.command(aliases=['멜론재생', '멜론차트재생', '멜론음악', 'ㅁㅈ', 'aw'])
+    async def melonplay(self, ctx, arg:int = None):
+        if arg == None or arg > 10 or arg < 1:
+            arg = 10
+        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+
+        embed=discord.Embed(title="멜론 파싱중...", color=self.normal_color)
+        embed.set_footer(text=BOT_NAME_TAG_VER)
+        melonplaymsg = await ctx.send(embed=embed)
+
+        data = await getReqTEXT (self.melon_url, self.header)
+        parse = BeautifulSoup(data, 'lxml')
+        titles = parse.find_all("div", {"class": "ellipsis rank01"})
+        songs = parse.find_all("div", {"class": "ellipsis rank02"})
+        title = []
+        song = []
+        for t in titles:
+            title.append(t.find('a').text)
+        for s in songs:
+            song.append(s.find('span', {"class": "checkEllipsis"}).text)
+        trackcount = 0
+        passmusic = "없음"
+        playmusic = "없음"
+        loading_dot_count = 0
+        for i in range(0, arg):
+            # ... 개수 변경
+            loading_dot = ""
+            loading_dot_count += 1
+            if loading_dot_count == 4:
+                loading_dot_count = 1
+            for a in range(0, loading_dot_count):
+                loading_dot = loading_dot + "."
+            musicname = str(f'{song[i]} {title[i]}')
+            embed=discord.Embed(title=f"음악 추가중{loading_dot}", description=musicname, color=self.normal_color)
+            embed.set_footer(text=BOT_NAME_TAG_VER)
+            await melonplaymsg.edit(embed=embed)
+            query = musicname.strip('<>')
+            if not url_rx.match(query):
+                query = f'ytsearch:{query}'
+
+            nofind = 0
+            while True:
+                results = await player.node.get_tracks(query)
+                if results['loadType'] == 'PLAYLIST_LOADED' or not results or not results['tracks']:
+                    if nofind < 3:
+                        nofind += 1
+                    elif nofind == 3:
+                        if passmusic == "없음":
+                            passmusic = musicname
+                        else:
+                            passmusic = "%s\n%s" %(passmusic, musicname)
+                else:
+                    break
+
+            track = results['tracks'][0]
+            if playmusic == "없음":
+                playmusic = musicname
+            else:
+                playmusic = "%s\n%s" %(playmusic, musicname)
+            if not trackcount == 1:
+                info = track['info']
+                trackcount = 1
+            track = lavalink.models.AudioTrack(track, ctx.author.id, recommended=True)
+            player.add(requester=ctx.author.id, track=track)
+
+        embed=discord.Embed(title=":arrow_forward: | 멜론차트 음악 재생!", description='', color=self.normal_color)
+        embed.add_field(name="재생한 음악", value = playmusic, inline=False)
+        embed.add_field(name="찾지 못한 음악", value = passmusic, inline=False)
+        embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
+        embed.set_footer(text=BOT_NAME_TAG_VER)
+        await melonplaymsg.edit(embed=embed)
+        if not player.is_playing:
+            await player.play()
+
+    @commands.command(aliases=['빌보드재생', '빌보드차트재생', '빌보드음악', 'ㅂㅈ', 'qw'])
+    async def billboardplay(self, ctx, arg:int = None):
+        if arg == None or arg > 10 or arg < 1:
+            arg = 10
+        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+
+        embed=discord.Embed(title="빌보드차트 파싱중...", color=self.normal_color)
+        melonplaymsg = await ctx.send(embed=embed)
+
+        data = await getReqTEXT (self.billboard_url, self.header)
+        parse = BeautifulSoup(data, 'lxml')
+        # 음악명
+        titles = parse.find_all("span", {"class" : "chart-element__information__song text--truncate color--primary"})
+        # 아티스트
+        songs = parse.find_all("span", {"class" : "chart-element__information__artist text--truncate color--secondary"})
+        title = []
+        song = []
+        for t in titles:
+            title.append(t.get_text())
+        for s in songs:
+            song.append(s.get_text())
+        trackcount = 0
+        passmusic = "없음"
+        playmusic = "없음"
+        loading_dot_count = 0
+        for i in range(0, arg) :
+            # ... 개수 변경
+            loading_dot = ""
+            loading_dot_count += 1
+            if loading_dot_count == 4:
+                loading_dot_count = 1
+            for a in range(0, loading_dot_count):
+                loading_dot = loading_dot + "."
+            musicname = str(f'{song[i]} {title[i]}')
+            embed=discord.Embed(title=f"음악 추가중{loading_dot}", description=musicname, color=self.normal_color)
+            await melonplaymsg.edit(embed=embed)
+            query = musicname.strip('<>')
+            if not url_rx.match(query):
+                query = f'ytsearch:{query}'
+
+            nofind = 0
+            while True:
+                results = await player.node.get_tracks(query)
+                if results['loadType'] == 'PLAYLIST_LOADED' or not results or not results['tracks']:
+                    if nofind < 3:
+                        nofind += 1
+                    elif nofind == 3:
+                        if passmusic == "없음":
+                            passmusic = musicname
+                        else:
+                            passmusic = "%s\n%s" %(passmusic, musicname)
+                else:
+                    break
+
+            track = results['tracks'][0]
+            if playmusic == "없음":
+                playmusic = musicname
+            else:
+                playmusic = "%s\n%s" %(playmusic, musicname)
+            if not trackcount == 1:
+                info = track['info']
+                trackcount = 1
+            track = lavalink.models.AudioTrack(track, ctx.author.id, recommended=True)
+            player.add(requester=ctx.author.id, track=track)
+
+        embed=discord.Embed(title=":arrow_forward: | 빌보드차트 음악 재생!", description='', color=self.normal_color)
+        embed.add_field(name="재생한 음악", value = playmusic, inline=False)
+        embed.add_field(name="찾지 못한 음악", value = passmusic, inline=False)
+        embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
+        embed.set_footer(text=BOT_NAME_TAG_VER)
+        await melonplaymsg.edit(embed=embed)
         if not player.is_playing:
             await player.play()
 

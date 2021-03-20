@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code, commandInt, BOT_NAME, OWNERS, EXTENSIONS
+from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code, commandInt, OWNERS, EXTENSIONS
 
 class Help (commands.Cog) :
     def __init__ (self, bot) :
@@ -46,6 +46,16 @@ class Help (commands.Cog) :
                 embed.set_footer(text=BOT_NAME_TAG_VER)
                 await ctx.send(embed=embed)
 
+        elif arg == "CHART" or arg == "차트재생" or arg == "차트":
+            if "music" in EXTENSIONS:
+                embed=discord.Embed(title="**차트 재생 명령어**", description='', color=color_code)
+                embed.add_field(name=f":melon: | `{commandInt}melonplay` (~위까지)",                               value=f">>> 멜론 차트 원하는 순위까지의 곡을 재생목록에 추가합니다!(최대 10위)\n`{commandInt}aw`, `{commandInt}멜론재생`, `{commandInt}멜론음악`, `{commandInt}멜론차트재생` 을(를) 사용할 수도 있어요.", inline=False)
+                embed.add_field(name=f":b: | `{commandInt}billboardplay` (~위까지)",                               value=f">>> 빌보드 차트 원하는 순위까지의 곡을 재생목록에 추가합니다!(최대 10위)\n`{commandInt}qw`, `{commandInt}빌보드재생`, `{commandInt}빌보드음악`, `{commandInt}빌보드차트재생` 을(를) 사용할 수도 있어요.", inline=False)
+                embed.add_field(name=f":page_with_curl: | `{commandInt}list` (페이지 수)",                         value=f">>> 재생목록들을 불러와요!\n`{commandInt}리스트`, `{commandInt}재생목록` 을(를) 사용할 수도 있어요.", inline=False)
+                embed.add_field(name=f":page_with_curl: | `{commandInt}list` (재생목록 이름)",                     value=f">>> 해당 재생목록의 음악들을 재생해요!\n애니메이션 OP/ED 가 중점으로 추가돼있어요!\n`{commandInt}리스트`, `{commandInt}재생목록` 을(를) 사용할 수도 있어요.", inline=False)
+                embed.set_footer(text=BOT_NAME_TAG_VER)
+                await ctx.send(embed=embed)
+
         elif arg == "DEV" or arg == "개발" or arg == "개발자":
             if ctx.author.id in OWNERS:
                 embed=discord.Embed(title="**개발자 명령어**", description='명령어 뒷쪽의 모든 괄호는 빼주세요!', color=color_code)
@@ -60,11 +70,14 @@ class Help (commands.Cog) :
                 await ctx.send(embed=embed)
 
         else:
-            embed=discord.Embed(title="**도움말**", description='안녕하세요! 전 %s 에요! 아래에 있는 명령어들을 이용해 도움말을 보세요!' %BOT_NAME, color=color_code)
+            embed=discord.Embed(title="**도움말**", description=f'안녕하세요! 전 {self.bot.user.name} 에요! 아래에 있는 명령어들을 이용해 도움말을 보세요!', color=color_code)
             embed.add_field(name=f"`{commandInt}help general`", value=">>> 기본적인 명령어들을 보내드려요!", inline=False)
 
             if "music" in EXTENSIONS:
                 embed.add_field(name=f"`{commandInt}help music`", value=">>> 음악 관련 명령어들을 보내드려요!", inline=False)
+
+            if "music" in EXTENSIONS:
+                embed.add_field(name=f"`{commandInt}help chart`", value=">>> 음악 차트 재생 관련 명령어들을 보내드려요!", inline=False)
 
             if ctx.author.id in OWNERS:
                 embed.add_field(name=f"`{commandInt}help dev`", value=">>> 개발자님이 사용가능한 명령어들을 보내드려요!", inline=False)

@@ -8,7 +8,7 @@
 ## Heroku Deploy
 
 <img src="https://github.com/NewPremium/Toaru-kagaku-no-music-bot/blob/main/image/sorry_lavalink.py_dev.jpg?raw=true" width="300"></img>
-<br>~~하지말라는건 구태여 해야 즐거운법!~~
+<br>~~:)~~
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/NewPremium/Toaru-kagaku-no-music-bot/tree/main)
 
@@ -17,9 +17,9 @@
 [Lavalink Download](https://github.com/Frederikam/Lavalink/releases)<br>
 [Lavalink Download(for arm or 32bit)](https://github.com/Cog-Creators/Lavalink-Jars/releases)
 
-* 이 프로그램은 [GNU GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.html) 을 따릅니다.
+* This program follows [GNU GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.html)
 
-### 참고
+### Reference
 
 * [lavalink.py](https://github.com/Devoxin/Lavalink.py)
 * [PythonLavalink](https://github.com/fxrcha/PythonLavalink)
@@ -27,31 +27,32 @@
 
 ## How to install
 
-### Heroku 로 사용하는 방법
+### How to use it with Heroku
 
-1. 위 Heroku Deploy 버튼을 누른다.
-2. 기초 설정을 한다.
-3. Deploy 한다.
+1. Click the Heroku Deploy button above.
+2. Set config
+3. Deploy!
 
-### 컴퓨터로 사용하는 방법
+### How to use it as a computer
 
-1. `musicbot` 폴더 안에 `config.py` 파일을 만든다.
-2. `config.py` 파일을 아래와 같이 작성한다.
+1. Create a `config.py` file in the `musicbot` folder.
+2. Write the `config.py` file as follows.
+
 ```python
 from musicbot.sample_config import Config
 
 class Development(Config):
-    TOKEN = '토큰'
-    OWNERS = [관리자 디스코드 아이디]
-    commandInt = "명령인자"
-    BOT_NAME = "봇 이름"
-    BOT_TAG = "#봇태그"
-    BOT_VER = "버전"
-    BOT_ID = 봇아이디
-    AboutBot = f"""봇 정보(about 명령어)에 넣을 말"""
+    TOKEN = 'token'
+    OWNERS = [owners discord id(list)]
+    commandInt = "command prefix"
+    BOT_NAME = "bot name"
+    BOT_TAG = "#bot tag"
+    BOT_VER = "version"
+    BOT_ID = bot id
+    AboutBot = f"""bot information"""
 
     # Music
-    psw = "컴퓨터 비밀번호"
+    psw = "computer password"
 ```
-`sample_config.py`를 **참고** 하여 만드시면 됩니다.<br>
-3. `python -m musicbot` 명령어를 실행한다.
+You can create it by **referring** to `sample_config.py`.<br>
+3. Run `python -m musicbot`
