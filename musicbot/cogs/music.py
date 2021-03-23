@@ -92,14 +92,13 @@ class Music(commands.Cog):
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_connect_voice_channel"), description='', color=self.normal_color)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.send(embed=embed)
-        else:
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_already_connected_voice_channel"), description='', color=self.normal_color)
-            embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.send(embed=embed)
+        embed=discord.Embed(title=get_lan(ctx.author.id, "music_already_connected_voice_channel"), description='', color=self.normal_color)
+        embed.set_footer(text=BOT_NAME_TAG_VER)
+        return await ctx.send(embed=embed)
 
     @commands.command(aliases=['p', '재생', 'ㅔ', 'add'])
     async def play(self, ctx, *, query: str = None):
-        if query == None and ctx.message.reference is not None:
+        if query is None and ctx.message.reference is not None:
             query = await self.bot.get_channel(ctx.message.reference.channel_id).fetch_message(ctx.message.reference.message_id)
             query = query.content
 
@@ -587,7 +586,7 @@ class Music(commands.Cog):
         while True:
             results = await player.node.get_tracks(query)
             if not results or not results['tracks']:
-                if not search_count == 3:
+                if search_count != 3:
                     search_count += 1
                 else:
                     embed=discord.Embed(title=get_lan(ctx.author.id, "music_youtube_can_not_found"), description='', color=self.normal_color)

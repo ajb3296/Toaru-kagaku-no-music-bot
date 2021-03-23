@@ -137,7 +137,7 @@ class Owners (commands.Cog) :
             for a in range(numa, numb):
                 try:
                     srvr = srvr + get_lan(ctx.author.id, "owners_server_list_info").format(server_name=botguild[a], server_members_count=botguild[a].member_count)
-                except:
+                except Exception:
                     break
             embed1 = discord.Embed(title = get_lan(ctx.author.id, "owners_server_list_title").format(BOT_NAME=self.bot.user.name), description=get_lan(ctx.author.id, "owners_server_list_description2").format(server_count=len(self.bot.guilds), members_count=len(self.bot.users), servers=srvr), color=color_code)
             embed1.set_footer(text=f"{get_lan(ctx.author.id, 'owners_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
@@ -215,7 +215,7 @@ class Owners (commands.Cog) :
                     target_channel = self.bot.get_channel(a.id)
                     await target_channel.send(embed=embed)
                 
-                except:
+                except Exception:
                     pass
                 else:
                     LOGGER.info(f"{a} ({a.id}) 서버에 공지 전송 완료!")
