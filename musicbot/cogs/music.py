@@ -125,7 +125,7 @@ class Music(commands.Cog):
             tracks = results['tracks']
             trackcount = 0
             for track in tracks:
-                if not trackcount == 1:
+                if trackcount != 1:
                     info = track['info']
                     trackcount = 1
                 player.add(requester=ctx.author.id, track=track)
@@ -439,7 +439,7 @@ class Music(commands.Cog):
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_not_playing"), description='', color=self.normal_color)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.send(embed=embed)
-        if arg == None:
+        if arg is None:
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_skip_next"), description='', color=self.normal_color)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.send(embed=embed)
