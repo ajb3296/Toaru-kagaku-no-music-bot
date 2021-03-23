@@ -266,7 +266,7 @@ class Music(commands.Cog):
                     except IndexError:
                         break
                 embed1 = discord.Embed(title=get_lan(ctx.author.id, "music_playlist_list"), description=filelist, color=color_code)
-                embed1.set_footer(text=f"{get_lan(ctx.author.id, 'page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
+                embed1.set_footer(text=f"{get_lan(ctx.author.id, 'music_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
                 if not chack:
                     msg = await ctx.send(embed=embed1)
                     chack = True
