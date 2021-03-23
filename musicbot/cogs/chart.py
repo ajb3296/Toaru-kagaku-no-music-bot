@@ -1,11 +1,9 @@
 import discord
-import asyncio
-import json
 from bs4 import BeautifulSoup
-import urllib.parse
-import requests
-from musicbot.utils.crawler import getReqTEXT
 from discord.ext import commands
+
+from musicbot.utils.language import get_lan
+from musicbot.utils.crawler import getReqTEXT
 from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code
 
 class Chart (commands.Cog) :
@@ -27,9 +25,9 @@ class Chart (commands.Cog) :
             title.append(t.find('a').text)
         for s in songs:
             song.append(s.find('span', {"class": "checkEllipsis"}).text)
-        embed=discord.Embed(title="**멜론 차트**", description="오늘의 멜론 차트에요!", color=color_code)
+        embed=discord.Embed(title=get_lan(ctx.author.id, "chart_melon_chart"), color=color_code)
         for i in range(0, 10):
-            embed.add_field(name=str(i+1) + "위", value = f"{song[i]} - {title[i]}", inline=False)
+            embed.add_field(name=str(i+1) + ".", value = f"{song[i]} - {title[i]}", inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
 
@@ -47,9 +45,9 @@ class Chart (commands.Cog) :
             title.append(t.get_text())
         for s in songs:
             song.append(s.get_text())
-        embed=discord.Embed(title="**빌보드 차트**", description="오늘의 빌보드 차트에요!", color=color_code)
+        embed=discord.Embed(title=get_lan(ctx.author.id, "chart_billboard_chart"), color=color_code)
         for i in range(0, 10):
-            embed.add_field(name=str(i+1) + "위", value = f"{song[i]} - {title[i]}", inline=False)
+            embed.add_field(name=str(i+1) + ".", value = f"{song[i]} - {title[i]}", inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
 

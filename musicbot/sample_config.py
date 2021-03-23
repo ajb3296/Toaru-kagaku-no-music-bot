@@ -11,7 +11,9 @@ class Config(object):
                 'other',
                 'ping',
                 'about',
-                'music']
+                'music',
+                'set_language',
+                'chart']
 
     OWNERS = [123456789] # 관리자의 아이디
     commandInt = "" # 명령인자

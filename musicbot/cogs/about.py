@@ -1,5 +1,7 @@
 import discord
 from discord.ext import commands
+
+from musicbot.utils.language import get_lan
 from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code, AboutBot
 
 class About (commands.Cog) :
@@ -16,10 +18,10 @@ class About (commands.Cog) :
                     player_server_count+=1
             except Exception:
                 pass
-        embed=discord.Embed(title="**봇에 대한 정보**", description=f"{AboutBot}\n\n이 봇의 출처는 [이곳](<https://github.com/NewPremium/Toaru-kagaku-no-music-bot>) 입니다.\n또한 [GPL v3.0](<https://www.gnu.org/licenses/gpl-3.0.html>) 이 적용되어 있습니다.", color=color_code)
-        embed.add_field(name="서버 수", value=len(self.bot.guilds), inline=True)
-        embed.add_field(name="유저 수", value=len(self.bot.users), inline=True)
-        embed.add_field(name="음악 재생 서버 수", value=player_server_count, inline=True)
+        embed=discord.Embed(title=get_lan(ctx.author.id, "about_bot_info"), description=AboutBot, color=color_code)
+        embed.add_field(name=get_lan(ctx.author.id, "about_guild_count"), value=len(self.bot.guilds), inline=True)
+        embed.add_field(name=get_lan(ctx.author.id, "about_members_count"), value=len(self.bot.users), inline=True)
+        embed.add_field(name=get_lan(ctx.author.id, "about_number_of_music_playback_servers"), value=player_server_count, inline=True)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
 

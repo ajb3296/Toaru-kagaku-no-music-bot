@@ -1,14 +1,18 @@
 import discord
+import lavalink
 import subprocess
 import ast
 import math
+import asyncio
 from discord.ext import commands
-from musicbot.utils.misc import footer
-from musicbot import LOGGER, OWNERS, color_code, BOT_NAME,BOT_NAME_TAG_VER, EXTENSIONS
 import platform
 import psutil
-import lavalink
 from EZPaginator import Paginator
+
+from musicbot.utils.misc import footer
+from musicbot.utils.language import get_lan
+from musicbot import LOGGER, OWNERS, color_code, BOT_NAME,BOT_NAME_TAG_VER, EXTENSIONS
+
 
 def insert_returns(body):
     if isinstance(body[-1], ast.Expr):
@@ -41,8 +45,8 @@ class Owners (commands.Cog) :
             self.bot.load_extension("musicbot.cogs." + module)
             LOGGER.info(f"로드 성공!\n모듈 : {module}")
             embed = discord.Embed (
-                title = '로드 성공!',
-                description = f'모듈 : {module}',
+                title = get_lan(ctx.author.id, "owners_load_success"),
+                description = get_lan(ctx.author.id, "owners_module").format(module=module),
                 color = self.color
             )
             if f"*~~{module}~~*" in EXTENSIONS:
@@ -52,8 +56,8 @@ class Owners (commands.Cog) :
         except Exception as error :
             LOGGER.error(f"로드 실패!\n에러 : {error}")
             embed = discord.Embed (
-                title = '로드 실패!',
-                description = f'에러 : {error}',
+                title = get_lan(ctx.author.id, "owners_load_fail"),
+                description = get_lan(ctx.author.id, "owners_error").format(error=error),
                 color = self.error_color
             )
         footer(embed)
@@ -63,18 +67,17 @@ class Owners (commands.Cog) :
     @is_owner()
     async def loadre (self, ctx, module) :
         try :
-            self.bot.unload_extension("musicbot.cogs." + module)
-            self.bot.load_extension("musicbot.cogs." + module)
+            self.bot.reload_extension("musicbot.cogs." + module)
             LOGGER.info(f"리로드 성공!\n모듈 : {module}")
             embed = discord.Embed (
-                title = '리로드 성공!',
-                description = f'모듈 : {module}',
+                title = get_lan(ctx.author.id, "owners_reload_success"),
+                description = get_lan(ctx.author.id, "owners_module").format(module=module),
                 color = self.color
             )
         except Exception as error :
             LOGGER.error(f"리로드 실패!\n에러 : {error}")
             embed = discord.Embed (
-                title = '리로드 실패!',
+                title = get_lan(ctx.author.id, "owners_reload_fail"),
                 description = f'에러 : {error}',
                 color = self.error_color
             )
@@ -90,8 +93,8 @@ class Owners (commands.Cog) :
             self.bot.unload_extension("musicbot.cogs." + module)
             LOGGER.info(f"언로드 성공!\n모듈 : {module}")
             embed = discord.Embed (
-                title = '언로드 성공!',
-                description = f'모듈 : {module}',
+                title = get_lan(ctx.author.id, "owners_unload_success"),
+                description = get_lan(ctx.author.id, "owners_module").format(module=module),
                 color = self.color
             )
             if module in EXTENSIONS:
@@ -99,27 +102,28 @@ class Owners (commands.Cog) :
         except Exception as error :
             LOGGER.error(f"언로드 실패!\n에러 : {error}")
             embed = discord.Embed (
-                title = '언로드 실패!',
+                title = get_lan(ctx.author.id, "owners_unload_fail"),
                 description = f'에러 : {error}',
                 color = self.error_color
             )
         footer(embed)
         await ctx.send (embed = embed)
 
-    @commands.command ()
+    @commands.command (name = '서버목록', aliases = ['serverlist'])
     @is_owner()
-    async def 서버목록(self, ctx) :
+    async def 서버목록(self, ctx, arg : int = None) :
         # 페이지 지정값이 없고, 총 서버수가 10 이하일 경우
         if len(self.bot.guilds) <= 10:
-            embed = discord.Embed(title = f"{BOT_NAME} (이)가 들어가 있는 서버목록", description=f"**{len(self.bot.guilds)}개**의 서버, **{len(self.bot.users)}명**의 유저", color = self.color)
+            embed = discord.Embed(title = get_lan(ctx.author.id, "owners_server_list_title").format(BOT_NAME=self.bot.user.name), description=get_lan(ctx.author.id, "owners_server_list_description").format(server_count=len(self.bot.guilds), members_count=len(self.bot.users)), color=color_code)
             srvr = str()
             for i in self.bot.guilds:
-                srvr = srvr + f"**{i}** - **{i.member_count}명**\n"
+                srvr = srvr + get_lan(ctx.author.id, "owners_server_list_info").format(server_name=i, server_members_count=i.member_count)
             embed.add_field(name="​", value=srvr, inline=False)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.send(embed = embed)
 
         # 서버수가 10개 이상일 경우
+
         # 총 페이지수 계산
         botguild = self.bot.guilds
         allpage = math.ceil(len(botguild) / 10)
@@ -132,11 +136,11 @@ class Owners (commands.Cog) :
             numa = numb - 10
             for a in range(numa, numb):
                 try:
-                    srvr = srvr + f"**{botguild[a]}** - **{botguild[a].member_count}명**\n"
-                except IndexError:
+                    srvr = srvr + get_lan(ctx.author.id, "owners_server_list_info").format(server_name=botguild[a], server_members_count=botguild[a].member_count)
+                except:
                     break
-            embed1 = discord.Embed(title=f"{BOT_NAME} (이)가 들어가 있는 서버목록", description=f"**{len(botguild)}개**의 서버, **{len(self.bot.users)}명**의 유저\n\n{srvr}", color = self.color)
-            embed1.set_footer(text=f"페이지 {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
+            embed1 = discord.Embed(title = get_lan(ctx.author.id, "owners_server_list_title").format(BOT_NAME=self.bot.user.name), description=get_lan(ctx.author.id, "owners_server_list_description2").format(server_count=len(self.bot.guilds), members_count=len(self.bot.users), servers=srvr), color=color_code)
+            embed1.set_footer(text=f"{get_lan(ctx.author.id, 'owners_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
             if not chack:
                 msg = await ctx.send(embed=embed1)
                 chack = True
@@ -152,39 +156,40 @@ class Owners (commands.Cog) :
         for m in EXTENSIONS:
             if not m[0:3] == "*~~":
                 modulenum += 1
-        modulenum = f"{modulenum}개의 모듈들이 로드되어 있습니다."
+        modulenum = get_lan(ctx.author.id, 'owners_loaded_modules_len').format(modulenum=modulenum)
         e1 = "\n".join(EXTENSIONS)
-        embed=discord.Embed(title="**모듈 리스트**", color=color_code)
+        embed=discord.Embed(title=get_lan(ctx.author.id, 'owners_modules_list'), color=color_code)
         embed.add_field(name=modulenum, value=e1, inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
-
+        
     @commands.command()
     @is_owner()
     async def shell(self, ctx, *arg) :
         try :
             cmd = " ".join(arg[:])
             res = subprocess.check_output(cmd, shell=True, encoding='utf-8')
-            embed=discord.Embed(title="**명령어 전달 성공!**", description = "명령어를 성공적으로 서버로 전달했어요.", color=self.color)
+            embed=discord.Embed(title=get_lan(ctx.author.id, 'owners_shell'), description = get_lan(ctx.author.id, 'owners_shell_description'), color=self.color)
             embed.add_field (name ="Input", value = f'```{cmd}```', inline=False)
             embed.add_field(name="Output", value=f"```{res}```", inline=False)
             footer(embed)
             await ctx.send(embed=embed)
 
-        except (discord.errors.HTTPException):
+        except (discord.errors.HTTPException) :
             cmd = " ".join(arg[:])
             res = subprocess.check_output(cmd, shell=True, encoding='utf-8')
             await ctx.send(f"```{res}```")
-
-        except (subprocess.CalledProcessError):
-            embed=discord.Embed(title="**커맨드 오류!**", description="커맨드 명령어 처리 도중 에러가 발생했어요.", color=self.color)
+         
+        except (subprocess.CalledProcessError) :
+            embed=discord.Embed(title=get_lan(ctx.author.id, 'owners_shell_error'), description=get_lan(ctx.author.id, 'owners_shell_error_description'), color=self.color)
             footer(embed)
             await ctx.send(embed=embed)
-
+            
     @commands.command (name = 'serverinfo', aliases = ['서버현황', '서버상태', '서버'])
     @is_owner()
     async def serverinfo(self, ctx) :
-        embed=discord.Embed(title="**봇 서버 현황**", color=color_code)
+
+        embed=discord.Embed(title=get_lan(ctx.author.id, 'owners_server_info'), color=color_code)
         embed.add_field(name="Platform", value=platform.platform(), inline=False)
         embed.add_field(name="Kernel", value=platform.version(), inline=False)
         embed.add_field(name="Architecture", value=platform.machine(), inline=False)
@@ -201,7 +206,7 @@ class Owners (commands.Cog) :
     @commands.command (name = 'broadcast', aliases = ['브로드캐스트', '방송', '공지'])
     @is_owner()
     async def broadcast(self, ctx, *, arg):
-        embed = discord.Embed(title="공지", description=str(arg), color=color_code)
+        embed = discord.Embed(title=get_lan(ctx.author.id, 'owners_broadcast'), description=str(arg), color=color_code)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         for i in self.bot.guilds:
             ch = self.bot.get_guild(int(i.id)).channels
@@ -209,13 +214,13 @@ class Owners (commands.Cog) :
                 try:
                     target_channel = self.bot.get_channel(a.id)
                     await target_channel.send(embed=embed)
-
-                except Exception:
+                
+                except:
                     pass
                 else:
                     LOGGER.info(f"{a} ({a.id}) 서버에 공지 전송 완료!")
                     break
-        embed = discord.Embed(title="공지발송 완료!", description=f"공지 내용 :\n```{str(arg)}```", color=color_code)
+        embed = discord.Embed(title=get_lan(ctx.author.id, 'owners_broadcast_finish'), description=get_lan(ctx.author.id, 'owners_broadcast_info').format(broadcast_info=arg), color=color_code)
         footer(embed)
         return await ctx.send(embed=embed)
 
