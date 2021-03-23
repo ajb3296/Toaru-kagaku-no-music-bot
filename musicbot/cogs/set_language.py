@@ -16,7 +16,7 @@ class Language (commands.Cog) :
             files = ""
             for file in os.listdir("musicbot/languages"):
                 if file.endswith(".json"):
-                    files = files + file.replace(".json", "")
+                    files = files + file.replace(".json", "") + "\n"
 
             embed=discord.Embed(title="Please select one of the following language packs", description=files, color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)

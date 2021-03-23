@@ -100,7 +100,6 @@ class Help (commands.Cog) :
                 embed.add_field(name=get_lan(ctx.author.id, "help_dev_command").format(commandInt=commandInt), value=get_lan(ctx.author.id, "help_dev_command_info"), inline=False)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.send(embed=embed)
-            
 
 def setup (bot) :
     bot.add_cog (Help (bot))

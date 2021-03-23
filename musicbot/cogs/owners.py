@@ -3,7 +3,6 @@ import lavalink
 import subprocess
 import ast
 import math
-import asyncio
 from discord.ext import commands
 import platform
 import psutil
@@ -11,7 +10,7 @@ from EZPaginator import Paginator
 
 from musicbot.utils.misc import footer
 from musicbot.utils.language import get_lan
-from musicbot import LOGGER, OWNERS, color_code, BOT_NAME,BOT_NAME_TAG_VER, EXTENSIONS
+from musicbot import LOGGER, OWNERS, color_code, BOT_NAME_TAG_VER, EXTENSIONS
 
 
 def insert_returns(body):
@@ -162,7 +161,7 @@ class Owners (commands.Cog) :
         embed.add_field(name=modulenum, value=e1, inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
-        
+
     @commands.command()
     @is_owner()
     async def shell(self, ctx, *arg) :

@@ -1,17 +1,11 @@
 import discord
 import lavalink
-import asyncio
 from discord.ext import commands
-from bs4 import BeautifulSoup
-import random
 import platform
-import psutil
-from musicbot.utils.misc import footer
 import subprocess
 
 from musicbot.utils.language import get_lan
-from musicbot.utils.crawler import getReqTEXT
-from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code, BOT_NAME
+from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code
 
 class Other (commands.Cog) :
     def __init__ (self, bot) :
