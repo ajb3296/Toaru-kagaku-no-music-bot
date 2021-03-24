@@ -520,7 +520,7 @@ class Music(commands.Cog):
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_pause").format(volicon=volicon, volume=player.volume), description='', color=self.normal_color)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.send(embed=embed)
-        elif volume > 1000 or volume < 1:
+        if volume > 1000 or volume < 1:
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_input_over_vol"), description=get_lan(ctx.author.id, "music_default_vol"), color=self.normal_color)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.send(embed=embed)

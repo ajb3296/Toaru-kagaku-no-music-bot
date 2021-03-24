@@ -17,7 +17,7 @@ def get_lan(id, text):
             language = temp[1]
             if not os.path.exists(f"musicbot/languages/{language}.json"):
                 language = default_language
-
+        conn.close()
         # read language file
         with open(f"musicbot/languages/{language}.json") as f:
             language_data = json.load(f)

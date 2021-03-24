@@ -178,12 +178,12 @@ class Owners (commands.Cog) :
             cmd = " ".join(arg[:])
             res = subprocess.check_output(cmd, shell=True, encoding='utf-8')
             await ctx.send(f"```{res}```")
-         
+
         except (subprocess.CalledProcessError) :
             embed=discord.Embed(title=get_lan(ctx.author.id, 'owners_shell_error'), description=get_lan(ctx.author.id, 'owners_shell_error_description'), color=self.color)
             footer(embed)
             await ctx.send(embed=embed)
-            
+
     @commands.command (name = 'serverinfo', aliases = ['서버현황', '서버상태', '서버'])
     @is_owner()
     async def serverinfo(self, ctx) :

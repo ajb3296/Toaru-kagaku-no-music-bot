@@ -174,5 +174,9 @@
     "owners_server_info": "**봇 서버 현황**",
     "owners_broadcast": "공지",
     "owners_broadcast_finish": "공지발송 완료!",
-    "owners_broadcast_info": "공지 내용 :\n```{broadcast_info}```"
+    "owners_broadcast_info": "공지 내용 :\n```{broadcast_info}```",
+
+    "set_language_pack_list": "아래 언어팩 중 하나를 선택해 주세요",
+    "set_language_pack_not_exist": "해당 언어팩은 존재하지 않아요!",
+    "set_language_complete": "언어팩 설정 완료!"
 }

@@ -10,7 +10,7 @@ from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code
 class Other (commands.Cog) :
     def __init__ (self, bot) :
         self.bot = bot
-    
+
     @commands.command (name = '초대', aliases = ['invite', 'ㅊㄷ'])
     async def invite(self, ctx):
         link = 'https://discord.com/oauth2/authorize?client_id=%s&permissions=3165184&scope=bot' %self.bot.user.id

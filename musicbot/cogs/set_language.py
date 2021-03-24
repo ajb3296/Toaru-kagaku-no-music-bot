@@ -3,6 +3,7 @@ import sqlite3
 import discord
 from discord.ext import commands
 
+from musicbot.utils.language import get_lan
 from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code
 
 class Language (commands.Cog) :
@@ -18,12 +19,12 @@ class Language (commands.Cog) :
                 if file.endswith(".json"):
                     files = files + file.replace(".json", "") + "\n"
 
-            embed=discord.Embed(title="Please select one of the following language packs", description=files, color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "set_language_pack_list"), description=files, color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.send(embed=embed)
 
         if not os.path.exists(f"musicbot/languages/{lang}.json"):
-            embed=discord.Embed(title="The language file does not exist!", color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "set_language_pack_not_exist"), color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.send(embed=embed)
 
@@ -36,11 +37,13 @@ class Language (commands.Cog) :
         if a is None:
             # add user data
             c.execute(f"INSERT INTO userdata VALUES({ctx.author.id}, '{lang}')")
+            embed=discord.Embed(title=get_lan(ctx.author.id, "set_language_complete"), description=f"{lang}", color=color_code)
         else:
             # modify user data
             c.execute("UPDATE userdata SET language=:language WHERE id=:id", {"language": lang, 'id': ctx.author.id})
+            embed=discord.Embed(title=get_lan(ctx.author.id, "set_language_complete"), description=f"{a[1]} --> {lang}", color=color_code)
+        conn.close()
 
-        embed=discord.Embed(title="Language setting complete!", description=f"{a[1]} --> {lang}", color=color_code)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
 
