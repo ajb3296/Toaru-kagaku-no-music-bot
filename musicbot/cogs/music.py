@@ -490,7 +490,7 @@ class Music(commands.Cog):
         for index, track in enumerate(player.queue[start:end], start=start):
             queue_list += f'`{index + 1}.` [**{track.title}**]({track.uri})\n'
         embed = discord.Embed(colour=self.normal_color,
-                              description=get_lan(ctx.author.id, "music_no_music_in_the_playlist").format(lenQ=len(player.queue), queue_list=queue_list))
+                              description=get_lan(ctx.author.id, "music_q").format(lenQ=len(player.queue), queue_list=queue_list))
         embed.set_footer(text=f'{get_lan(ctx.author.id, "music_page")} {page}/{pages}\n{BOT_NAME_TAG_VER}')
         await ctx.send(embed=embed)
 
