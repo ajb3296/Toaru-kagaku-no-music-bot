@@ -100,6 +100,10 @@ class Music(commands.Cog):
         if query is None and ctx.message.reference is not None:
             query = await self.bot.get_channel(ctx.message.reference.channel_id).fetch_message(ctx.message.reference.message_id)
             query = query.content
+        if query is None:
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_play_enter_music_name"), description='', color=self.normal_color)
+            embed.set_footer(text=BOT_NAME_TAG_VER)
+            return await ctx.send(embed=embed)
 
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         query = query.strip('<>')

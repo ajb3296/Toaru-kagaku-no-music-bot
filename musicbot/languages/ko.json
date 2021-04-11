@@ -101,6 +101,7 @@
     "music_can_not_find_anything": "아무것도 찾지 못했어요!",
     "music_play_playlist": ":arrow_forward: | 플레이리스트 재생!",
     "music_play_music": ":arrow_forward: | 음악 재생!",
+    "music_play_enter_music_name": "음악 제목이나 링크를 입력해 주세요!",
     "music_len_list": "리스트 개수",
     "music_list_playlist_len": "재생목록이 총 {files_len}개 있습니다.",
     "music_list_finding": "리스트 찾는 중...",

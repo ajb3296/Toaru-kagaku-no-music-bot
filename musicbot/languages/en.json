@@ -101,6 +101,7 @@
     "music_can_not_find_anything": "I didn't find anything!",
     "music_play_playlist": ":arrow_forward: | Playlist play!",
     "music_play_music": ":arrow_forward: | Music play!",
+    "music_play_enter_music_name": "Please enter a music title or link!",
     "music_len_list": "List count",
     "music_list_playlist_len": "There are a total of {files_len} playlists.",
     "music_list_finding": "Finding list...",
