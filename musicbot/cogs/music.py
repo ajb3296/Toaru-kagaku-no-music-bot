@@ -516,7 +516,7 @@ class Music(commands.Cog):
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         if volume is None:
             volicon = await volumeicon(player.volume)
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_pause").format(volicon=volicon, volume=player.volume), description='', color=self.normal_color)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_now_vol").format(volicon=volicon, volume=player.volume), description='', color=self.normal_color)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.send(embed=embed)
         if volume > 1000 or volume < 1:
@@ -525,7 +525,7 @@ class Music(commands.Cog):
             return await ctx.send(embed=embed)
         await player.set_volume(volume)
         volicon = await volumeicon(player.volume)
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_set_vol").format(volume=player.volume), description='', color=self.normal_color)
+        embed=discord.Embed(title=get_lan(ctx.author.id, "music_set_vol").format(volicon=volicon, volume=player.volume), description='', color=self.normal_color)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
 
