@@ -5,6 +5,8 @@
 <a href="https://www.codefactor.io/repository/github/ajb3296/toaru-kagaku-no-music-bot"><img src="https://www.codefactor.io/repository/github/ajb3296/toaru-kagaku-no-music-bot/badge" alt="CodeFactor" /></a>
 <a href="https://www.codacy.com/gh/ajb3296/Toaru-kagaku-no-music-bot/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ajb3296/Toaru-kagaku-no-music-bot&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/a077da0e48aa4adbad939e0e43042e60"/></a>
 
+[English README](https://github.com/ajb3296/Toaru-kagaku-no-music-bot/blob/main/README.en.md)
+
 ## Heroku Deploy
 
 <img src="https://github.com/ajb3296/Toaru-kagaku-no-music-bot/blob/main/image/sorry_lavalink.py_dev.jpg?raw=true" width="300"></img>
