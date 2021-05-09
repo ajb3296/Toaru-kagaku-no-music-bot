@@ -77,12 +77,12 @@ class Help (commands.Cog) :
             if ctx.author.id in OWNERS:
                 embed=discord.Embed(title=get_lan(ctx.author.id, "help_dev"), description=get_lan(ctx.author.id, "help_dev_description"), color=color_code)
                 embed.add_field(name=get_lan(ctx.author.id, "help_dev_serverlist_command").format(commandInt=commandInt),   value=get_lan(ctx.author.id, "help_dev_serverlist_info"), inline=False)
-                embed.add_field(name=get_lan(ctx.author.id, "help_dev_modules_command").format(commandInt=commandInt),      value=get_lan(ctx.author.id, "help_dev_modules_command"), inline=False)
-                embed.add_field(name=get_lan(ctx.author.id, "help_dev_load_command").format(commandInt=commandInt),         value=get_lan(ctx.author.id, "help_dev_load_command"), inline=False)
-                embed.add_field(name=get_lan(ctx.author.id, "help_dev_unload_command").format(commandInt=commandInt),       value=get_lan(ctx.author.id, "help_dev_unload_command"), inline=False)
-                embed.add_field(name=get_lan(ctx.author.id, "help_dev_reload_command").format(commandInt=commandInt),       value=get_lan(ctx.author.id, "help_dev_reload_command"), inline=False)
-                embed.add_field(name=get_lan(ctx.author.id, "help_dev_serverinfo_command").format(commandInt=commandInt),   value=get_lan(ctx.author.id, "help_dev_serverinfo_command"), inline=False)
-                embed.add_field(name=get_lan(ctx.author.id, "help_dev_broadcast_command").format(commandInt=commandInt),    value=get_lan(ctx.author.id, "help_dev_broadcast_command"), inline=False)
+                embed.add_field(name=get_lan(ctx.author.id, "help_dev_modules_command").format(commandInt=commandInt),      value=get_lan(ctx.author.id, "help_dev_modules_info"), inline=False)
+                embed.add_field(name=get_lan(ctx.author.id, "help_dev_load_command").format(commandInt=commandInt),         value=get_lan(ctx.author.id, "help_dev_load_info"), inline=False)
+                embed.add_field(name=get_lan(ctx.author.id, "help_dev_unload_command").format(commandInt=commandInt),       value=get_lan(ctx.author.id, "help_dev_unload_info"), inline=False)
+                embed.add_field(name=get_lan(ctx.author.id, "help_dev_reload_command").format(commandInt=commandInt),       value=get_lan(ctx.author.id, "help_dev_reload_info"), inline=False)
+                embed.add_field(name=get_lan(ctx.author.id, "help_dev_serverinfo_command").format(commandInt=commandInt),   value=get_lan(ctx.author.id, "help_dev_serverinfo_info"), inline=False)
+                embed.add_field(name=get_lan(ctx.author.id, "help_dev_broadcast_command").format(commandInt=commandInt),    value=get_lan(ctx.author.id, "help_dev_broadcast_info"), inline=False)
                 embed.set_footer(text=BOT_NAME_TAG_VER)
                 await ctx.send(embed=embed)
 
@@ -100,6 +100,7 @@ class Help (commands.Cog) :
                 embed.add_field(name=get_lan(ctx.author.id, "help_dev_command").format(commandInt=commandInt), value=get_lan(ctx.author.id, "help_dev_command_info"), inline=False)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.send(embed=embed)
+            
 
 def setup (bot) :
     bot.add_cog (Help (bot))
