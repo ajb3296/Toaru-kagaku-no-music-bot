@@ -27,6 +27,7 @@ class Help (commands.Cog) :
             if "chart" in EXTENSIONS:
                 embed.add_field(name=get_lan(ctx.author.id, "help_general_melon_command").format(commandInt=commandInt),      value=get_lan(ctx.author.id, "help_general_melon_info"), inline=True)
                 embed.add_field(name=get_lan(ctx.author.id, "help_general_billboard_command").format(commandInt=commandInt),  value=get_lan(ctx.author.id, "help_general_billboard_info"), inline=True)
+                embed.add_field(name=get_lan(ctx.author.id, "help_general_billboardjp_command").format(commandInt=commandInt),  value=get_lan(ctx.author.id, "help_general_billboardjp_info"), inline=True)
 
             if "ping" in EXTENSIONS:
                 embed.add_field(name=get_lan(ctx.author.id, "help_general_ping_command").format(commandInt=commandInt),       value=get_lan(ctx.author.id, "help_general_ping_info"), inline=True)
@@ -68,6 +69,7 @@ class Help (commands.Cog) :
                 embed=discord.Embed(title=get_lan(ctx.author.id, "help_play_chart"), description='', color=color_code)
                 embed.add_field(name=get_lan(ctx.author.id, "help_play_chart_melonplay_command").format(commandInt=commandInt),      value=get_lan(ctx.author.id, "help_play_chart_melonplay_info").format(commandInt=commandInt), inline=False)
                 embed.add_field(name=get_lan(ctx.author.id, "help_play_chart_billboardplay_command").format(commandInt=commandInt),  value=get_lan(ctx.author.id, "help_play_chart_billboardplay_info").format(commandInt=commandInt), inline=False)
+                embed.add_field(name=get_lan(ctx.author.id, "help_play_chart_billboardjpplay_command").format(commandInt=commandInt),  value=get_lan(ctx.author.id, "help_play_chart_billboardjpplay_info").format(commandInt=commandInt), inline=False)
                 embed.add_field(name=get_lan(ctx.author.id, "help_play_chart_listpage_command").format(commandInt=commandInt),       value=get_lan(ctx.author.id, "help_play_chart_listpage_info").format(commandInt=commandInt), inline=False)
                 embed.add_field(name=get_lan(ctx.author.id, "help_play_chart_listplay_command").format(commandInt=commandInt),       value=get_lan(ctx.author.id, "help_play_chart_listplay_info").format(commandInt=commandInt), inline=False)
                 embed.set_footer(text=BOT_NAME_TAG_VER)

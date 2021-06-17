@@ -11,6 +11,7 @@ class Chart (commands.Cog) :
         self.bot = bot
         self.melon_url = 'https://www.melon.com/chart/index.htm'
         self.billboard_url = 'https://www.billboard.com/charts/hot-100'
+        self.billboardjp_url = 'https://www.billboard-japan.com/charts/detail?a=hot100'
         self.header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko'}
 
     @commands.command(name = '멜론', aliases = ['멜론차트', 'melonchart'])
@@ -45,6 +46,25 @@ class Chart (commands.Cog) :
             title.append(t.get_text())
         for s in songs:
             song.append(s.get_text())
+        embed=discord.Embed(title=get_lan(ctx.author.id, "chart_billboard_chart"), color=color_code)
+        for i in range(0, 10):
+            embed.add_field(name=str(i+1) + ".", value = f"{song[i]} - {title[i]}", inline=False)
+        embed.set_footer(text=BOT_NAME_TAG_VER)
+        await ctx.send(embed=embed)
+
+    @commands.command(name = '빌보드재팬', aliases = ['빌보드재팬차트', 'billboardjpchart'])
+    async def billboardjp(self, ctx) :
+        data = await getReqTEXT (self.billboardjp_url, self.header)
+        parse = BeautifulSoup(data, 'lxml').find("tbody").find_all("div", {"class" : "name_detail"})
+        title = []
+        song = []
+        for p in parse:
+            title.append(p.find("p", {"class" : "musuc_title"}).get_text())
+            try:
+                artisttry = p.find("p", {"class" : "artist_name"}).find("a").get_text()
+            except:
+                artisttry = p.find("p", {"class" : "artist_name"}).get_text()
+            song.append(artisttry)
         embed=discord.Embed(title=get_lan(ctx.author.id, "chart_billboard_chart"), color=color_code)
         for i in range(0, 10):
             embed.add_field(name=str(i+1) + ".", value = f"{song[i]} - {title[i]}", inline=False)

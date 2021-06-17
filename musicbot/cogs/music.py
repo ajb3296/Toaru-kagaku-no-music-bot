@@ -30,6 +30,7 @@ class Music(commands.Cog):
         self.normal_color = color_code
         self.melon_url = 'https://www.melon.com/chart/index.htm'
         self.billboard_url = 'https://www.billboard.com/charts/hot-100'
+        self.billboardjp_url = 'https://www.billboard-japan.com/charts/detail?a=hot100'
         self.header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko'}
         if not hasattr(bot, 'lavalink'):  # This ensures the client isn't overwritten during cog reloads.
             bot.lavalink = lavalink.Client(self._)
@@ -60,7 +61,7 @@ class Music(commands.Cog):
                         await self.connect_to(voice_channel.guild.id, None)
                         LOGGER.info(f"{voice_channel} 음성채널에 봇만 남았으므로 자동 연결해제")
         except Exception as a:
-            print(a)
+            pass
 
     async def cog_before_invoke(self, ctx):
         guild_check = ctx.guild is not None
@@ -366,12 +367,12 @@ class Music(commands.Cog):
         # 음악명
         titles = parse.find_all("span", {"class" : "chart-element__information__song text--truncate color--primary"})
         # 아티스트
-        songs = parse.find_all("span", {"class" : "chart-element__information__artist text--truncate color--secondary"})
+        artists = parse.find_all("span", {"class" : "chart-element__information__artist text--truncate color--secondary"})
         title = []
         song = []
         for t in titles:
             title.append(t.get_text())
-        for s in songs:
+        for s in artists:
             song.append(s.get_text())
         trackcount = 0
         passmusic = get_lan(ctx.author.id, "music_none")
@@ -418,6 +419,82 @@ class Music(commands.Cog):
             player.add(requester=ctx.author.id, track=track)
 
         embed=discord.Embed(title=get_lan(ctx.author.id, "music_billboard_chart_play"), description='', color=self.normal_color)
+        embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
+        embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
+        embed.set_footer(text=BOT_NAME_TAG_VER)
+        await melonplaymsg.edit(embed=embed)
+        if not player.is_playing:
+            await player.play()
+    
+    @commands.command(aliases=['빌보드재팬재생', '빌보드차트재팬재생', '빌보드재팬음악', 'ㅂㅈㅈ', 'qww'])
+    async def billboardjpplay(self, ctx, arg:int = None):
+        if arg is None or arg > 10 or arg < 1:
+            arg = 10
+        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+
+        embed=discord.Embed(title=get_lan(ctx.author.id, "misic_parsing_billboardjp"), color=self.normal_color)
+        melonplaymsg = await ctx.send(embed=embed)
+
+        data = await getReqTEXT (self.billboardjp_url, self.header)
+        parse = BeautifulSoup(data, 'lxml').find("tbody").find_all("div", {"class" : "name_detail"})
+        print(parse)
+        # 음악명
+        # 아티스트
+        title = []
+        song = []
+        for p in parse:
+            title.append(p.find("p", {"class" : "musuc_title"}).get_text())
+            try:
+                artisttry = p.find("p", {"class" : "artist_name"}).find("a").get_text()
+            except:
+                artisttry = p.find("p", {"class" : "artist_name"}).get_text()
+            song.append(artisttry)
+        trackcount = 0
+        passmusic = get_lan(ctx.author.id, "music_none")
+        playmusic = get_lan(ctx.author.id, "music_none")
+        loading_dot_count = 0
+        for i in range(0, arg) :
+            # ... 개수 변경
+            loading_dot = ""
+            loading_dot_count += 1
+            if loading_dot_count == 4:
+                loading_dot_count = 1
+            for a in range(0, loading_dot_count):
+                loading_dot = loading_dot + "."
+            musicname = str(f'{song[i]} {title[i]}')
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_adding_music").format(loading_dot=loading_dot), description=musicname, color=self.normal_color)
+            await melonplaymsg.edit(embed=embed)
+            query = musicname.strip('<>')
+            if not url_rx.match(query):
+                query = f'ytsearch:{query}'
+
+            nofind = 0
+            while True:
+                results = await player.node.get_tracks(query)
+                if results['loadType'] == 'PLAYLIST_LOADED' or not results or not results['tracks']:
+                    if nofind < 3:
+                        nofind += 1
+                    elif nofind == 3:
+                        if passmusic == get_lan(ctx.author.id, "music_none"):
+                            passmusic = musicname
+                        else:
+                            passmusic = "%s\n%s" %(passmusic, musicname)
+                else:
+                    break
+
+            track = results['tracks'][0]
+            if playmusic == get_lan(ctx.author.id, "music_none"):
+                playmusic = musicname
+            else:
+                playmusic = "%s\n%s" %(playmusic, musicname)
+            if trackcount != 1:
+                info = track['info']
+                trackcount = 1
+            track = lavalink.models.AudioTrack(track, ctx.author.id, recommended=True)
+            player.add(requester=ctx.author.id, track=track)
+
+        embed=discord.Embed(title=get_lan(ctx.author.id, "music_billboardjp_chart_play"), description='', color=self.normal_color)
         embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
         embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
         embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
@@ -627,7 +704,7 @@ class Music(commands.Cog):
 
     async def ensure_voice(self, ctx):
         player = self.bot.lavalink.player_manager.create(ctx.guild.id, endpoint=str(ctx.guild.region))
-        should_connect = ctx.command.name in ('play', 'melonplay', 'billboardplay', 'connect', 'find', 'list')
+        should_connect = ctx.command.name in ('play', 'melonplay', 'billboardplay', 'billboardjpplay', 'connect', 'find', 'list')
 
         if not ctx.author.voice or not ctx.author.voice.channel:
             raise commands.CommandInvokeError(get_lan(ctx.author.id, "music_come_in_voice_channel"))
