@@ -24,11 +24,6 @@ class Help (commands.Cog) :
                 embed.add_field(name=get_lan(ctx.author.id, "help_general_softver_command").format(commandInt=commandInt),    value=get_lan(ctx.author.id, "help_general_softver_info"), inline=True)
                 embed.add_field(name=get_lan(ctx.author.id, "help_general_uptime_command").format(commandInt=commandInt),     value=get_lan(ctx.author.id, "help_general_uptime_info"), inline=True)
 
-            if "chart" in EXTENSIONS:
-                embed.add_field(name=get_lan(ctx.author.id, "help_general_melon_command").format(commandInt=commandInt),      value=get_lan(ctx.author.id, "help_general_melon_info"), inline=True)
-                embed.add_field(name=get_lan(ctx.author.id, "help_general_billboard_command").format(commandInt=commandInt),  value=get_lan(ctx.author.id, "help_general_billboard_info"), inline=True)
-                embed.add_field(name=get_lan(ctx.author.id, "help_general_billboardjp_command").format(commandInt=commandInt),  value=get_lan(ctx.author.id, "help_general_billboardjp_info"), inline=True)
-
             if "ping" in EXTENSIONS:
                 embed.add_field(name=get_lan(ctx.author.id, "help_general_ping_command").format(commandInt=commandInt),       value=get_lan(ctx.author.id, "help_general_ping_info"), inline=True)
 
@@ -65,8 +60,13 @@ class Help (commands.Cog) :
                 await ctx.send(embed=embed)
 
         elif arg == "CHART" or arg == "차트재생" or arg == "차트":
+            embed=discord.Embed(title=get_lan(ctx.author.id, "help_play_chart"), description='', color=color_code)
+            if "chart" in EXTENSIONS:
+                embed.add_field(name=get_lan(ctx.author.id, "help_general_melon_command").format(commandInt=commandInt),      value=get_lan(ctx.author.id, "help_general_melon_info"), inline=False)
+                embed.add_field(name=get_lan(ctx.author.id, "help_general_billboard_command").format(commandInt=commandInt),  value=get_lan(ctx.author.id, "help_general_billboard_info"), inline=False)
+                embed.add_field(name=get_lan(ctx.author.id, "help_general_billboardjp_command").format(commandInt=commandInt),  value=get_lan(ctx.author.id, "help_general_billboardjp_info"), inline=False)
+
             if "music" in EXTENSIONS:
-                embed=discord.Embed(title=get_lan(ctx.author.id, "help_play_chart"), description='', color=color_code)
                 embed.add_field(name=get_lan(ctx.author.id, "help_play_chart_melonplay_command").format(commandInt=commandInt),      value=get_lan(ctx.author.id, "help_play_chart_melonplay_info").format(commandInt=commandInt), inline=False)
                 embed.add_field(name=get_lan(ctx.author.id, "help_play_chart_billboardplay_command").format(commandInt=commandInt),  value=get_lan(ctx.author.id, "help_play_chart_billboardplay_info").format(commandInt=commandInt), inline=False)
                 embed.add_field(name=get_lan(ctx.author.id, "help_play_chart_billboardjpplay_command").format(commandInt=commandInt),  value=get_lan(ctx.author.id, "help_play_chart_billboardjpplay_info").format(commandInt=commandInt), inline=False)
