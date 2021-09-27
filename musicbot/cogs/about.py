@@ -20,7 +20,6 @@ class About (commands.Cog) :
                 pass
         embed=discord.Embed(title=get_lan(ctx.author.id, "about_bot_info"), description=AboutBot, color=color_code)
         embed.add_field(name=get_lan(ctx.author.id, "about_guild_count"), value=len(self.bot.guilds), inline=True)
-        embed.add_field(name=get_lan(ctx.author.id, "about_members_count"), value=len(self.bot.users), inline=True)
         embed.add_field(name=get_lan(ctx.author.id, "about_number_of_music_playback_servers"), value=player_server_count, inline=True)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)

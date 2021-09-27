@@ -25,12 +25,6 @@ async def status_task():
                 afk = False
             )
             await asyncio.sleep(10)
-            await bot.change_presence(
-                activity = discord.Game ("%d명의 유저들과 놀고있어요!" %len(bot.users)),
-                status = discord.Status.online,
-                afk = False
-            )
-            await asyncio.sleep(10)
         except Exception:
             pass
 
@@ -73,7 +67,6 @@ class Toaru_kagaku_no_music_bot (commands.Bot) :
 intents = discord.Intents.default()
 intents.messages = True
 intents.guilds = True
-intents.members = True
 
 bot = Toaru_kagaku_no_music_bot ()
 bot.run (TOKEN, bot=True)
