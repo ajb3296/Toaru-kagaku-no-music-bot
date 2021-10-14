@@ -106,6 +106,8 @@ class Music(commands.Cog):
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.send(embed=embed)
 
+        query.encode("utf-8", "ignore").decode("utf-8")
+
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         query = query.strip('<>')
         if not url_rx.match(query):
