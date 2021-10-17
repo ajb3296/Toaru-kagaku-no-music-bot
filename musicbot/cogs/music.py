@@ -1,6 +1,7 @@
 import os
 import re
 import math
+import json
 import discord
 import lavalink
 from bs4 import BeautifulSoup
@@ -106,6 +107,7 @@ class Music(commands.Cog):
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.send(embed=embed)
 
+        # Fix UnicodeDecodeError
         query.encode("utf-8", "ignore").decode("utf-8")
 
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
@@ -115,6 +117,8 @@ class Music(commands.Cog):
         nofind = 0
         while True:
             results = await player.node.get_tracks(query)
+            # Fix UnicodeDecodeError
+            results = json.loads(json.dumps(results).encode("utf-8", "ignore").decode("utf-8"))
             if not results or not results['tracks']:
                 if nofind < 3:
                     nofind += 1
@@ -155,12 +159,12 @@ class Music(commands.Cog):
     async def list(self, ctx, *, arg: str = None):
         anilistpath = "musicbot/anilist"
 
-        # 파일 목록
+        # Files list
         files = []
         for file in os.listdir(anilistpath):
             if file.endswith(".txt"):
                 files.append(file.replace(".txt", ""))
-        # 정렬
+        # Sort
         file = sorted(files)
         # 재생목록 총 개수
         if arg == "-a":
@@ -174,7 +178,7 @@ class Music(commands.Cog):
         try:
             arg1 = int(arg)
 
-        # 리스트 재생
+        # List play
         except ValueError:
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_list_finding"), color=self.normal_color)
             embed.set_footer(text=BOT_NAME_TAG_VER)
