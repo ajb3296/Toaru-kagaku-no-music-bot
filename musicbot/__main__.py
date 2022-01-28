@@ -20,7 +20,7 @@ async def status_task():
             )
             await asyncio.sleep(10)
             await bot.change_presence(
-                activity = discord.Game ("%d개의 서버에서 놀고있어요!" %len(bot.guilds)),
+                activity = discord.Game (f"{len(bot.guilds)}개의 서버에서 놀고있어요!"),
                 status = discord.Status.online,
                 afk = False
             )
@@ -31,18 +31,17 @@ async def status_task():
 class Toaru_kagaku_no_music_bot (commands.Bot) :
     def __init__ (self) :
         super().__init__ (
-            command_prefix=commandInt,
             intents=intents
         )
         self.remove_command("help")
 
         # Lavalink Download
-
+        
         LOGGER.info("Lavalink Downloading...")
         a = requests.get("https://api.github.com/repos/Cog-Creators/Lavalink-Jars/releases")
         b = json.loads(a.text)
         request.urlretrieve(f"https://github.com/Cog-Creators/Lavalink-Jars/releases/download/{b[0]['tag_name']}/Lavalink.jar", "Lavalink.jar")
-
+        
         process = multiprocessing.Process(target=child_process)
         process.start()
         time.sleep(20)

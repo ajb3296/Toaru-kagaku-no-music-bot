@@ -33,6 +33,7 @@ class Music(commands.Cog):
         self.billboard_url = 'https://www.billboard.com/charts/hot-100'
         self.billboardjp_url = 'https://www.billboard-japan.com/charts/detail?a=hot100'
         self.header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko'}
+        
         if not hasattr(bot, 'lavalink'):  # This ensures the client isn't overwritten during cog reloads.
             bot.lavalink = lavalink.Client(self._)
             bot.lavalink.add_node(host, 2333, psw, region, "default-node")  # Host, Port, Password, Region, Name
@@ -43,7 +44,7 @@ class Music(commands.Cog):
         self.bot.lavalink._event_hooks.clear()
 
     @commands.Cog.listener()
-    async def on_voice_state_update(self, member, before, after):
+    async def on_voice_state_update(self, member, before, after): # member, before, after
         try:
             voice_channel = self.bot.get_channel(int(before.channel.id))
             player = self.bot.lavalink.player_manager.get(int(voice_channel.guild.id))
@@ -717,7 +718,9 @@ class Music(commands.Cog):
         if not player.is_connected:
             if not should_connect:
                 raise commands.CommandInvokeError(get_lan(ctx.author.id, "music_not_connected_voice_channel"))
+
             permissions = ctx.author.voice.channel.permissions_for(ctx.me)
+            
             if not permissions.connect or not permissions.speak:
                 raise commands.CommandInvokeError(get_lan(ctx.author.id, "music_no_permission"))
             player.store('channel', ctx.channel.id)

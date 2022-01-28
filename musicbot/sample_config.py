@@ -11,7 +11,7 @@ class Config(object):
                 'other',
                 'ping',
                 'about',
-                'music',
+                'music2',
                 'set_language',
                 'chart']
 
