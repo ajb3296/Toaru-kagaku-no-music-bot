@@ -18,7 +18,7 @@ class Other (commands.Cog) :
         link = f'https://discord.com/oauth2/authorize?client_id={self.bot.user.id}&permissions=414501390400&scope=bot'
         embed=discord.Embed(title=get_lan(ctx.author.id, "other_invite_title"), description=get_lan(ctx.author.id, "other_invite_description").format(link=link), color=color_code)
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.send(embed=embed)
+        await ctx.respond(embed=embed)
 
     @slash_command()
     async def softver(self, ctx) :
@@ -32,7 +32,7 @@ class Other (commands.Cog) :
         embed.add_field(name="Java Ver", value=f"```{javaver}```", inline=False)
         embed.add_field(name="Lavalink Ver", value=f"```{lavalinkver}```", inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.send(embed=embed)
+        await ctx.respond(embed=embed)
 
     @slash_command()
     async def uptime(self, ctx):
@@ -40,7 +40,7 @@ class Other (commands.Cog) :
         res = subprocess.check_output("uptime", shell=False, encoding='utf-8')
         embed=discord.Embed(title=get_lan(ctx.author.id, "other_uptime"), description="```%s```" %res.replace(',  ', '\n').replace(', ', '\n').replace(': ', ' : ')[1:], color=color_code)
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.send(embed=embed)
+        await ctx.respond(embed=embed)
 
 def setup (bot) :
     bot.add_cog (Other (bot))

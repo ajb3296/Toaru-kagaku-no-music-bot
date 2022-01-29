@@ -39,7 +39,7 @@ class Help (commands.Cog) :
                 embed.add_field(name=f"`/language` [*language pack*]", value="Apply the language pack.", inline=True)
 
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            await ctx.send(embed=embed)
+            await ctx.respond(embed=embed)
 
         elif arg == "MUSIC" or arg == "음악":
             if "music" in EXTENSIONS:
@@ -58,7 +58,7 @@ class Help (commands.Cog) :
                 embed.add_field(name=get_lan(ctx.author.id, "help_music_remove_command"),    value=get_lan(ctx.author.id, "help_music_remove_info"), inline=False)
                 embed.add_field(name=get_lan(ctx.author.id, "help_music_find_command"),      value=get_lan(ctx.author.id, "help_music_find_info"), inline=False)
                 embed.set_footer(text=BOT_NAME_TAG_VER)
-                await ctx.send(embed=embed)
+                await ctx.respond(embed=embed)
 
         elif arg == "CHART" or arg == "차트재생" or arg == "차트":
             embed=discord.Embed(title=get_lan(ctx.author.id, "help_play_chart"), description='', color=color_code)
@@ -74,7 +74,7 @@ class Help (commands.Cog) :
                 embed.add_field(name=get_lan(ctx.author.id, "help_play_chart_listpage_command"),       value=get_lan(ctx.author.id, "help_play_chart_listpage_info"), inline=False)
                 embed.add_field(name=get_lan(ctx.author.id, "help_play_chart_listplay_command"),       value=get_lan(ctx.author.id, "help_play_chart_listplay_info"), inline=False)
                 embed.set_footer(text=BOT_NAME_TAG_VER)
-                await ctx.send(embed=embed)
+                await ctx.respond(embed=embed)
 
         elif arg == "DEV" or arg == "개발" or arg == "개발자":
             if ctx.author.id in OWNERS:
@@ -102,7 +102,7 @@ class Help (commands.Cog) :
             if ctx.author.id in OWNERS:
                 embed.add_field(name=get_lan(ctx.author.id, "help_dev_command"), value=get_lan(ctx.author.id, "help_dev_command_info"), inline=False)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            await ctx.send(embed=embed)
+            await ctx.respond(embed=embed)
 
 def setup (bot) :
     bot.add_cog (Help (bot))

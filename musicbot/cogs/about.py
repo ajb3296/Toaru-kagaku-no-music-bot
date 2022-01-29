@@ -24,7 +24,7 @@ class About (commands.Cog) :
         embed.add_field(name=get_lan(ctx.author.id, "about_guild_count"), value=len(self.bot.guilds), inline=True)
         embed.add_field(name=get_lan(ctx.author.id, "about_number_of_music_playback_servers"), value=player_server_count, inline=True)
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.send(embed=embed)
+        await ctx.respond(embed=embed)
 
 def setup (bot) :
     bot.add_cog (About (bot))

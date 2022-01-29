@@ -85,7 +85,7 @@ class Owners (commands.Cog) :
                 color = self.error_color
             )
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.send (embed = embed)
+        await ctx.respond(embed = embed)
 
     @slash_command(permissions=[CommandPermission("owner", 2, True)], guild_ids=[675171256299028490])
     async def module_list(self, ctx):
@@ -99,7 +99,7 @@ class Owners (commands.Cog) :
         embed=discord.Embed(title=get_lan(ctx.author.id, 'owners_modules_list'), color=color_code)
         embed.add_field(name=modulenum, value=e1, inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.send(embed=embed)
+        await ctx.respond(embed=embed)
 
     @slash_command(permissions=[CommandPermission("owner", 2, True)], guild_ids=[675171256299028490])
     async def serverinfo(self, ctx) :
@@ -117,7 +117,7 @@ class Owners (commands.Cog) :
         embed.add_field(name="Lavalink.py Ver", value=lavalink.__version__, inline=False)
         embed.add_field(name="Ping", value=str(round(self.bot.latency * 1000)) + "ms", inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.send(embed=embed)
+        await ctx.respond(embed=embed)
 
 def setup (bot) :
     bot.add_cog (Owners (bot))
