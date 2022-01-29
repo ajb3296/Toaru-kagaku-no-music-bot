@@ -37,10 +37,6 @@
         "description": "봇 태그를 입력하세요.",
         "value": "#"
       },
-      "BOT_VER": {
-        "description": "봇 버전을 입력하세요.",
-        "value": "V.2.0"
-      },
       "BOT_ID": {		
         "description": "봇 ID를 입력하세요.",		
         "value": ""		

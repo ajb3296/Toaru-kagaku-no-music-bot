@@ -1,10 +1,8 @@
 import discord
-from bs4 import BeautifulSoup
 from discord.ext import commands
 from discord.commands import slash_command
 
 from musicbot.utils.language import get_lan
-from musicbot.utils.crawler import getReqTEXT
 from musicbot.utils.get_chart import *
 from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code
 

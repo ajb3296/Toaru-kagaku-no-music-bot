@@ -1,20 +1,17 @@
 import time
-import json
 import discord
 import asyncio
-import requests
 import multiprocessing
-from urllib import request
 from discord.ext import commands
 
 from musicbot.lavalinkstart import child_process
-from musicbot import LOGGER, TOKEN, EXTENSIONS, commandInt, BOT_NAME_TAG_VER
+from musicbot import LOGGER, TOKEN, EXTENSIONS, BOT_NAME_TAG_VER, OWNERS
 
 async def status_task():
     while True:
         try:
             await bot.change_presence(
-                activity = discord.Game (f"{commandInt}help : 도움말"),
+                activity = discord.Game ("/help : 도움말"),
                 status = discord.Status.online,
             )
             await asyncio.sleep(10)
@@ -29,7 +26,8 @@ async def status_task():
 class Toaru_kagaku_no_music_bot (commands.Bot) :
     def __init__ (self) :
         super().__init__ (
-            intents=intents
+            intents=intents,
+            owner_ids=OWNERS
         )
         self.remove_command("help")
 
@@ -50,7 +48,7 @@ class Toaru_kagaku_no_music_bot (commands.Bot) :
     async def on_ready (self) :
         LOGGER.info(BOT_NAME_TAG_VER)
         await self.change_presence(
-            activity = discord.Game (f"{commandInt}help : 도움말"),
+            activity = discord.Game ("/help : 도움말"),
             status = discord.Status.online,
         )
         bot.loop.create_task(status_task())

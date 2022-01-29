@@ -2,6 +2,9 @@ import os
 import sys
 import logging
 
+# Bot version
+BOT_VER = "V.3.0a"
+
 # enable logging
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -26,10 +29,8 @@ if ENV:
         OWNERS       = set(int(x) for x in os.environ.get("OWNERS", "").split())
     except ValueError:
         raise Exception("OWNERS 사용자 목록에 올바른 정수가 없습니다.")
-    commandInt       = os.environ.get('commandInt', "/")
     BOT_NAME         = os.environ.get('BOT_NAME', None)
     BOT_TAG          = os.environ.get('BOT_TAG', "#1234")
-    BOT_VER          = os.environ.get('BOT_VER', None)
     try:
         BOT_ID       = int(os.environ.get('BOT_ID', None))
     except ValueError:
@@ -47,10 +48,8 @@ else:
     TOKEN            = Config.TOKEN
     EXTENSIONS       = Config.EXTENSIONS
     OWNERS           = Config.OWNERS
-    commandInt       = Config.commandInt
     BOT_NAME         = Config.BOT_NAME
     BOT_TAG          = Config.BOT_TAG
-    BOT_VER          = Config.BOT_VER
     BOT_ID           = Config.BOT_ID
     color_code       = Config.color_code
     AboutBot         = Config.AboutBot

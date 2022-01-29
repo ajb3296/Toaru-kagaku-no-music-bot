@@ -2,6 +2,7 @@ import os
 import sqlite3
 import discord
 from discord.ext import commands
+from discord.commands import slash_command
 
 from musicbot.utils.language import get_lan
 from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code
@@ -10,9 +11,9 @@ class Language (commands.Cog) :
     def __init__ (self, bot) :
         self.bot = bot
 
-    @commands.command (aliases = ['언어', "set_lang"])
+    @slash_command()
     async def language (self, ctx, lang: str = None) :
-
+        """ Apply the language pack. """
         if lang is None:
             files = ""
             for file in os.listdir("musicbot/languages"):
@@ -21,12 +22,12 @@ class Language (commands.Cog) :
 
             embed=discord.Embed(title=get_lan(ctx.author.id, "set_language_pack_list"), description=files, color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.send(embed=embed)
+            return await ctx.respond(embed=embed)
 
         if not os.path.exists(f"musicbot/languages/{lang}.json"):
             embed=discord.Embed(title=get_lan(ctx.author.id, "set_language_pack_not_exist"), color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.send(embed=embed)
+            return await ctx.respond(embed=embed)
 
         conn = sqlite3.connect("userdata.db", isolation_level=None)
         c = conn.cursor()
@@ -45,7 +46,7 @@ class Language (commands.Cog) :
         conn.close()
 
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.send(embed=embed)
+        await ctx.respond(embed=embed)
 
 def setup (bot) :
     bot.add_cog (Language (bot))

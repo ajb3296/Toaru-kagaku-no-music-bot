@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord.commands import slash_command
 
 from musicbot.utils.language import get_lan
 from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code, AboutBot
@@ -8,14 +9,15 @@ class About (commands.Cog) :
     def __init__ (self, bot) :
         self.bot = bot
 
-    @commands.command (aliases = ['봇', '개발자', '봇정보', '봇관련', '관련', '정보'])
+    @slash_command()
     async def about (self, ctx) :
+        """ Let me tell you about me! """
         player_server_count=0
         for i in self.bot.guilds:
             player = self.bot.lavalink.player_manager.get(int(i.id))
             try:
                 if player.is_connected:
-                    player_server_count+=1
+                    player_server_count += 1
             except Exception:
                 pass
         embed=discord.Embed(title=get_lan(ctx.author.id, "about_bot_info"), description=AboutBot, color=color_code)
