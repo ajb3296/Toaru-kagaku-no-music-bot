@@ -6,14 +6,8 @@ from discord.commands import slash_command
 import platform
 import psutil
 
-from musicbot.utils.misc import footer
 from musicbot.utils.language import get_lan
-from musicbot import LOGGER, OWNERS, color_code, BOT_NAME_TAG_VER, EXTENSIONS
-
-def is_owner():
-    async def predicate(ctx):
-        return ctx.author.id in OWNERS
-    return commands.check(predicate)
+from musicbot import LOGGER, color_code, BOT_NAME_TAG_VER, EXTENSIONS
 
 class Owners (commands.Cog) :
     def __init__ (self, bot) :
@@ -44,7 +38,7 @@ class Owners (commands.Cog) :
                 description = get_lan(ctx.author.id, "owners_error").format(error=error),
                 color = self.error_color
             )
-        footer(embed)
+        embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed = embed)
 
     @slash_command(permissions=[CommandPermission("owner", 2, True)], guild_ids=[675171256299028490])
@@ -67,7 +61,7 @@ class Owners (commands.Cog) :
             )
             if module in EXTENSIONS:
                 EXTENSIONS[EXTENSIONS.index(module)] = f"*~~{module}~~*"
-        footer(embed)
+        embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed = embed)
 
     @slash_command(permissions=[CommandPermission("owner", 2, True)], guild_ids=[675171256299028490])
@@ -90,7 +84,7 @@ class Owners (commands.Cog) :
                 description = f'에러 : {error}',
                 color = self.error_color
             )
-        footer(embed)
+        embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send (embed = embed)
 
     @slash_command(permissions=[CommandPermission("owner", 2, True)], guild_ids=[675171256299028490])
