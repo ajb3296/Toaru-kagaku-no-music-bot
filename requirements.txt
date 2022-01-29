@@ -5,6 +5,5 @@ psutil
 requests
 lxml
 PyNaCl
-EZPaginator
 chardet
 aiohttp

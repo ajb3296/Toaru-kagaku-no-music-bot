@@ -1,5 +1,7 @@
 import re
+import os
 import math
+from this import d
 
 import discord
 import lavalink
@@ -7,9 +9,12 @@ from discord.ext import commands
 from discord.commands import slash_command
 
 from musicbot.utils.language import get_lan
-from musicbot.utils.crawler import getReqTEXT
 from musicbot.utils.volumeicon import volumeicon
+from musicbot.utils.get_chart import *
+from musicbot.utils.play_list import play_list
 from musicbot import LOGGER, BOT_ID, color_code, BOT_NAME_TAG_VER, host, psw, region
+
+from EZPaginator.EZPaginator import Paginator
 
 
 url_rx = re.compile(r'https?://(?:www\.)?.+')
@@ -135,7 +140,7 @@ class Music(commands.Cog):
 
         # These are commands that require the bot to join a voicechannel (i.e. initiating playback).
         # Commands such as volume/skip etc don't require the bot to be in a voicechannel so don't need listing here.
-        should_connect = ctx.command.name in ('play', 'connect',)
+        should_connect = ctx.command.name in ('play', 'connect', 'list', 'melonplay', 'billboardplay', 'billboardjpplay',)
 
         if not ctx.author.voice or not ctx.author.voice.channel:
             # Our cog_command_error handler catches this and sends it to the voicechannel.
@@ -427,7 +432,202 @@ class Music(commands.Cog):
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.respond(embed=embed)
     
+    @slash_command()
+    async def melonplay(self, ctx):
+        """ Add the top 10 songs on the Melon chart to your playlist! """
+        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+
+        embed=discord.Embed(title=get_lan(ctx.author.id, "music_parsing_melon"), color=color_code)
+        embed.set_footer(text=BOT_NAME_TAG_VER)
+        playmsg = await ctx.respond(embed=embed)
+
+        title, artist = await get_melon()
+
+        info, playmusic, passmusic = await play_list(player, ctx, title, artist, playmsg)
+
+        embed=discord.Embed(title=get_lan(ctx.author.id, "music_melon_chart_play"), description='', color=color_code)
+        embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
+        embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
+        embed.set_footer(text=BOT_NAME_TAG_VER)
+        await playmsg.edit_original_message(embed=embed)
+        if not player.is_playing:
+            await player.play()
     
+    @slash_command()
+    async def billboardplay(self, ctx):
+        """ Add the top 10 songs on the Billboard chart to your playlist! """
+        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+
+        embed=discord.Embed(title=get_lan(ctx.author.id, "music_parsing_billboard"), color=color_code)
+        playmsg = await ctx.respond(embed=embed)
+
+        title, artist = await get_billboard()
+
+        info, playmusic, passmusic = await play_list(player, ctx, title, artist, playmsg)
+
+        embed=discord.Embed(title=get_lan(ctx.author.id, "music_billboard_chart_play"), description='', color=color_code)
+        embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
+        embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
+        embed.set_footer(text=BOT_NAME_TAG_VER)
+        await playmsg.edit_original_message(embed=embed)
+        if not player.is_playing:
+            await player.play()
+    
+    @slash_command()
+    async def billboardjpplay(self, ctx):
+        """ Add the top 10 songs on the Billboard japan chart to your playlist! """
+        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+
+        embed=discord.Embed(title=get_lan(ctx.author.id, "music_parsing_billboardjp"), color=color_code)
+        playmsg = await ctx.respond(embed=embed)
+
+        title, artist = await get_billboardjp()
+
+        info, playmusic, passmusic = await play_list(player, ctx, title, artist, playmsg)
+
+        embed=discord.Embed(title=get_lan(ctx.author.id, "music_billboardjp_chart_play"), description='', color=color_code)
+        embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
+        embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
+        embed.set_footer(text=BOT_NAME_TAG_VER)
+        await playmsg.edit_original_message(embed=embed)
+        if not player.is_playing:
+            await player.play()
+    
+    @slash_command()
+    async def list(self, ctx, *, arg: str = None):
+        """ Load playlists or play the music from that playlist! """
+        anilistpath = "musicbot/anilist"
+
+        # Files list
+        files = []
+        for file in os.listdir(anilistpath):
+            if file.endswith(".txt"):
+                files.append(file.replace(".txt", ""))
+        # Sort
+        file = sorted(files)
+        # 재생목록 총 개수
+        if arg == "-a":
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_len_list"), description=get_lan(ctx.author.id, "music_len_list").format(files_len=len(files)), color=color_code)
+            embed.set_footer(text=BOT_NAME_TAG_VER)
+            return await ctx.respond(embed=embed)
+
+        if arg is None:
+            arg = 1
+
+        embed=discord.Embed(title=get_lan(ctx.author.id, "music_list_finding"), color=color_code)
+        embed.set_footer(text=BOT_NAME_TAG_VER)
+        playmsg = await ctx.respond(embed=embed)
+
+        try:
+            arg1 = int(arg)
+
+        # List play
+        except ValueError:
+
+            try:
+                f = open(f"{anilistpath}/{arg}.txt", 'r')
+                list_str = f.read()
+                f.close()
+
+            except Exception:
+                embed=discord.Embed(title=get_lan(ctx.author.id, "music_list_can_not_find"), description=arg, color=color_code)
+                embed.set_footer(text=BOT_NAME_TAG_VER)
+                return await playmsg.edit_original_message(embed=embed)
+
+            player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+            music_list = list_str.split('\n')
+            passmusic = get_lan(ctx.author.id, "music_none")
+            playmusic = get_lan(ctx.author.id, "music_none")
+            trackcount = 0
+
+            loading_dot_count = 0
+            for music in music_list:
+                if not music == "":
+                    # ... 개수 변경
+                    loading_dot = ""
+                    loading_dot_count += 1
+                    if loading_dot_count == 4:
+                        loading_dot_count = 1
+                    for a in range(0, loading_dot_count):
+                        loading_dot = loading_dot + "."
+
+                    embed=discord.Embed(title=get_lan(ctx.author.id, "music_adding_music").format(loading_dot=loading_dot), description=music, color=color_code)
+                    embed.set_footer(text=BOT_NAME_TAG_VER)
+                    await playmsg.edit_original_message(embed=embed)
+
+                    query = music.strip('<>')
+                    if not url_rx.match(query):
+                        query = f'ytsearch:{query}'
+
+                    nofind = 0
+                    while True:
+                        results = await player.node.get_tracks(query)
+                        if results['loadType'] == 'PLAYLIST_LOADED' or not results or not results['tracks']:
+                            if nofind < 3:
+                                nofind += 1
+                            elif nofind == 3:
+                                if passmusic == get_lan(ctx.author.id, "music_none"):
+                                    passmusic = music
+                                else:
+                                    passmusic = f"{passmusic}\n{music}"
+                        else:
+                            break
+
+                    track = results['tracks'][0]
+                    if playmusic == get_lan(ctx.author.id, "music_none"):
+                        playmusic = music
+                    else:
+                        playmusic = f"{playmusic}\n{music}"
+                    if trackcount != 1:
+                        info = track['info']
+                        trackcount = 1
+                    track = lavalink.models.AudioTrack(track, ctx.author.id, recommended=True)
+                    player.add(requester=ctx.author.id, track=track)
+
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_play_music"), description='', color=color_code)
+            embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
+            embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
+            embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
+            embed.set_footer(text=BOT_NAME_TAG_VER)
+            await playmsg.edit_original_message(embed=embed)
+            if not player.is_playing:
+                await player.play()
+
+        # 리스트 목록
+        else:
+            # 총 리스트 수가 10 이하일 경우
+            if len(file) <= 10:
+                embed=discord.Embed(title=get_lan(ctx.author.id, "music_playlist_list"), description="\n".join(file), color=color_code)
+                embed.set_footer(text=BOT_NAME_TAG_VER)
+                return await playmsg.edit_original_message(embed=embed)
+
+            # 총 페이지수 계산
+            allpage = math.ceil(len(file) / 15)
+
+            embeds = []
+            chack = False
+            for i in range(1, allpage+1):
+                filelist = ""
+                numb = (15 * i)
+                numa = numb - 15
+                for a in range(numa, numb):
+                    try:
+                        filelist = filelist + f"{file[a]}\n"
+                    except IndexError:
+                        break
+                embed1 = discord.Embed(title=get_lan(ctx.author.id, "music_playlist_list"), description=filelist, color=color_code)
+                embed1.set_footer(text=f"{get_lan(ctx.author.id, 'music_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
+                if not chack:
+                    msg = await ctx.respond(embed=embed1)
+                    chack = True
+                embeds.append(embed1)
+
+            page = Paginator(bot=self.bot, message=msg, embeds=embeds, use_extend=True)
+            await page.start()
+
 
 def setup(bot):
     bot.add_cog(Music(bot))

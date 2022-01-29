@@ -9,9 +9,6 @@
 
 ## Heroku Deploy
 
-<img src="https://github.com/ajb3296/Toaru-kagaku-no-music-bot/blob/main/image/sorry_lavalink.py_dev.jpg?raw=true" width="300"></img>
-<br>~~하지말라는건 구태여 해야 즐거운법!~~
-
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/ajb3296/Toaru-kagaku-no-music-bot/tree/main)
 
 ## Note

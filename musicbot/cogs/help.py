@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.commands import slash_command
+from discord.commands import Option
 
 from musicbot.utils.language import get_lan
 from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code, OWNERS, EXTENSIONS
@@ -27,12 +28,6 @@ class Help (commands.Cog) :
 
             if "ping" in EXTENSIONS:
                 embed.add_field(name=get_lan(ctx.author.id, "help_general_ping_command"),       value=get_lan(ctx.author.id, "help_general_ping_info"), inline=True)
-
-            if "neko" in EXTENSIONS:
-                embed.add_field(name=get_lan(ctx.author.id, "help_general_neko_command"),       value=get_lan(ctx.author.id, "help_general_neko_info"), inline=True)
-
-            if "translation" in EXTENSIONS:
-                embed.add_field(name=get_lan(ctx.author.id, "help_general_translation_command"),value=get_lan(ctx.author.id, "help_general_translation_info"), inline=True)
 
             if "set_language" in EXTENSIONS:
                 embed.add_field(name=f"`/language`", value="Sends a list of available language packs.", inline=True)
