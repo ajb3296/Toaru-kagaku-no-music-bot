@@ -8,7 +8,7 @@ class Ping (commands.Cog) :
     def __init__ (self, bot) :
         self.bot = bot
 
-    @slash_command(guild_ids=[675171256299028490])
+    @slash_command()
     async def ping(self, ctx):
         """ Measure ping speed """
         latancy = self.bot.latency
