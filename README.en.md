@@ -44,11 +44,11 @@ from musicbot.sample_config import Config
 class Development(Config):
     TOKEN = 'token'
     OWNERS = [owners discord id(list)]
+    DebugServer = [Debug server id]
     commandInt = "command prefix"
     BOT_NAME = "bot name"
     BOT_TAG = "#bot tag"
-    BOT_VER = "version"
-    BOT_ID = bot id
+    BOT_ID = bot_id
     AboutBot = f"""bot information"""
 
     # Music

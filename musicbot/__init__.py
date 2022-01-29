@@ -29,6 +29,10 @@ if ENV:
         OWNERS       = set(int(x) for x in os.environ.get("OWNERS", "").split())
     except ValueError:
         raise Exception("OWNERS 사용자 목록에 올바른 정수가 없습니다.")
+    try:
+        DebugServer  = set(int(x) for x in os.environ.get("DebugServer", "").split())
+    except ValueError:
+        raise Exception("DebugChannel 사용자 목록에 올바른 정수가 없습니다.")
     BOT_NAME         = os.environ.get('BOT_NAME', None)
     BOT_TAG          = os.environ.get('BOT_TAG', "#1234")
     try:
@@ -48,6 +52,7 @@ else:
     TOKEN            = Config.TOKEN
     EXTENSIONS       = Config.EXTENSIONS
     OWNERS           = Config.OWNERS
+    DebugServer      = Config.DebugServer
     BOT_NAME         = Config.BOT_NAME
     BOT_TAG          = Config.BOT_TAG
     BOT_ID           = Config.BOT_ID

@@ -167,7 +167,7 @@ class Music(commands.Cog):
             guild = self.bot.get_guild(guild_id)
             await guild.voice_client.disconnect(force=True)
 
-    @slash_command(guild_ids=[675171256299028490])
+    @slash_command()
     async def connect(self, ctx):
         """ Connect to voice channel! """
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
@@ -179,7 +179,7 @@ class Music(commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         return await ctx.respond(embed=embed)
 
-    @slash_command(guild_ids=[675171256299028490])
+    @slash_command()
     async def play(self, ctx, *, query: str):
         """ Searches and plays a song from a given query. """
         # Get the player for this guild from cache.
@@ -251,7 +251,7 @@ class Music(commands.Cog):
         if not player.is_playing:
             await player.play()
 
-    @slash_command(guild_ids=[675171256299028490])
+    @slash_command()
     async def disconnect(self, ctx):
         """ Disconnects the player from the voice channel and clears its queue. """
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
@@ -281,7 +281,7 @@ class Music(commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
 
-    @slash_command(guild_ids=[675171256299028490])
+    @slash_command()
     async def skip(self, ctx):
         """ Skip to the next song! """
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
@@ -298,7 +298,7 @@ class Music(commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
     
-    @slash_command(guild_ids=[675171256299028490])
+    @slash_command()
     async def nowplaying(self, ctx):
         """ Sending the currently playing song! """
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
@@ -319,7 +319,7 @@ class Music(commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
 
-    @slash_command(guild_ids=[675171256299028490])
+    @slash_command()
     async def queue(self, ctx, page: int = 1):
         """ Send a playlist on the page in (*Number of page*) of the playlist list! """
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
@@ -340,7 +340,7 @@ class Music(commands.Cog):
         embed.set_footer(text=f'{get_lan(ctx.author.id, "music_page")} {page}/{pages}\n{BOT_NAME_TAG_VER}')
         await ctx.respond(embed=embed)
     
-    @slash_command(guild_ids=[675171256299028490])
+    @slash_command()
     async def repeat(self, ctx):
         """ Play all the songs in the playlist over and over again! """
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
@@ -356,7 +356,7 @@ class Music(commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
 
-    @slash_command(guild_ids=[675171256299028490])
+    @slash_command()
     async def remove(self, ctx, index: int):
         """ Remove music from the playlist! """
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
@@ -373,7 +373,7 @@ class Music(commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
 
-    @slash_command(guild_ids=[675171256299028490])
+    @slash_command()
     async def shuffle(self, ctx):
         """ The music in the playlist comes out randomly from the next song! """
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
@@ -389,7 +389,7 @@ class Music(commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
     
-    @slash_command(guild_ids=[675171256299028490])
+    @slash_command()
     async def volume(self, ctx, volume: int = None):
         """ Changes or display the volume """
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
@@ -408,7 +408,7 @@ class Music(commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
     
-    @slash_command(guild_ids=[675171256299028490])
+    @slash_command()
     async def pause(self, ctx):
         """ Pause or resume music! """
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)

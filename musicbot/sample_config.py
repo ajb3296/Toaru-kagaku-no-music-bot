@@ -16,6 +16,7 @@ class Config(object):
                 'chart']
 
     OWNERS = [123456789] # 관리자의 아이디
+    DebugServer = [] # 채널 id
     BOT_NAME = "" # 봇 이름
     BOT_TAG = "#" # 태그
     BOT_ID = 123456789      # 봇 아이디
