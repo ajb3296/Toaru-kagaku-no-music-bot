@@ -1,10 +1,3 @@
-"""
-This example cog demonstrates basic usage of Lavalink.py, using the DefaultPlayer.
-As this example primarily showcases usage in conjunction with discord.py, you will need to make
-modifications as necessary for use with another Discord library.
-Usage of this cog requires Python 3.6 or higher due to the use of f-strings.
-Compatibility with Python 3.5 should be possible if f-strings are removed.
-"""
 import re
 
 import discord

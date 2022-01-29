@@ -1,9 +1,11 @@
 import discord
 from bs4 import BeautifulSoup
 from discord.ext import commands
+from discord.commands import slash_command
 
 from musicbot.utils.language import get_lan
 from musicbot.utils.crawler import getReqTEXT
+from musicbot.utils.get_chart import *
 from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code
 
 class Chart (commands.Cog) :
@@ -14,62 +16,35 @@ class Chart (commands.Cog) :
         self.billboardjp_url = 'https://www.billboard-japan.com/charts/detail?a=hot100'
         self.header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko'}
 
-    @commands.command(name = '멜론', aliases = ['멜론차트', 'melonchart'])
+    @slash_command()
     async def melon(self, ctx) :
-        data = await getReqTEXT (self.melon_url, self.header)
-        parse = BeautifulSoup(data, 'lxml')
-        titles = parse.find_all("div", {"class": "ellipsis rank01"})
-        songs = parse.find_all("div", {"class": "ellipsis rank02"})
-        title = []
-        song = []
-        for t in titles:
-            title.append(t.find('a').text)
-        for s in songs:
-            song.append(s.find('span', {"class": "checkEllipsis"}).text)
+        """ I will tell you from the 1st to the 10th place on the melon chart. """
+        title, artist = await get_melon()
         embed=discord.Embed(title=get_lan(ctx.author.id, "chart_melon_chart"), color=color_code)
         for i in range(0, 10):
-            embed.add_field(name=str(i+1) + ".", value = f"{song[i]} - {title[i]}", inline=False)
+            embed.add_field(name=str(i+1) + ".", value = f"{artist[i]} - {title[i]}", inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.send(embed=embed)
+        await ctx.respond(embed=embed)
 
-    @commands.command(name = '빌보드', aliases = ['빌보드차트', 'billboardchart'])
+    @slash_command()
     async def billboard(self, ctx) :
-        data = await getReqTEXT (self.billboard_url, self.header)
-        parse = BeautifulSoup(data, 'lxml')
-        # 음악명
-        titles = parse.find_all("span", {"class" : "chart-element__information__song text--truncate color--primary"})
-        # 아티스트
-        songs = parse.find_all("span", {"class" : "chart-element__information__artist text--truncate color--secondary"})
-        title = []
-        song = []
-        for t in titles:
-            title.append(t.get_text())
-        for s in songs:
-            song.append(s.get_text())
+        """ I will tell you from the 1st to the 10th place on the billboard chart. """
+        title, artist = await get_billboard()
         embed=discord.Embed(title=get_lan(ctx.author.id, "chart_billboard_chart"), color=color_code)
         for i in range(0, 10):
-            embed.add_field(name=str(i+1) + ".", value = f"{song[i]} - {title[i]}", inline=False)
+            embed.add_field(name=str(i+1) + ".", value = f"{artist[i]} - {title[i]}", inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.send(embed=embed)
+        await ctx.respond(embed=embed)
 
-    @commands.command(name = '빌보드재팬', aliases = ['빌보드재팬차트', 'billboardjpchart'])
+    @slash_command()
     async def billboardjp(self, ctx) :
-        data = await getReqTEXT (self.billboardjp_url, self.header)
-        parse = BeautifulSoup(data, 'lxml').find("tbody").find_all("div", {"class" : "name_detail"})
-        title = []
-        song = []
-        for p in parse:
-            title.append(p.find("p", {"class" : "musuc_title"}).get_text())
-            try:
-                artisttry = p.find("p", {"class" : "artist_name"}).find("a").get_text()
-            except:
-                artisttry = p.find("p", {"class" : "artist_name"}).get_text()
-            song.append(artisttry)
+        """ I will tell you from the 1st to the 10th place on the billboard japan chart. """
+        title, artist = await get_billboardjp()
         embed=discord.Embed(title=get_lan(ctx.author.id, "chart_billboard_chart"), color=color_code)
         for i in range(0, 10):
-            embed.add_field(name=str(i+1) + ".", value = f"{song[i]} - {title[i]}", inline=False)
+            embed.add_field(name=str(i+1) + ".", value = f"{artist[i]} - {title[i]}", inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.send(embed=embed)
+        await ctx.respond(embed=embed)
 
 def setup (bot) :
     bot.add_cog (Chart (bot))
