@@ -1,14 +1,16 @@
 import time
 import discord
 from discord.ext import commands
+from discord.commands import slash_command
 from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code
 
 class Ping (commands.Cog) :
     def __init__ (self, bot) :
         self.bot = bot
 
-    @commands.command (name = 'ping', aliases = ['핑'])
+    @slash_command
     async def ping(self, ctx):
+        """ Measure ping speed """
         latancy = self.bot.latency
         before = time.monotonic()
         embed=discord.Embed(title="**Ping**", description=f'ping_pong: Pong! WebSocket Ping {round(latancy * 1000)}ms\n:ping_pong: Pong! Measuring...', color=color_code)

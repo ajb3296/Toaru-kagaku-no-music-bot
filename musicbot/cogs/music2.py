@@ -10,6 +10,7 @@ import re
 import discord
 import lavalink
 from discord.ext import commands
+from discord.commands import slash_command
 
 from musicbot.utils.language import get_lan
 from musicbot.utils.crawler import getReqTEXT
@@ -97,7 +98,7 @@ class Music(commands.Cog):
         self.bot = bot
 
         if not hasattr(bot, 'lavalink'):  # This ensures the client isn't overwritten during cog reloads.
-            bot.lavalink = lavalink.Client(bot.user.id)
+            bot.lavalink = lavalink.Client(BOT_ID)
             bot.lavalink.add_node(host, 2333, psw, region, "default-node")  # Host, Port, Password, Region, Name
 
         lavalink.add_event_hook(self.track_hook)
@@ -120,7 +121,7 @@ class Music(commands.Cog):
 
     async def cog_command_error(self, ctx, error):
         if isinstance(error, commands.CommandInvokeError):
-            await ctx.send(error.original)
+            await ctx.respond(error.original)
             # The above handles errors thrown in this cog and shows them to the user.
             # This shouldn't be a problem as the only errors thrown in this cog are from `ensure_voice`
             # which contain a reason string, such as "Join a voicechannel" etc. You can modify the above
@@ -169,7 +170,7 @@ class Music(commands.Cog):
             guild = self.bot.get_guild(guild_id)
             await guild.voice_client.disconnect(force=True)
 
-    @commands.command(aliases=['p', '재생', 'ㅔ', 'add'])
+    @slash_command(guild_ids=[675171256299028490])
     async def play(self, ctx, *, query: str):
         """ Searches and plays a song from a given query. """
         # Get the player for this guild from cache.
@@ -193,9 +194,9 @@ class Music(commands.Cog):
                 if nofind < 3:
                     nofind += 1
                 elif nofind == 3:
-                    embed=discord.Embed(title=get_lan(ctx.author.id, "music_can_not_find_anything"), description='', color=self.normal_color)
+                    embed=discord.Embed(title=get_lan(ctx.author.id, "music_can_not_find_anything"), description='', color=color_code)
                     embed.set_footer(text=BOT_NAME_TAG_VER)
-                    return await ctx.send(embed=embed)
+                    return await ctx.respond(embed=embed)
             else:
                 break
 
@@ -234,30 +235,30 @@ class Music(commands.Cog):
         
         embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.reply(embed=embed, mention_author=True)
+        await ctx.respond(embed=embed)
 
         # We don't want to call .play() if the player is playing as that will effectively skip
         # the current track.
         if not player.is_playing:
             await player.play()
 
-    @commands.command(aliases=['dc', '연결해제', '나가', 'ㅇㅊ', '중지', '정지', 'stop'])
+    @slash_command(guild_ids=[675171256299028490])
     async def disconnect(self, ctx):
         """ Disconnects the player from the voice channel and clears its queue. """
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
 
         if not player.is_connected:
             # We can't disconnect, if we're not connected.
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_dc_not_connect_voice_channel"), description='', color=self.normal_color)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_dc_not_connect_voice_channel"), description='', color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.send(embed=embed)
+            return await ctx.respond(embed=embed)
 
         if not ctx.author.voice or (player.is_connected and ctx.author.voice.channel.id != int(player.channel_id)):
             # Abuse prevention. Users not in voice channels, or not in the same voice channel as the bot
             # may not disconnect the bot.
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_dc_not_connect_my_voice_channel").format(name=ctx.author.name), description='', color=self.normal_color)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_dc_not_connect_my_voice_channel").format(name=ctx.author.name), description='', color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.send(embed=embed)
+            return await ctx.respond(embed=embed)
 
         # Clear the queue to ensure old tracks don't start playing
         # when someone else queues something.
@@ -267,9 +268,11 @@ class Music(commands.Cog):
         # Disconnect from the voice channel.
         await ctx.voice_client.disconnect(force=True)
 
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_dc_disconnected"), description='', color=self.normal_color)
+        embed=discord.Embed(title=get_lan(ctx.author.id, "music_dc_disconnected"), description='', color=color_code)
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.send(embed=embed)
+        await ctx.respond(embed=embed)
+    
+
 
 
 def setup(bot):
