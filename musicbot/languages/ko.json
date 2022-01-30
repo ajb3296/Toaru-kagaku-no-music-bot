@@ -54,7 +54,7 @@
     "help_music_shuffle_info": ">>> 다음 곡부터 재생목록의 음악들이 랜덤으로 나와요!",
     "help_music_repeat_command": ":repeat: | `/repeat`",
     "help_music_repeat_info": ">>> 현재 듣고 계시는 노래를 포함한 재생목록의 모든 노래를 반복해서 들려드려요!",
-    "help_music_seek_command": ":clock: | `/탐색` [*+(초) 혹은 -(초)*]",
+    "help_music_seek_command": ":clock: | `/seek` [*+(초) 혹은 -(초)*]",
     "help_music_seek_info": ">>> 음악을 명령어 뒤의 숫자만큼 초단위로 진행시간을 조절해요!",
     "help_music_remove_command": ":asterisk: | `/remove` [*재생목록에서의 음악 순서 번호*]",
     "help_music_remove_info": ">>> 재생목록에서 음악을 제거해요!",
