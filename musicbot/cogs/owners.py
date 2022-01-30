@@ -1,10 +1,11 @@
 import discord
 import lavalink
-from discord.ext import commands
-from discord.commands import CommandPermission, SlashCommandGroup
-from discord.commands import slash_command
 import platform
 import psutil
+import math
+
+from discord.ext import commands, pages
+from discord.commands import CommandPermission, slash_command
 
 from musicbot.utils.language import get_lan
 from musicbot import LOGGER, color_code, BOT_NAME_TAG_VER, EXTENSIONS, DebugServer
@@ -118,6 +119,46 @@ class Owners (commands.Cog) :
         embed.add_field(name="Ping", value=str(round(self.bot.latency * 1000)) + "ms", inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
+    
+    @slash_command(permissions=[CommandPermission("owner", 2, True)], guild_ids=DebugServer)
+    async def server_list(self, ctx) :
+        """ 봇이 들어가있는 모든 서버 리스트를 출력합니다. """
+        page = 10
+        # 페이지 지정값이 없고, 총 서버수가 10 이하일 경우
+        if len(self.bot.guilds) <= page:
+            embed = discord.Embed(title = get_lan(ctx.author.id, "owners_server_list_title").format(BOT_NAME=self.bot.user.name), description=get_lan(ctx.author.id, "owners_server_list_description").format(server_count=len(self.bot.guilds), members_count=len(self.bot.users)), color=color_code)
+            srvr = str()
+            for i in self.bot.guilds:
+                srvr = srvr + get_lan(ctx.author.id, "owners_server_list_info").format(server_name=i, server_members_count=i.member_count)
+            embed.add_field(name="​", value=srvr, inline=False)
+            embed.set_footer(text=BOT_NAME_TAG_VER)
+            return await ctx.respond(embed = embed)
+
+        # 서버수가 10개 이상일 경우
+
+        # 총 페이지수 계산
+        botguild = self.bot.guilds
+        allpage = math.ceil(len(botguild) / page)
+
+        pages_list = []
+        for i in range(1, allpage+1):
+            srvr = ""
+            numb = (page * i)
+            numa = numb - page
+            for a in range(numa, numb):
+                try:
+                    srvr = srvr + get_lan(ctx.author.id, "owners_server_list_info").format(server_name=botguild[a], server_members_count=botguild[a].member_count)
+                except IndexError:
+                    break
+
+            pages_list.append(
+                [
+                    discord.Embed(title = get_lan(ctx.author.id, "owners_server_list_title").format(BOT_NAME=self.bot.user.name), description=get_lan(ctx.author.id, "owners_server_list_description2").format(server_count=len(self.bot.guilds), members_count=len(self.bot.users), servers=srvr), color=color_code).set_footer(text=f"{get_lan(ctx.author.id, 'owners_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
+                ]
+            )
+        paginator = pages.Paginator(pages=pages_list)
+        await paginator.respond(ctx.interaction, ephemeral=False)
+
 
 def setup (bot) :
     bot.add_cog (Owners (bot))

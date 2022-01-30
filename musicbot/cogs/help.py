@@ -1,20 +1,20 @@
 import discord
 from discord.ext import commands
-from discord.commands import slash_command
-from discord.commands import Option
+from discord.commands import slash_command, Option, CommandPermission
 
 from musicbot.utils.language import get_lan
-from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code, OWNERS, EXTENSIONS
+from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code, OWNERS, EXTENSIONS, DebugServer
 
 class Help (commands.Cog) :
     def __init__ (self, bot) :
         self.bot = bot
 
     @slash_command()
-    async def help (self, ctx, *, arg : str = None) :
-        if not arg == None:
-            arg = arg.upper()
-        if arg == "GENERAL" or arg == "일반":
+    async def help (self, ctx, *, help_option : Option(str, "Choose help menu.", choices=["INFO", "GENERAL", "MUSIC", "CHART"])) :
+        """ Send help """
+        if not help_option == None:
+            help_option = help_option.upper()
+        if help_option == "GENERAL" or help_option == "일반":
             embed=discord.Embed(title=get_lan(ctx.author.id, "help_general"), description="", color=color_code)
 
             if "about" in EXTENSIONS:
@@ -36,7 +36,7 @@ class Help (commands.Cog) :
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.respond(embed=embed)
 
-        elif arg == "MUSIC" or arg == "음악":
+        elif help_option == "MUSIC" or help_option == "음악":
             if "music" in EXTENSIONS:
                 embed=discord.Embed(title=get_lan(ctx.author.id, "help_music"), description=get_lan(ctx.author.id, "help_music_description"), color=color_code)
                 embed.add_field(name=get_lan(ctx.author.id, "help_music_connect_command"),   value=get_lan(ctx.author.id, "help_music_connect_info"), inline=False)
@@ -55,7 +55,7 @@ class Help (commands.Cog) :
                 embed.set_footer(text=BOT_NAME_TAG_VER)
                 await ctx.respond(embed=embed)
 
-        elif arg == "CHART" or arg == "차트재생" or arg == "차트":
+        elif help_option == "CHART" or help_option == "차트재생" or help_option == "차트":
             embed=discord.Embed(title=get_lan(ctx.author.id, "help_play_chart"), description='', color=color_code)
             if "chart" in EXTENSIONS:
                 embed.add_field(name=get_lan(ctx.author.id, "help_general_melon_command"),      value=get_lan(ctx.author.id, "help_general_melon_info"), inline=False)
@@ -71,19 +71,6 @@ class Help (commands.Cog) :
                 embed.set_footer(text=BOT_NAME_TAG_VER)
                 await ctx.respond(embed=embed)
 
-        elif arg == "DEV" or arg == "개발" or arg == "개발자":
-            if ctx.author.id in OWNERS:
-                embed=discord.Embed(title=get_lan(ctx.author.id, "help_dev"), description=get_lan(ctx.author.id, "help_dev_description"), color=color_code)
-                embed.add_field(name=get_lan(ctx.author.id, "help_dev_serverlist_command"),   value=get_lan(ctx.author.id, "help_dev_serverlist_info"), inline=False)
-                embed.add_field(name=get_lan(ctx.author.id, "help_dev_modules_command"),      value=get_lan(ctx.author.id, "help_dev_modules_info"), inline=False)
-                embed.add_field(name=get_lan(ctx.author.id, "help_dev_load_command"),         value=get_lan(ctx.author.id, "help_dev_load_info"), inline=False)
-                embed.add_field(name=get_lan(ctx.author.id, "help_dev_unload_command"),       value=get_lan(ctx.author.id, "help_dev_unload_info"), inline=False)
-                embed.add_field(name=get_lan(ctx.author.id, "help_dev_reload_command"),       value=get_lan(ctx.author.id, "help_dev_reload_info"), inline=False)
-                embed.add_field(name=get_lan(ctx.author.id, "help_dev_serverinfo_command"),   value=get_lan(ctx.author.id, "help_dev_serverinfo_info"), inline=False)
-                embed.add_field(name=get_lan(ctx.author.id, "help_dev_broadcast_command"),    value=get_lan(ctx.author.id, "help_dev_broadcast_info"), inline=False)
-                embed.set_footer(text=BOT_NAME_TAG_VER)
-                await ctx.send(embed=embed)
-
         else:
             embed=discord.Embed(title=get_lan(ctx.author.id, "help"), description=get_lan(ctx.author.id, "help_info").format(bot_name=self.bot.user.name), color=color_code)
             embed.add_field(name=get_lan(ctx.author.id, "help_general_command"), value=get_lan(ctx.author.id, "help_general_command_info"), inline=False)
@@ -98,6 +85,20 @@ class Help (commands.Cog) :
                 embed.add_field(name=get_lan(ctx.author.id, "help_dev_command"), value=get_lan(ctx.author.id, "help_dev_command_info"), inline=False)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.respond(embed=embed)
+
+    @slash_command(permissions=[CommandPermission("owner", 2, True)], guilds_id=DebugServer)
+    async def dev_help(self, ctx):
+        """ 개발자용 도움말 """
+        embed=discord.Embed(title=get_lan(ctx.author.id, "help_dev"), description=get_lan(ctx.author.id, "help_dev_description"), color=color_code)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_serverlist_command"),   value=get_lan(ctx.author.id, "help_dev_serverlist_info"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_modules_command"),      value=get_lan(ctx.author.id, "help_dev_modules_info"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_load_command"),         value=get_lan(ctx.author.id, "help_dev_load_info"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_unload_command"),       value=get_lan(ctx.author.id, "help_dev_unload_info"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_reload_command"),       value=get_lan(ctx.author.id, "help_dev_reload_info"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_serverinfo_command"),   value=get_lan(ctx.author.id, "help_dev_serverinfo_info"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_broadcast_command"),    value=get_lan(ctx.author.id, "help_dev_broadcast_info"), inline=False)
+        embed.set_footer(text=BOT_NAME_TAG_VER)
+        await ctx.respond(embed=embed)
 
 def setup (bot) :
     bot.add_cog (Help (bot))

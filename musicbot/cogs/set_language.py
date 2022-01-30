@@ -2,17 +2,22 @@ import os
 import sqlite3
 import discord
 from discord.ext import commands
-from discord.commands import slash_command
+from discord.commands import slash_command, Option
 
 from musicbot.utils.language import get_lan
 from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code
+
+lanPack = []
+for file in os.listdir("musicbot/languages"):
+    if file.endswith(".json"):
+        lanPack.append(file.replace(".json", ""))
 
 class Language (commands.Cog) :
     def __init__ (self, bot) :
         self.bot = bot
 
     @slash_command()
-    async def language (self, ctx, lang: str = None) :
+    async def language (self, ctx, lang : Option(str, "Choose language pack.", choices=lanPack)) :
         """ Apply the language pack. """
         if lang is None:
             files = ""

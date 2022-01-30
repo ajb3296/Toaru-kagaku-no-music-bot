@@ -3,7 +3,7 @@ import sys
 import logging
 
 # Bot version
-BOT_VER = "V.3.0a"
+BOT_VER = "V.3.0"
 
 # enable logging
 logging.basicConfig(

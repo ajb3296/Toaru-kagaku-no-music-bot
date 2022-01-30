@@ -429,6 +429,16 @@ class Music(commands.Cog):
             await ctx.respond(embed=embed)
     
     @slash_command()
+    async def seek(self, ctx, *, seconds: int):
+        """ Adjust the music play time in seconds by the number after the command! """
+        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+        track_time = player.position + (seconds * 1000)
+        await player.seek(track_time)
+        embed=discord.Embed(title=get_lan(ctx.author.id, "music_seek_move_to").format(move_time=lavalink.utils.format_time(track_time)), description='', color=self.normal_color)
+        embed.set_footer(text=BOT_NAME_TAG_VER)
+        await ctx.respond(embed=embed)
+    
+    @slash_command()
     async def melonplay(self, ctx):
         """ Add the top 10 songs on the Melon chart to your playlist! """
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
