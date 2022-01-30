@@ -22,10 +22,6 @@ ENV = bool(os.environ.get('ENV', False))
 if ENV:
     TOKEN            = os.environ.get('TOKEN', None)
     try:
-        EXTENSIONS   = set(str(x) for x in os.environ.get("EXTENSIONS", 'owners help other ping about music melon').split())
-    except ValueError:
-        raise Exception("모듈 목록이 올바르지 않습니다.")
-    try:
         OWNERS       = set(int(x) for x in os.environ.get("OWNERS", "").split())
     except ValueError:
         raise Exception("OWNERS 사용자 목록에 올바른 정수가 없습니다.")
@@ -50,7 +46,6 @@ else:
     from musicbot.config import Development as Config
 
     TOKEN            = Config.TOKEN
-    EXTENSIONS       = Config.EXTENSIONS
     OWNERS           = Config.OWNERS
     DebugServer      = Config.DebugServer
     BOT_NAME         = Config.BOT_NAME
@@ -63,7 +58,10 @@ else:
     region           = Config.region
     port             = Config.port
 
-EXTENSIONS = list(EXTENSIONS)
+EXTENSIONS = []
+for file in os.listdir("musicbot/cogs"):
+    if file.endswith(".py"):
+        EXTENSIONS.append(file.replace(".py", ""))
 
 BOT_NAME_TAG_VER = "%s%s | %s" %(BOT_NAME, BOT_TAG, BOT_VER)
 

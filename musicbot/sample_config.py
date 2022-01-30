@@ -1,3 +1,5 @@
+import os
+
 if not __name__.endswith("sample_config"):
     import sys
     print("README 는 읽기 전용입니다. 이 sample_config 을 config 파일로 확장하되, 그냥 이름만 바꾸고 여기에 있는 요소들을 바꿔서는 안 됩니다. "
@@ -6,16 +8,6 @@ if not __name__.endswith("sample_config"):
 
 class Config(object):
     TOKEN = '' # 봇 토큰
-    EXTENSIONS = ['owners',
-                'help',
-                'other',
-                'ping',
-                'about',
-                'music',
-                'set_language',
-                'chart',
-                'test']
-
     OWNERS = [123456789] # 관리자의 아이디
     DebugServer = [] # 채널 id
     BOT_NAME = "" # 봇 이름
