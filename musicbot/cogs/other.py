@@ -15,7 +15,7 @@ class Other (commands.Cog) :
     @slash_command()
     async def invite(self, ctx):
         """ Send you a link for invite me """
-        link = f'https://discord.com/oauth2/authorize?client_id={self.bot.user.id}&permissions=414501390400&scope=bot'
+        link = f'https://discord.com/api/oauth2/authorize?client_id={self.bot.user.id}&permissions=414501391424&scope=bot%20applications.commands'
         embed=discord.Embed(title=get_lan(ctx.author.id, "other_invite_title"), description=get_lan(ctx.author.id, "other_invite_description").format(link=link), color=color_code)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)

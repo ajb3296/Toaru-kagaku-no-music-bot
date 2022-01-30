@@ -7,12 +7,12 @@ from musicbot import color_code
 
 url_rx = re.compile(r'https?://(?:www\.)?.+')
 
-async def play_list(player, ctx, title, artist, playmsg):
+async def play_list(player, ctx, musics, playmsg):
     trackcount = 0
     playmusic = get_lan(ctx.author.id, "music_none")
     passmusic = get_lan(ctx.author.id, "music_none")
     loading_dot_count = 0
-    for i in range(0, 10) :
+    for i in range(0, len(musics)) :
         # ... 개수 변경
         loading_dot = ""
         loading_dot_count += 1
@@ -20,10 +20,9 @@ async def play_list(player, ctx, title, artist, playmsg):
             loading_dot_count = 1
         for a in range(0, loading_dot_count):
             loading_dot = loading_dot + "."
-        musicname = str(f'{artist[i]} {title[i]}')
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_adding_music").format(loading_dot=loading_dot), description=musicname, color=color_code)
+        embed=discord.Embed(title=get_lan(ctx.author.id, "music_adding_music").format(loading_dot=loading_dot), description=musics[i], color=color_code)
         await playmsg.edit_original_message(embed=embed)
-        query = musicname
+        query = musics[i]
         if not url_rx.match(query):
             query = f'ytsearch:{query}'
         nofind = 0
@@ -34,16 +33,16 @@ async def play_list(player, ctx, title, artist, playmsg):
                     nofind += 1
                 elif nofind == 3:
                     if passmusic == get_lan(ctx.author.id, "music_none"):
-                        passmusic = musicname
+                        passmusic = musics[i]
                     else:
-                        passmusic = "%s\n%s" %(passmusic, musicname)
+                        passmusic = "%s\n%s" %(passmusic, musics[i])
             else:
                 break
         track = results['tracks'][0]
         if playmusic == get_lan(ctx.author.id, "music_none"):
-            playmusic = musicname
+            playmusic = musics[i]
         else:
-            playmusic = "%s\n%s" %(playmusic, musicname)
+            playmusic = "%s\n%s" %(playmusic, musics[i])
         if trackcount != 1:
             info = track['info']
             trackcount = 1

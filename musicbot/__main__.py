@@ -1,11 +1,16 @@
+import os
 import time
+import json
 import discord
 import asyncio
+import requests
 import multiprocessing
+from urllib import request
+
 from discord.ext import commands
 
 from musicbot.lavalinkstart import child_process
-from musicbot import LOGGER, TOKEN, EXTENSIONS, BOT_NAME_TAG_VER, OWNERS
+from musicbot import LOGGER, TOKEN, EXTENSIONS, BOT_NAME_TAG_VER
 
 async def status_task():
     while True:
@@ -26,18 +31,17 @@ async def status_task():
 class Toaru_kagaku_no_music_bot (commands.Bot) :
     def __init__ (self) :
         super().__init__ (
-            intents=intents,
-            owner_ids=OWNERS
+            intents=intents
         )
         self.remove_command("help")
 
         # Lavalink Download
-        '''
-        LOGGER.info("Lavalink Downloading...")
-        a = requests.get("https://api.github.com/repos/Cog-Creators/Lavalink-Jars/releases")
-        b = json.loads(a.text)
-        request.urlretrieve(f"https://github.com/Cog-Creators/Lavalink-Jars/releases/download/{b[0]['tag_name']}/Lavalink.jar", "Lavalink.jar")
-        '''
+        if not os.path.exists("Lavalink.jar"):
+            LOGGER.info("Lavalink Downloading...")
+            a = requests.get("https://api.github.com/repos/Cog-Creators/Lavalink-Jars/releases")
+            b = json.loads(a.text)
+            request.urlretrieve(f"https://github.com/Cog-Creators/Lavalink-Jars/releases/download/{b[0]['tag_name']}/Lavalink.jar", "Lavalink.jar")
+        
         process = multiprocessing.Process(target=child_process)
         process.start()
         time.sleep(20)

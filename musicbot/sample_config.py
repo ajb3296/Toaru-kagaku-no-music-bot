@@ -13,7 +13,8 @@ class Config(object):
                 'about',
                 'music',
                 'set_language',
-                'chart']
+                'chart',
+                'test']
 
     OWNERS = [123456789] # 관리자의 아이디
     DebugServer = [] # 채널 id
