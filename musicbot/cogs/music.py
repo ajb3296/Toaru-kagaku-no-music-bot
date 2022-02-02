@@ -5,7 +5,7 @@ import math
 import discord
 import lavalink
 from discord.ext import commands, pages
-from discord.commands import slash_command
+from discord.commands import slash_command, Option
 
 from musicbot.utils.language import get_lan
 from musicbot.utils.volumeicon import volumeicon
@@ -439,40 +439,31 @@ class Music(commands.Cog):
         await ctx.respond(embed=embed)
     
     @slash_command()
-    async def melonplay(self, ctx):
-        """ Add the top 10 songs on the Melon chart to your playlist! """
+    async def chartplay(self, ctx, *, chart : Option(str, "Choose chart.", choices=["Melon", "Billboard", "Billboard Japan"])):
+        """ Add the top 10 songs on the selected chart to your playlist! """
+        if not chart == None:
+            chart = chart.upper()
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+        if chart == "MELON":
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_parsing_melon"), color=color_code)
+            embed.set_footer(text=BOT_NAME_TAG_VER)
+            playmsg = await ctx.respond(embed=embed)
+            title, artist = await get_melon()
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_melon_chart_play"), description='', color=color_code)
 
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_parsing_melon"), color=color_code)
-        embed.set_footer(text=BOT_NAME_TAG_VER)
-        playmsg = await ctx.respond(embed=embed)
+        elif chart == "BILLBOARD":
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_parsing_billboard"), color=color_code)
+            embed.set_footer(text=BOT_NAME_TAG_VER)
+            playmsg = await ctx.respond(embed=embed)
+            title, artist = await get_billboard()
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_billboard_chart_play"), description='', color=color_code)
 
-        title, artist = await get_melon()
-        musics = []
-        for i in range(0, 10):
-            musics.append(f'{artist[i]} {title[i]}')
-
-        # Play music list
-        info, playmusic, passmusic = await play_list(player, ctx, musics, playmsg)
-
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_melon_chart_play"), description='', color=color_code)
-        embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
-        embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
-        embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
-        embed.set_footer(text=BOT_NAME_TAG_VER)
-        await playmsg.edit_original_message(embed=embed)
-        if not player.is_playing:
-            await player.play()
-    
-    @slash_command()
-    async def billboardplay(self, ctx):
-        """ Add the top 10 songs on the Billboard chart to your playlist! """
-        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
-
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_parsing_billboard"), color=color_code)
-        playmsg = await ctx.respond(embed=embed)
-
-        title, artist = await get_billboard()
+        elif chart == "BILLBOARD JAPAN":
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_parsing_billboardjp"), color=color_code)
+            embed.set_footer(text=BOT_NAME_TAG_VER)
+            playmsg = await ctx.respond(embed=embed)
+            title, artist = await get_billboardjp()
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_billboardjp_chart_play"), description='', color=color_code)
 
         musics = []
         for i in range(0, 10):
@@ -481,7 +472,6 @@ class Music(commands.Cog):
         # Play music list
         info, playmusic, passmusic = await play_list(player, ctx, musics, playmsg)
 
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_billboard_chart_play"), description='', color=color_code)
         embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
         embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
         embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
@@ -489,33 +479,7 @@ class Music(commands.Cog):
         await playmsg.edit_original_message(embed=embed)
         if not player.is_playing:
             await player.play()
-    
-    @slash_command()
-    async def billboardjpplay(self, ctx):
-        """ Add the top 10 songs on the Billboard japan chart to your playlist! """
-        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
 
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_parsing_billboardjp"), color=color_code)
-        playmsg = await ctx.respond(embed=embed)
-
-        title, artist = await get_billboardjp()
-
-        musics = []
-        for i in range(0, 10):
-            musics.append(f'{artist[i]} {title[i]}')
-
-        # Play music list
-        info, playmusic, passmusic = await play_list(player, ctx, musics, playmsg)
-
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_billboardjp_chart_play"), description='', color=color_code)
-        embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
-        embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
-        embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
-        embed.set_footer(text=BOT_NAME_TAG_VER)
-        await playmsg.edit_original_message(embed=embed)
-        if not player.is_playing:
-            await player.play()
-    
     @slash_command()
     async def list(self, ctx, *, arg: str = None):
         """ Load playlists or play the music from that playlist! """

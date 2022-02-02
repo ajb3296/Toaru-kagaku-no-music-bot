@@ -7,3 +7,4 @@ lxml
 PyNaCl
 chardet
 aiohttp
+billboard.py
