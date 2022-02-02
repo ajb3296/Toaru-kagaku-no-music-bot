@@ -56,15 +56,13 @@ class Help (commands.Cog) :
                 await ctx.respond(embed=embed)
 
         elif help_option == "CHART" or help_option == "차트재생" or help_option == "차트":
-            embed=discord.Embed(title=get_lan(ctx.author.id, "help_play_chart"), description='', color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "help_chart"), description='', color=color_code)
             if "chart" in EXTENSIONS:
                 embed.add_field(name=get_lan(ctx.author.id, "help_general_chart_command"),      value=get_lan(ctx.author.id, "help_general_chart_info"), inline=False)
             if "music" in EXTENSIONS:
-                embed.add_field(name=get_lan(ctx.author.id, "help_play_chart_melonplay_command"),      value=get_lan(ctx.author.id, "help_play_chart_melonplay_info"), inline=False)
-                embed.add_field(name=get_lan(ctx.author.id, "help_play_chart_billboardplay_command"),  value=get_lan(ctx.author.id, "help_play_chart_billboardplay_info"), inline=False)
-                embed.add_field(name=get_lan(ctx.author.id, "help_play_chart_billboardjpplay_command"),  value=get_lan(ctx.author.id, "help_play_chart_billboardjpplay_info"), inline=False)
-                embed.add_field(name=get_lan(ctx.author.id, "help_play_chart_listpage_command"),       value=get_lan(ctx.author.id, "help_play_chart_listpage_info"), inline=False)
-                embed.add_field(name=get_lan(ctx.author.id, "help_play_chart_listplay_command"),       value=get_lan(ctx.author.id, "help_play_chart_listplay_info"), inline=False)
+                embed.add_field(name=get_lan(ctx.author.id, "help_chart_chartplay_command"),      value=get_lan(ctx.author.id, "help_chart_chartplay_info"), inline=False)
+                embed.add_field(name=get_lan(ctx.author.id, "help_chart_listpage_command"),       value=get_lan(ctx.author.id, "help_chart_listpage_info"), inline=False)
+                embed.add_field(name=get_lan(ctx.author.id, "help_chart_listplay_command"),       value=get_lan(ctx.author.id, "help_chart_listplay_info"), inline=False)
                 embed.set_footer(text=BOT_NAME_TAG_VER)
                 await ctx.respond(embed=embed)
 
