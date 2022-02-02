@@ -51,3 +51,11 @@ class Development(Config):
 ```
 You can create it by **referring** to `sample_config.py`.<br>
 3. Run `python -m musicbot`
+
+### Troubleshoot
+
+If an SSL certificate-related problem occurs during parsing of the chart site :<br>
+
+To do this you need to open up /etc/ssl/openssl.cnf and change `CipherString` from `DEFAULT@SECLEVEL=2` to `DEFAULT@SECLEVEL=1` Then you will have to reboot your system.<br>
+
+Thanks to [KeonWoo PARK](https://github.com/parkkw472)

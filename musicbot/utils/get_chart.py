@@ -1,4 +1,6 @@
+import requests
 from bs4 import BeautifulSoup
+import billboard
 
 from musicbot.utils.crawler import getReqTEXT
 
@@ -18,20 +20,17 @@ async def get_melon():
     return title, artist
 
 async def get_billboard():
-    billboard_url = 'https://www.billboard.com/charts/hot-100'
-    data = await getReqTEXT (billboard_url, header)
-    parse = BeautifulSoup(data, 'lxml')
-    musics = parse.find_all("div", {"class" : "o-chart-results-list-row-container"})
+    chart = billboard.ChartData('hot-100')
     title = []
     artist = []
     for num in range(0, 10):
-        title.append(musics[num].find("h3", {"id" : "title-of-a-story"}).text.replace("\n", ""))
-        artist.append(musics[num].find("ul").find("ul").find("span").text.replace("\n", ""))
+        title.append(chart[num].title)
+        artist.append(chart[num].artist)
     return title, artist
 
 async def get_billboardjp():
     billboardjp_url = 'https://www.billboard-japan.com/charts/detail?a=hot100'
-    data = await getReqTEXT (billboardjp_url, header)
+    data = requests.get(billboardjp_url, header)
     parse = BeautifulSoup(data, 'lxml')
     musics = parse.find("tbody").find_all("tr")
     title = []

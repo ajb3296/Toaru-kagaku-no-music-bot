@@ -1,6 +1,8 @@
 import aiohttp
 import json
 
+connector = aiohttp.TCPConnector(verify_ssl=False)
+
 async def getReqJSON (url : str) :
     async with aiohttp.ClientSession () as session:
       async with session.get (url) as r :

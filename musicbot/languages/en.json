@@ -6,6 +6,7 @@
 
     "chart_melon_chart": "**Melon chart**",
     "chart_billboard_chart": "**Billboard chart**",
+    "chart_billboardjp_chart": "**Billboard Japan chart**",
 
     "help": "**Help**",
     "help_info": "Hello! My name is {bot_name}! Get help using commands below!",
@@ -62,12 +63,8 @@
     "help_music_find_info": ">>> Search for music on Youtube and send you the results!",
 
     "help_play_chart": "**Chart play command**",
-    "help_general_melon_command": ":melon: | `/melon`",
-    "help_general_melon_info": ">>> Add the top 10 songs on the Melon chart to your playlist!",
-    "help_general_billboard_command": ":b: | `/billboard`",
-    "help_general_billboard_info": ">>> Add the top 10 songs on the Billboard chart to your playlist!",
-    "help_general_billboardjp_command": ":b: | `/billboardjp`",
-    "help_general_billboardjp_info": ">>> Add the top 10 songs on the Billboard japan chart to your playlist!",
+    "help_general_chart_command": ":melon: | `/chart` [*chart site*]",
+    "help_general_chart_info": ">>> We will tell you from 1st to 10th on the selected chart site!",
     "help_play_chart_melonplay_command": ":melon: | `/melonplay`",
     "help_play_chart_melonplay_info": ">>> Adds a song from the melon chart to the playlist that you want to rank!",
     "help_play_chart_billboardplay_command": ":b: | `/billboardplay`",
