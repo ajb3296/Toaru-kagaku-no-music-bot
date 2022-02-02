@@ -58,7 +58,7 @@ class Help (commands.Cog) :
         elif help_option == "CHART" or help_option == "차트재생" or help_option == "차트":
             embed=discord.Embed(title=get_lan(ctx.author.id, "help_chart"), description='', color=color_code)
             if "chart" in EXTENSIONS:
-                embed.add_field(name=get_lan(ctx.author.id, "help_general_chart_command"),      value=get_lan(ctx.author.id, "help_general_chart_info"), inline=False)
+                embed.add_field(name=get_lan(ctx.author.id, "help_chart_chart_command"),      value=get_lan(ctx.author.id, "help_chart_chart_info"), inline=False)
             if "music" in EXTENSIONS:
                 embed.add_field(name=get_lan(ctx.author.id, "help_chart_chartplay_command"),      value=get_lan(ctx.author.id, "help_chart_chartplay_info"), inline=False)
                 embed.add_field(name=get_lan(ctx.author.id, "help_chart_listpage_command"),       value=get_lan(ctx.author.id, "help_chart_listpage_info"), inline=False)
