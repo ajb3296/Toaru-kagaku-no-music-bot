@@ -1,4 +1,3 @@
-import requests
 from bs4 import BeautifulSoup
 import billboard
 
@@ -30,7 +29,7 @@ async def get_billboard():
 
 async def get_billboardjp():
     billboardjp_url = 'https://www.billboard-japan.com/charts/detail?a=hot100'
-    data = requests.get(billboardjp_url, header)
+    data = await getReqTEXT(billboardjp_url, header)
     parse = BeautifulSoup(data, 'lxml')
     musics = parse.find("tbody").find_all("tr")
     title = []
