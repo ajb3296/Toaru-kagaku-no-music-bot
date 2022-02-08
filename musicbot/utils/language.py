@@ -3,7 +3,7 @@ import json
 import sqlite3
 
 def get_lan(id, text):
-    default_language = "en"
+    default_language = "ko"
 
     # if the userdata file exists
     if os.path.exists("userdata.db"):
