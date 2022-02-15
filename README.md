@@ -41,7 +41,6 @@ class Development(Config):
     TOKEN = '토큰'
     OWNERS = [관리자 디스코드 아이디]
     DebugServer = [디버그 서버 id]
-    commandInt = "명령인자"
     BOT_NAME = "봇 이름"
     BOT_TAG = "#봇태그"
     BOT_ID = 봇아이디

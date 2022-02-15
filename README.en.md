@@ -40,7 +40,6 @@ class Development(Config):
     TOKEN = 'token'
     OWNERS = [owners discord id(list)]
     DebugServer = [Debug server id]
-    commandInt = "command prefix"
     BOT_NAME = "bot name"
     BOT_TAG = "#bot tag"
     BOT_ID = bot_id
