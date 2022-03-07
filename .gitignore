@@ -4,6 +4,7 @@ Lavalink.jar
 application.yml
 logs
 userdata.db
+statistics.db
 test.py
 
 

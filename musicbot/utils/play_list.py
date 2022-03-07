@@ -3,6 +3,7 @@ import discord
 import lavalink
 
 from musicbot.utils.language import get_lan
+from musicbot.utils.statistics import Statistics
 from musicbot import color_code
 
 url_rx = re.compile(r'https?://(?:www\.)?.+')
@@ -39,6 +40,10 @@ async def play_list(player, ctx, musics, playmsg):
             else:
                 break
         track = results['tracks'][0]
+
+        # Music statistical
+        Statistics.up(track['info']['identifier'])
+
         if playmusic == get_lan(ctx.author.id, "music_none"):
             playmusic = musics[i]
         else:

@@ -4,10 +4,11 @@ import sqlite3
 
 def get_lan(id, text):
     default_language = "en"
+    userdata_db_path = "userdata.db"
 
     # if the userdata file exists
-    if os.path.exists("userdata.db"):
-        conn = sqlite3.connect("userdata.db", isolation_level=None)
+    if os.path.exists(userdata_db_path):
+        conn = sqlite3.connect(userdata_db_path, isolation_level=None)
         c = conn.cursor()
         c.execute("SELECT * FROM userdata WHERE id=:Id", {"Id": id})
         temp = c.fetchone()

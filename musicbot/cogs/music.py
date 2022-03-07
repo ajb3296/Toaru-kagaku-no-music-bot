@@ -11,6 +11,7 @@ from musicbot.utils.language import get_lan
 from musicbot.utils.volumeicon import volumeicon
 from musicbot.utils.get_chart import *
 from musicbot.utils.play_list import play_list
+from musicbot.utils.statistics import Statistics
 from musicbot import LOGGER, BOT_ID, color_code, BOT_NAME_TAG_VER, host, psw, region
 
 url_rx = re.compile(r'https?://(?:www\.)?.+')
@@ -227,6 +228,9 @@ class Music(commands.Cog):
                 if trackcount != 1:
                     info = track['info']
                     trackcount = 1
+                # Music statistical(for playlist)
+                Statistics.up(track['info']['identifier'])
+
                 # Add all of the tracks from the playlist to the queue.
                 player.add(requester=ctx.author.id, track=track)
 
@@ -238,11 +242,14 @@ class Music(commands.Cog):
             embed.description = f'[{track["info"]["title"]}]({track["info"]["uri"]})'
             info = track['info']
 
+            # Music statistical
+            Statistics.up(info['identifier'])
+
             # You can attach additional information to audiotracks through kwargs, however this involves
             # constructing the AudioTrack class yourself.
             track = lavalink.models.AudioTrack(track, ctx.author.id, recommended=True)
             player.add(requester=ctx.author.id, track=track)
-        
+
         embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
