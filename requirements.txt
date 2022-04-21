@@ -1,4 +1,4 @@
-py-cord==2.0.0b1
+py-cord==2.0.0b7
 BeautifulSoup4
 lavalink
 psutil
