@@ -17,6 +17,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      ENV: ${{ secrets.ENV }}
+      
+
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python 3.10
