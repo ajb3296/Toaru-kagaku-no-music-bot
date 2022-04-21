@@ -19,6 +19,12 @@ jobs:
 
     env:
       ENV: ${{ secrets.ENV }}
+      TOKEN: ${{ secrets.TOKEN }}
+      DebugServer: ${{ secrets.DEBUGSERVER }}
+      BOT_NAME: ${{ secrets.BOT_NAME }}
+      BOT_TAG: ${{ secrets.BOT_TAG }}
+      BOT_ID: ${{ secrets.BOT_ID }}
+      color_code: ${{ secrets.COLOR_CODE }}
       
 
     steps:
