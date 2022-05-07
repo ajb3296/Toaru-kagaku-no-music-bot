@@ -2,6 +2,12 @@ import os
 import sys
 import logging
 
+from musicbot.utils.make_config import make_config
+
+# Create the config file if it doesn't exist
+if not os.path.exists("musicbot/config.py"):
+    make_config()
+
 # Bot version
 BOT_VER = "V.3.0"
 
