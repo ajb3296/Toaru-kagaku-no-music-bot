@@ -30,26 +30,8 @@
 
 ### How to use it as a computer
 
-1. Create a `config.py` file in the `musicbot` folder.
-2. Write the `config.py` file as follows.
-
-```python
-from musicbot.sample_config import Config
-
-class Development(Config):
-    TOKEN = 'token'
-    OWNERS = [owners discord id(list)]
-    DebugServer = [Debug server id]
-    BOT_NAME = "bot name"
-    BOT_TAG = "#bot tag"
-    BOT_ID = bot_id
-    AboutBot = f"""bot information"""
-
-    # Music
-    psw = "computer password"
-```
-You can create it by **referring** to `sample_config.py`.<br>
-3. Run `python -m musicbot`
+1. Run `python -m musicbot`
+2. Proceed according to the instructions of the program.
 
 ### Troubleshoot
 

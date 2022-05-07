@@ -9,6 +9,7 @@ from urllib import request
 
 from discord.ext import commands
 
+from musicbot.utils.make_config import make_config
 from musicbot.lavalinkstart import child_process
 from musicbot import LOGGER, TOKEN, EXTENSIONS, BOT_NAME_TAG_VER
 
@@ -61,6 +62,9 @@ class Toaru_kagaku_no_music_bot (commands.Bot) :
         if message.author.bot:
             return
         await self.process_commands (message)
+
+if not os.path.exists("musicbot/config.py"):
+    make_config()
 
 intents = discord.Intents.default()
 intents.messages = True

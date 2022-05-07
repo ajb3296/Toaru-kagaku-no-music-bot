@@ -32,25 +32,8 @@
 
 ### 컴퓨터로 사용하는 방법
 
-1. `musicbot` 폴더 안에 `config.py` 파일을 만든다.
-2. `config.py` 파일을 아래와 같이 작성한다.
-```python
-from musicbot.sample_config import Config
-
-class Development(Config):
-    TOKEN = '토큰'
-    OWNERS = [관리자 디스코드 아이디]
-    DebugServer = [디버그 서버 id]
-    BOT_NAME = "봇 이름"
-    BOT_TAG = "#봇태그"
-    BOT_ID = 봇아이디
-    AboutBot = f"""봇 정보(about 명령어)에 넣을 말"""
-
-    # Music
-    psw = "컴퓨터 비밀번호"
-```
-`sample_config.py`를 **참고** 하여 만드시면 됩니다.<br>
-3. `python -m musicbot` 명령어를 실행한다.
+1. `python -m musicbot` 명령어를 실행한다.
+2. 프로그램의 안내에 따라 진행한다
 
 ### Troubleshoot
 

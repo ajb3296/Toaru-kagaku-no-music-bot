@@ -6,6 +6,7 @@ logs
 userdata.db
 statistics.db
 test.py
+node_modules
 
 
 

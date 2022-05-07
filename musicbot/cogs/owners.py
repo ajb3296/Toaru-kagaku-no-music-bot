@@ -17,6 +17,20 @@ class Owners (commands.Cog) :
         self.color = color_code
         self.error_color = 0xff4a4a
 
+    @slash_command(permissions=[CommandPermission("owner", 2, True)], guilds_id=DebugServer)
+    async def dev_help(self, ctx):
+        """ 개발자용 도움말 """
+        embed=discord.Embed(title=get_lan(ctx.author.id, "help_dev"), description=get_lan(ctx.author.id, "help_dev_description"), color=color_code)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_serverlist_command"),   value=get_lan(ctx.author.id, "help_dev_serverlist_info"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_modules_command"),      value=get_lan(ctx.author.id, "help_dev_modules_info"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_load_command"),         value=get_lan(ctx.author.id, "help_dev_load_info"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_unload_command"),       value=get_lan(ctx.author.id, "help_dev_unload_info"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_reload_command"),       value=get_lan(ctx.author.id, "help_dev_reload_info"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_serverinfo_command"),   value=get_lan(ctx.author.id, "help_dev_serverinfo_info"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_broadcast_command"),    value=get_lan(ctx.author.id, "help_dev_broadcast_info"), inline=False)
+        embed.set_footer(text=BOT_NAME_TAG_VER)
+        await ctx.respond(embed=embed)
+
     @slash_command(permissions=[CommandPermission("owner", 2, True)], guild_ids=DebugServer)
     async def load (self, ctx, module) :
         """ 모듈을 로드합니다. """
