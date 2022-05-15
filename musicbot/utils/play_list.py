@@ -4,7 +4,7 @@ import lavalink
 
 from musicbot.utils.language import get_lan
 from musicbot.utils.statistics import Statistics
-from musicbot import color_code
+from musicbot import color_code, BOT_NAME_TAG_VER
 
 url_rx = re.compile(r'https?://(?:www\.)?.+')
 
@@ -53,4 +53,4 @@ async def play_list(player, ctx, musics, playmsg):
             trackcount = 1
         track = lavalink.models.AudioTrack(track, ctx.author.id, recommended=True)
         player.add(requester=ctx.author.id, track=track)
-    return info, playmusic, passmusic
+    return player, info, playmusic, passmusic

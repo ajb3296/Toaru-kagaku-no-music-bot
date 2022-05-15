@@ -466,7 +466,7 @@ class Music(commands.Cog):
         embed=discord.Embed(title=get_lan(ctx.author.id, "music_seek_move_to").format(move_time=lavalink.utils.format_time(track_time)), description='', color=self.normal_color)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
-    
+
     @slash_command()
     async def chartplay(self, ctx, *, chart : Option(str, "Choose chart.", choices=["Melon", "Billboard", "Billboard Japan"])):
         """ Add the top 10 songs on the selected chart to your playlist! """
@@ -527,13 +527,9 @@ class Music(commands.Cog):
         files = sorted(files)
         # 재생목록 총 개수
         if arg == "-a":
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_len_list"), description=get_lan(ctx.author.id, "music_len_list").format(files_len=len(files)), color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_len_list").format(files_len=len(files)), description=get_lan(ctx.author.id, "music_len_list").format(files_len=len(files)), color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
-
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_list_finding"), color=color_code)
-        embed.set_footer(text=BOT_NAME_TAG_VER)
-        playmsg = await ctx.followup.send(embed=embed)
 
         if arg is not None:
             # List play
@@ -545,7 +541,7 @@ class Music(commands.Cog):
             except Exception:
                 embed=discord.Embed(title=get_lan(ctx.author.id, "music_list_can_not_find"), description=arg, color=color_code)
                 embed.set_footer(text=BOT_NAME_TAG_VER)
-                return await playmsg.edit_original_message(embed=embed)
+                return await ctx.followup.send(embed=embed)
 
             player = self.bot.lavalink.player_manager.get(ctx.guild.id)
             music_list = list_str.split('\n')
@@ -556,7 +552,11 @@ class Music(commands.Cog):
             music_list = music_list_process
 
             # Play music list
-            info, playmusic, passmusic = await play_list(player, ctx, music_list, playmsg)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_list_finding"), color=color_code)
+            embed.set_footer(text=BOT_NAME_TAG_VER)
+            playmsg = await ctx.followup.send(embed=embed)
+
+            player, info, playmusic, passmusic = await play_list(player, ctx, music_list, playmsg)
 
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_play_music"), description='', color=color_code)
             embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
@@ -575,7 +575,7 @@ class Music(commands.Cog):
             if len(files) <= page:
                 embed=discord.Embed(title=get_lan(ctx.author.id, "music_playlist_list"), description="\n".join(file), color=color_code)
                 embed.set_footer(text=BOT_NAME_TAG_VER)
-                return await playmsg.edit_original_message(embed=embed)
+                return await ctx.followup.send(embed=embed)
 
             # 총 페이지수 계산
             allpage = math.ceil(len(files) / page)
@@ -597,7 +597,7 @@ class Music(commands.Cog):
                     ]
                 )
             paginator = pages.Paginator(pages=pages_list)
-            await paginator.send(ctx.interaction, ephemeral=False)
+            await paginator.respond(ctx.interaction, ephemeral=False)
 
 def setup(bot):
     bot.add_cog(Music(bot))

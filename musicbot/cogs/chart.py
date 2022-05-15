@@ -13,6 +13,8 @@ class Chart (commands.Cog) :
     @slash_command()
     async def chart(self, ctx, *, chart : Option(str, "Choose chart.", choices=["Melon", "Billboard", "Billboard Japan"])):
         """ I will tell you from the 1st to the 10th place on the chart site """
+        await ctx.defer()
+
         if not chart == None:
             chart = chart.upper()
         if chart == "MELON":
@@ -27,7 +29,7 @@ class Chart (commands.Cog) :
         for i in range(0, 10):
             embed.add_field(name=str(i+1) + ".", value = f"{artist[i]} - {title[i]}", inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.respond(embed=embed)
+        await ctx.followup.send(embed=embed)
 
 def setup (bot) :
     bot.add_cog (Chart (bot))
