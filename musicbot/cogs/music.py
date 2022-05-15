@@ -554,7 +554,7 @@ class Music(commands.Cog):
             # Play music list
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_list_finding"), color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            playmsg = await ctx.followup.send(embed=embed)
+            playmsg = await ctx.respond(embed=embed)
 
             player, info, playmusic, passmusic = await play_list(player, ctx, music_list, playmsg)
 
@@ -563,7 +563,7 @@ class Music(commands.Cog):
             embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
             embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            await playmsg.edit_original_message(embed=embed)
+            await playmsg.edit(embed=embed)
             if not player.is_playing:
                 await player.play()
 

@@ -21,8 +21,11 @@ async def play_list(player, ctx, musics, playmsg):
             loading_dot_count = 1
         for a in range(0, loading_dot_count):
             loading_dot = loading_dot + "."
+        
+        print("a")
         embed=discord.Embed(title=get_lan(ctx.author.id, "music_adding_music").format(loading_dot=loading_dot), description=musics[i], color=color_code)
-        await playmsg.edit_original_message(embed=embed)
+        await playmsg.edit(embed=embed)
+        print("b")
         query = musics[i]
         if not url_rx.match(query):
             query = f'ytsearch:{query}'
