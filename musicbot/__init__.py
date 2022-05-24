@@ -26,43 +26,43 @@ if sys.version_info[0] < 3 or sys.version_info[1] < 6:
 ENV = bool(os.environ.get('ENV', False))
 
 if ENV:
-    TOKEN            = os.environ.get('TOKEN', None)
+    TOKEN = os.environ.get('TOKEN', None)
     try:
-        OWNERS       = set(int(x) for x in os.environ.get("OWNERS", "").split())
+        OWNERS = set(int(x) for x in os.environ.get("OWNERS", "").split())
     except ValueError:
         raise Exception("OWNERS 사용자 목록에 올바른 정수가 없습니다.")
     try:
-        DebugServer  = set(int(x) for x in os.environ.get("DebugServer", "").split())
+        DebugServer = set(int(x) for x in os.environ.get("DebugServer", "").split())
     except ValueError:
         raise Exception("DebugChannel 사용자 목록에 올바른 정수가 없습니다.")
-    BOT_NAME         = os.environ.get('BOT_NAME', None)
-    BOT_TAG          = os.environ.get('BOT_TAG', "#1234")
+    BOT_NAME = os.environ.get('BOT_NAME', None)
+    BOT_TAG = os.environ.get('BOT_TAG', "#1234")
     try:
-        BOT_ID       = int(os.environ.get('BOT_ID', None))
+        BOT_ID = int(os.environ.get('BOT_ID', None))
     except ValueError:
         raise Exception("BOT_ID에 올바른 정수가 없습니다.")
-    color_code       = int(os.environ.get('color_code', "0xc68e6e"), 0)
-    AboutBot         = os.environ.get('AboutBot', None)
-    host             = os.environ.get('host', "localhost")
-    psw              = os.environ.get('psw', None)
-    region           = os.environ.get('region', "en")
-    port             = int(os.environ.get('port', 2333))
+    color_code = int(os.environ.get('color_code', "0xc68e6e"), 0)
+    AboutBot = os.environ.get('AboutBot', None)
+    host = os.environ.get('host', "localhost")
+    psw = os.environ.get('psw', None)
+    region = os.environ.get('region', "en")
+    port = int(os.environ.get('port', 2333))
 
 else:
     from musicbot.config import Development as Config
 
-    TOKEN            = Config.TOKEN
-    OWNERS           = Config.OWNERS
-    DebugServer      = Config.DebugServer
-    BOT_NAME         = Config.BOT_NAME
-    BOT_TAG          = Config.BOT_TAG
-    BOT_ID           = Config.BOT_ID
-    color_code       = Config.color_code
-    AboutBot         = Config.AboutBot
-    host             = Config.host
-    psw              = Config.psw
-    region           = Config.region
-    port             = Config.port
+    TOKEN = Config.TOKEN
+    OWNERS = Config.OWNERS
+    DebugServer = Config.DebugServer
+    BOT_NAME = Config.BOT_NAME
+    BOT_TAG = Config.BOT_TAG
+    BOT_ID = Config.BOT_ID
+    color_code = Config.color_code
+    AboutBot = Config.AboutBot
+    host = Config.host
+    psw = Config.psw
+    region = Config.region
+    port = Config.port
 
 EXTENSIONS = []
 for file in os.listdir("musicbot/cogs"):
