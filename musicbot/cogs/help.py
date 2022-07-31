@@ -27,7 +27,7 @@ class Help (commands.Cog) :
                 embed.add_field(name=get_lan(ctx.author.id, "help_general_uptime_command"), value=get_lan(ctx.author.id, "help_general_uptime_info"), inline=True)
 
             if "ping" in EXTENSIONS:
-                embed.add_field(name=get_lan(ctx.author.id, "help_general_ping_command"),    value=get_lan(ctx.author.id, "help_general_ping_info"), inline=True)
+                embed.add_field(name=get_lan(ctx.author.id, "help_general_ping_command"), value=get_lan(ctx.author.id, "help_general_ping_info"), inline=True)
 
             if "set_language" in EXTENSIONS:
                 embed.add_field(name=f"`/language`", value="Sends a list of available language packs.", inline=True)
