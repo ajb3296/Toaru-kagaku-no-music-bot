@@ -501,13 +501,13 @@ class Music(commands.Cog):
             musics.append(f'{artist[i]} {title[i]}')
 
         # Play music list
-        info, playmusic, passmusic = await play_list(player, ctx, musics, playmsg)
+        playmsg, player, info, playmusic, passmusic = await play_list(player, ctx, musics, playmsg)
 
         embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
         embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
         embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await playmsg.edit_original_message(embed=embed)
+        await playmsg.edit(embed=embed)
         if not player.is_playing:
             await player.play()
 

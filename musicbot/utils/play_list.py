@@ -13,6 +13,7 @@ async def play_list(player, ctx, musics, playmsg):
     playmusic = get_lan(ctx.author.id, "music_none")
     passmusic = get_lan(ctx.author.id, "music_none")
     loading_dot_count = 0
+
     for i in range(0, len(musics)) :
         # ... 개수 변경
         loading_dot = ""
@@ -54,4 +55,4 @@ async def play_list(player, ctx, musics, playmsg):
             trackcount = 1
         track = lavalink.models.AudioTrack(track, ctx.author.id, recommended=True)
         player.add(requester=ctx.author.id, track=track)
-    return player, info, playmusic, passmusic
+    return playmsg, player, info, playmusic, passmusic
