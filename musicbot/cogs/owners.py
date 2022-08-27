@@ -5,7 +5,7 @@ import psutil
 import math
 
 from discord.ext import commands, pages
-from discord.commands import CommandPermission, slash_command
+from discord.commands import slash_command
 
 from musicbot.utils.language import get_lan
 from musicbot import LOGGER, color_code, BOT_NAME_TAG_VER, EXTENSIONS, DebugServer
@@ -17,7 +17,7 @@ class Owners (commands.Cog) :
         self.color = color_code
         self.error_color = 0xff4a4a
 
-    @slash_command(permissions=[CommandPermission("owner", 2, True)], guilds_id=DebugServer)
+    @slash_command(permissions=[commands.is_owner().predicate], guilds_id=DebugServer)
     async def dev_help(self, ctx):
         """ 개발자용 도움말 """
         embed=discord.Embed(title=get_lan(ctx.author.id, "help_dev"), description=get_lan(ctx.author.id, "help_dev_description"), color=color_code)
@@ -31,7 +31,7 @@ class Owners (commands.Cog) :
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
 
-    @slash_command(permissions=[CommandPermission("owner", 2, True)], guild_ids=DebugServer)
+    @slash_command(permissions=[commands.is_owner().predicate], guild_ids=DebugServer)
     async def load (self, ctx, module) :
         """ 모듈을 로드합니다. """
         try :
@@ -56,7 +56,7 @@ class Owners (commands.Cog) :
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed = embed)
 
-    @slash_command(permissions=[CommandPermission("owner", 2, True)], guild_ids=DebugServer)
+    @slash_command(permissions=[commands.is_owner().predicate], guild_ids=DebugServer)
     async def reload (self, ctx, module) :
         """ 모듈을 리로드합니다. """
         try :
@@ -79,7 +79,7 @@ class Owners (commands.Cog) :
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed = embed)
 
-    @slash_command(permissions=[CommandPermission("owner", 2, True)], guild_ids=DebugServer)
+    @slash_command(permissions=[commands.is_owner().predicate], guild_ids=DebugServer)
     async def unload (self, ctx, module) :
         """ 모듈을 언로드합니다. """
         try :
@@ -102,7 +102,7 @@ class Owners (commands.Cog) :
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed = embed)
 
-    @slash_command(permissions=[CommandPermission("owner", 2, True)], guild_ids=DebugServer)
+    @slash_command(permissions=[commands.is_owner().predicate], guild_ids=DebugServer)
     async def module_list(self, ctx):
         """ 모든 모듈들의 이름을 알려줘요! """
         modulenum = 0
@@ -116,7 +116,7 @@ class Owners (commands.Cog) :
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
 
-    @slash_command(permissions=[CommandPermission("owner", 2, True)], guild_ids=DebugServer)
+    @slash_command(permissions=[commands.is_owner().predicate], guild_ids=DebugServer)
     async def serverinfo(self, ctx) :
         """ 봇 서버의 사양을 알려줘요! """
 
@@ -134,7 +134,7 @@ class Owners (commands.Cog) :
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
     
-    @slash_command(permissions=[CommandPermission("owner", 2, True)], guild_ids=DebugServer)
+    @slash_command(permissions=[commands.is_owner().predicate], guild_ids=DebugServer)
     async def server_list(self, ctx) :
         """ 봇이 들어가있는 모든 서버 리스트를 출력합니다. """
         page = 10

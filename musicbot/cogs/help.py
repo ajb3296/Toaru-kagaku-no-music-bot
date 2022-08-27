@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from discord.commands import slash_command, Option, CommandPermission
+from discord.commands import slash_command, Option
 
 from musicbot.utils.language import get_lan
 from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code, OWNERS, EXTENSIONS, DebugServer
