@@ -4,7 +4,7 @@ import lavalink
 
 from musicbot.utils.language import get_lan
 from musicbot.utils.statistics import Statistics
-from musicbot import color_code, BOT_NAME_TAG_VER
+from musicbot import color_code
 
 url_rx = re.compile(r'https?://(?:www\.)?.+')
 
@@ -14,7 +14,7 @@ async def play_list(player, ctx, musics, playmsg):
     passmusic = get_lan(ctx.author.id, "music_none")
     loading_dot_count = 0
 
-    for i in range(0, len(musics)) :
+    for music in musics:
         # ... 개수 변경
         loading_dot = ""
         loading_dot_count += 1
@@ -25,7 +25,7 @@ async def play_list(player, ctx, musics, playmsg):
 
         embed=discord.Embed(title=get_lan(ctx.author.id, "music_adding_music").format(loading_dot=loading_dot), description=musics[i], color=color_code)
         await playmsg.edit(embed=embed)
-        query = musics[i]
+        query = music
         if not url_rx.match(query):
             query = f'ytsearch:{query}'
         nofind = 0
@@ -36,9 +36,9 @@ async def play_list(player, ctx, musics, playmsg):
                     nofind += 1
                 elif nofind == 3:
                     if passmusic == get_lan(ctx.author.id, "music_none"):
-                        passmusic = musics[i]
+                        passmusic = music
                     else:
-                        passmusic = "%s\n%s" %(passmusic, musics[i])
+                        passmusic = "%s\n%s" %(passmusic, i)
             else:
                 break
         track = results['tracks'][0]
@@ -47,9 +47,9 @@ async def play_list(player, ctx, musics, playmsg):
         Statistics.up(track['info']['identifier'])
 
         if playmusic == get_lan(ctx.author.id, "music_none"):
-            playmusic = musics[i]
+            playmusic = music
         else:
-            playmusic = "%s\n%s" %(playmusic, musics[i])
+            playmusic = "%s\n%s" %(playmusic, music)
         if trackcount != 1:
             info = track['info']
             trackcount = 1

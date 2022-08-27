@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.commands import slash_command, Option
 
 from musicbot.utils.language import get_lan
-from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code, OWNERS, EXTENSIONS, DebugServer
+from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code, OWNERS, EXTENSIONS
 
 class Help (commands.Cog) :
     def __init__ (self, bot) :
@@ -12,7 +12,7 @@ class Help (commands.Cog) :
     @slash_command()
     async def help (self, ctx, *, help_option : Option(str, "Choose help menu.", choices=["INFO", "GENERAL", "MUSIC", "CHART"])) :
         """ Send help """
-        if not help_option == None:
+        if help_option is not None:
             help_option = help_option.upper()
         if help_option == "GENERAL" or help_option == "일반":
             embed=discord.Embed(title=get_lan(ctx.author.id, "help_general"), description="", color=color_code)

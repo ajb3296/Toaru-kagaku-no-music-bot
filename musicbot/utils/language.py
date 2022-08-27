@@ -2,7 +2,7 @@ import os
 import json
 import sqlite3
 
-def get_lan(id, text):
+def get_lan(user_id, text):
     default_language = "en"
     userdata_db_path = "userdata.db"
 
@@ -10,7 +10,7 @@ def get_lan(id, text):
     if os.path.exists(userdata_db_path):
         conn = sqlite3.connect(userdata_db_path, isolation_level=None)
         c = conn.cursor()
-        c.execute("SELECT * FROM userdata WHERE id=:Id", {"Id": id})
+        c.execute("SELECT * FROM userdata WHERE id=:Id", {"Id": user_id})
         temp = c.fetchone()
         if temp is None:
             language = default_language

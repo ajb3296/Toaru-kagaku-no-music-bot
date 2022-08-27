@@ -6,7 +6,6 @@ ID, video_id, count
 
 """
 
-import os
 import sqlite3
 from datetime import datetime
 
@@ -52,7 +51,7 @@ class Statistics_Db:
         temp = c.fetchone()
         conn.close()
         return temp
-    
+
     def get_all(table_name):
         conn = sqlite3.connect(statistics_db_path, isolation_level=None)
         c = conn.cursor()

@@ -41,7 +41,7 @@ class Toaru_kagaku_no_music_bot (commands.Bot) :
             a = requests.get("https://api.github.com/repos/Cog-Creators/Lavalink-Jars/releases")
             b = json.loads(a.text)
             request.urlretrieve(f"https://github.com/Cog-Creators/Lavalink-Jars/releases/download/{b[0]['tag_name']}/Lavalink.jar", "Lavalink.jar")
-        
+
         process = multiprocessing.Process(target=child_process)
         process.start()
         time.sleep(20)

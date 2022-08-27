@@ -4,7 +4,6 @@ lavalink
 psutil
 requests
 lxml
-PyNaCl
 chardet
 aiohttp
 billboard.py

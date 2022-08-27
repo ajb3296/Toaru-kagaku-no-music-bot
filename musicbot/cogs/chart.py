@@ -15,7 +15,7 @@ class Chart (commands.Cog) :
         """ I will tell you from the 1st to the 10th place on the chart site """
         await ctx.defer()
 
-        if not chart == None:
+        if chart is not None:
             chart = chart.upper()
         if chart == "MELON":
             title, artist = await get_melon()

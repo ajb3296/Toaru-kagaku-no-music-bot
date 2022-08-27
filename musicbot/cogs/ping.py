@@ -2,7 +2,7 @@ import time
 import discord
 from discord.ext import commands
 from discord.commands import slash_command
-from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code, DebugServer
+from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code
 
 class Ping (commands.Cog) :
     def __init__ (self, bot) :

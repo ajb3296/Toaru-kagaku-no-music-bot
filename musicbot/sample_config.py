@@ -1,5 +1,3 @@
-import os
-
 if not __name__.endswith("sample_config"):
     import sys
     print("README 는 읽기 전용입니다. 이 sample_config 을 config 파일로 확장하되, 그냥 이름만 바꾸고 여기에 있는 요소들을 바꿔서는 안 됩니다. "

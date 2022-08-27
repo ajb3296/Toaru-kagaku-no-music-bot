@@ -133,7 +133,7 @@ class Owners (commands.Cog) :
         embed.add_field(name="Ping", value=str(round(self.bot.latency * 1000)) + "ms", inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
-    
+
     @slash_command(permissions=[commands.is_owner().predicate], guild_ids=DebugServer)
     async def server_list(self, ctx) :
         """ 봇이 들어가있는 모든 서버 리스트를 출력합니다. """
