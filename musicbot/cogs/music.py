@@ -556,7 +556,7 @@ class Music(commands.Cog):
             embed.set_footer(text=BOT_NAME_TAG_VER)
             playmsg = await ctx.respond(embed=embed)
 
-            player, info, playmusic, passmusic = await play_list(player, ctx, music_list, playmsg)
+            playmsg, player, info, playmusic, passmusic = await play_list(player, ctx, music_list, playmsg)
 
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_play_music"), description='', color=color_code)
             embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)

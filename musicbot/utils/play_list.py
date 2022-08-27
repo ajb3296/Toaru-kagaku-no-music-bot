@@ -23,7 +23,7 @@ async def play_list(player, ctx, musics, playmsg):
         for a in range(0, loading_dot_count):
             loading_dot = loading_dot + "."
 
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_adding_music").format(loading_dot=loading_dot), description=musics[i], color=color_code)
+        embed=discord.Embed(title=get_lan(ctx.author.id, "music_adding_music").format(loading_dot=loading_dot), description=music, color=color_code)
         await playmsg.edit(embed=embed)
         query = music
         if not url_rx.match(query):
@@ -38,7 +38,7 @@ async def play_list(player, ctx, musics, playmsg):
                     if passmusic == get_lan(ctx.author.id, "music_none"):
                         passmusic = music
                     else:
-                        passmusic = "%s\n%s" %(passmusic, i)
+                        passmusic = f"{passmusic}\n{music}"
             else:
                 break
         track = results['tracks'][0]
@@ -49,10 +49,13 @@ async def play_list(player, ctx, musics, playmsg):
         if playmusic == get_lan(ctx.author.id, "music_none"):
             playmusic = music
         else:
-            playmusic = "%s\n%s" %(playmusic, music)
+            playmusic = f"{playmusic}\n{music}"
         if trackcount != 1:
             info = track['info']
             trackcount = 1
         track = lavalink.models.AudioTrack(track, ctx.author.id, recommended=True)
         player.add(requester=ctx.author.id, track=track)
+
+        if not player.is_playing:
+            await player.play()
     return playmsg, player, info, playmusic, passmusic
