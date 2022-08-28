@@ -30,8 +30,8 @@ class Help (commands.Cog) :
                 embed.add_field(name=get_lan(ctx.author.id, "help_general_ping_command"), value=get_lan(ctx.author.id, "help_general_ping_info"), inline=True)
 
             if "set_language" in EXTENSIONS:
-                embed.add_field(name=f"`/language`", value="Sends a list of available language packs.", inline=True)
-                embed.add_field(name=f"`/language` [*language pack*]", value="Apply the language pack.", inline=True)
+                embed.add_field(name="`/language`", value="Sends a list of available language packs.", inline=True)
+                embed.add_field(name="`/language` [*language pack*]", value="Apply the language pack.", inline=True)
 
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.respond(embed=embed)

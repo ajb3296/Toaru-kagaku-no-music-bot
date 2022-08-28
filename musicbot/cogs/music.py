@@ -9,7 +9,7 @@ from discord.commands import slash_command, Option
 
 from musicbot.utils.language import get_lan
 from musicbot.utils.volumeicon import volumeicon
-from musicbot.utils.get_chart import *
+from musicbot.utils.get_chart import get_melon, get_billboard, get_billboardjp
 from musicbot.utils.play_list import play_list
 from musicbot.utils.statistics import Statistics
 from musicbot import LOGGER, BOT_ID, color_code, BOT_NAME_TAG_VER, host, psw, region
@@ -316,7 +316,7 @@ class Music(commands.Cog):
         embed=discord.Embed(title=get_lan(ctx.author.id, "music_skip_next"), description='', color=color_code)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
-    
+
     @slash_command()
     async def nowplaying(self, ctx):
         """ Sending the currently playing song! """
@@ -373,8 +373,14 @@ class Music(commands.Cog):
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_not_playing"), description='', color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
-        player.repeat = not player.repeat
-        if player.repeat:
+
+        # 0 = off, 1 = single track, 2 = queue
+        if player.loop == 0:
+            player.set_loop(2)
+        elif player.loop == 2:
+            player.set_loop(0)
+
+        if player.loop == 2:
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_repeat_on"), description='', color=color_code)
         else:
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_repeat_off"), description='', color=color_code)

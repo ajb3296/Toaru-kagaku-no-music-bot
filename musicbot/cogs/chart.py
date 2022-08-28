@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.commands import slash_command, Option
 
 from musicbot.utils.language import get_lan
-from musicbot.utils.get_chart import *
+from musicbot.utils.get_chart import get_melon, get_billboard, get_billboardjp
 from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code
 
 class Chart (commands.Cog) :

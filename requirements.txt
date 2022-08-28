@@ -1,6 +1,6 @@
-py-cord==2.1.1
+py-cord>=2.1.1
+lavalink>=4.0.1
 BeautifulSoup4
-lavalink
 psutil
 requests
 lxml
