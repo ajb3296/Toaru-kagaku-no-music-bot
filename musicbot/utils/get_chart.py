@@ -6,7 +6,7 @@ from musicbot.utils.crawler import getReqTEXT
 header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko'}
 
 
-async def get_melon(count):
+async def get_melon(count = 10):
     melon_url = 'https://www.melon.com/chart/index.htm'
     data = await getReqTEXT (melon_url, header)
     parse = BeautifulSoup(data, 'lxml')
@@ -18,7 +18,7 @@ async def get_melon(count):
         artist.append(musics[num].find("div", {"class" : "ellipsis rank02"}).find("a").text)
     return title, artist
 
-async def get_billboard(count):
+async def get_billboard(count = 10):
     chart = billboard.ChartData('hot-100')
     title = []
     artist = []
@@ -27,7 +27,7 @@ async def get_billboard(count):
         artist.append(chart[num].artist)
     return title, artist
 
-async def get_billboardjp(count):
+async def get_billboardjp(count = 10):
     billboardjp_url = 'https://www.billboard-japan.com/charts/detail?a=hot100'
     data = await getReqTEXT(billboardjp_url, header)
     parse = BeautifulSoup(data, 'lxml')
