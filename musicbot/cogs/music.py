@@ -342,7 +342,7 @@ class Music(commands.Cog):
 
     @slash_command()
     async def queue(self, ctx):
-        """ Send a playlist on the page in (*Number of page*) of the playlist list! """
+        """ Send music queue! """
         await ctx.defer()
 
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
@@ -385,7 +385,7 @@ class Music(commands.Cog):
 
     @slash_command()
     async def repeat(self, ctx):
-        """ Play all the songs in the playlist over and over again! """
+        """ Repeat one song or repeat multiple songs! """
         await ctx.defer()
 
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
