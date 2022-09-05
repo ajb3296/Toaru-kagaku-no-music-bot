@@ -336,12 +336,12 @@ class Music(commands.Cog):
         song = f'**[{player.current.title}]({player.current.uri})**\n({position}/{duration})'
         embed = discord.Embed(color=color_code,
                               title=get_lan(ctx.author.id, "music_now_playing"), description=song)
-        embed.set_thumbnail(url="%s/0.jpg"%player.current.uri.replace('https://www.youtube.com/watch?v=', 'http://img.youtube.com/vi/'))
+        embed.set_thumbnail(url=f"{player.current.uri.replace('https://www.youtube.com/watch?v=', 'http://img.youtube.com/vi/')}/0.jpg")
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
     @slash_command()
-    async def queue(self, ctx, page: int = 1):
+    async def queue(self, ctx):
         """ Send a playlist on the page in (*Number of page*) of the playlist list! """
         await ctx.defer()
 
@@ -351,18 +351,38 @@ class Music(commands.Cog):
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
 
+        # 페이지당 띄울 음악 개수
         items_per_page = 10
-        pages = math.ceil(len(player.queue) / items_per_page)
-        start = (page - 1) * items_per_page
-        end = start + items_per_page
-        queue_list = ''
-        for index, track in enumerate(player.queue[start:end], start=start):
-            queue_list += f'`{index + 1}.` [**{track.title}**]({track.uri})\n'
-        embed = discord.Embed(colour=color_code,
-                              description=get_lan(ctx.author.id, "music_q").format(lenQ=len(player.queue), queue_list=queue_list))
-        embed.set_footer(text=f'{get_lan(ctx.author.id, "music_page")} {page}/{pages}\n{BOT_NAME_TAG_VER}')
-        await ctx.followup.send(embed=embed)
-    
+
+        if len(player.queue) <= items_per_page:
+            queue_list = ''
+            for index, track in enumerate(player.queue):
+                queue_list += f'`{index + 1}.` [**{track.title}**]({track.uri})\n'
+            embed = discord.Embed(description=get_lan(ctx.author.id, "music_q").format(lenQ=len(player.queue), queue_list=queue_list), colour=color_code)
+            embed.set_footer(text=f'{get_lan(ctx.author.id, "music_page")}\n{BOT_NAME_TAG_VER}')
+            return await ctx.followup.send(embed=embed)
+
+        # 총 페이지수 계산
+        allpage = math.ceil(len(player.queue) / items_per_page)
+
+        pages_list = []
+
+        for i in range(1, allpage+1):
+            queue_list = ''
+            numb = (items_per_page * i)
+            numa = numb - items_per_page
+            
+            for index, track in enumerate(player.queue[numa:numb], start=numa):
+                queue_list += f'`{index + 1}.` [**{track.title}**]({track.uri})\n'
+
+            pages_list.append(
+                [
+                    discord.Embed(description=get_lan(ctx.author.id, "music_q").format(lenQ=len(player.queue), queue_list=queue_list), color=color_code).set_footer(text=f"{get_lan(ctx.author.id, 'music_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
+                ]
+            )
+        paginator = pages.Paginator(pages=pages_list)
+        await paginator.respond(ctx.interaction, ephemeral=False)
+
     @slash_command()
     async def repeat(self, ctx):
         """ Play all the songs in the playlist over and over again! """
@@ -378,12 +398,16 @@ class Music(commands.Cog):
         if player.loop == 0:
             player.set_loop(2)
         elif player.loop == 2:
+            player.set_loop(1)
+        else:
             player.set_loop(0)
 
-        if player.loop == 2:
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_repeat_on"), description='', color=color_code)
-        else:
+        if player.loop == 0:
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_repeat_off"), description='', color=color_code)
+        elif player.loop == 1:
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_repeat_one"), description='', color=color_code)
+        elif player.loop == 2:
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_repeat_all"), description='', color=color_code)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
@@ -391,7 +415,7 @@ class Music(commands.Cog):
     async def remove(self, ctx, index: int):
         """ Remove music from the playlist! """
         await ctx.defer()
-        
+
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         if not player.queue:
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_remove_no_wating_music"), description='', color=color_code)
@@ -479,9 +503,14 @@ class Music(commands.Cog):
         await ctx.followup.send(embed=embed)
 
     @slash_command()
-    async def chartplay(self, ctx, *, chart : Option(str, "Choose chart.", choices=["Melon", "Billboard", "Billboard Japan"])):
+    async def chartplay(self, ctx, *, chart : Option(str, "Choose chart.", choices=["Melon", "Billboard", "Billboard Japan"]), count : int = 10):
         """ Add the top 10 songs on the selected chart to your playlist! """
         await ctx.defer()
+
+        if count > 100:
+            count = 100
+        elif count < 1:
+            count = 1
 
         if chart is not None:
             chart = chart.upper()
@@ -490,25 +519,25 @@ class Music(commands.Cog):
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_parsing_melon"), color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             playmsg = await ctx.followup.send(embed=embed)
-            title, artist = await get_melon()
+            title, artist = await get_melon(count)
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_melon_chart_play"), description='', color=color_code)
 
         elif chart == "BILLBOARD":
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_parsing_billboard"), color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             playmsg = await ctx.followup.send(embed=embed)
-            title, artist = await get_billboard()
+            title, artist = await get_billboard(count)
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_billboard_chart_play"), description='', color=color_code)
 
         elif chart == "BILLBOARD JAPAN":
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_parsing_billboardjp"), color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             playmsg = await ctx.followup.send(embed=embed)
-            title, artist = await get_billboardjp()
+            title, artist = await get_billboardjp(count)
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_billboardjp_chart_play"), description='', color=color_code)
 
         musics = []
-        for i in range(0, 10):
+        for i in range(0, count):
             musics.append(f'{artist[i]} {title[i]}')
 
         # Play music list
@@ -516,7 +545,7 @@ class Music(commands.Cog):
 
         embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
         embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
-        embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
+        embed.set_thumbnail(url=f"http://img.youtube.com/vi/{info['identifier']}/0.jpg")
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await playmsg.edit(embed=embed)
         if not player.is_playing:
@@ -572,7 +601,7 @@ class Music(commands.Cog):
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_play_music"), description='', color=color_code)
             embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
             embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
-            embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
+            embed.set_thumbnail(url=f"http://img.youtube.com/vi/{info['identifier']}/0.jpg")
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await playmsg.edit(embed=embed)
             if not player.is_playing:
