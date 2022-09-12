@@ -1,6 +1,7 @@
 import re
 import os
 import math
+import difflib
 
 import discord
 import lavalink
@@ -572,6 +573,13 @@ class Music(commands.Cog):
             return await ctx.followup.send(embed=embed)
 
         if arg is not None:
+
+            # 유사한 제목 찾기
+            if arg not in files:
+                arg = difflib.get_close_matches(arg, files, 1, 0.65)[0]
+                if arg is None:
+                    raise Exception("Can't find music")
+
             # List play
             try:
                 f = open(f"{anilistpath}/{arg}.txt", 'r')
@@ -598,7 +606,7 @@ class Music(commands.Cog):
 
             playmsg, player, info, playmusic, passmusic = await play_list(player, ctx, music_list, playmsg)
 
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_play_music"), description='', color=color_code)
+            embed=discord.Embed(title=f":arrow_forward: | {arg}", description='', color=color_code)
             embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
             embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
             embed.set_thumbnail(url=f"http://img.youtube.com/vi/{info['identifier']}/0.jpg")
