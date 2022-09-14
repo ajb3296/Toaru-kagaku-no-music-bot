@@ -5,6 +5,7 @@ import difflib
 
 import discord
 import lavalink
+from lavalink.filters import Equalizer as llEq
 from discord.ext import commands, pages
 from discord.commands import slash_command, Option
 
@@ -14,8 +15,11 @@ from musicbot.utils.get_chart import get_melon, get_billboard, get_billboardjp
 from musicbot.utils.play_list import play_list
 from musicbot.utils.statistics import Statistics
 from musicbot import LOGGER, BOT_ID, color_code, BOT_NAME_TAG_VER, host, psw, region
+from musicbot.utils.equalizer import Equalizer
 
 url_rx = re.compile(r'https?://(?:www\.)?.+')
+
+import traceback
 
 
 class LavalinkVoiceClient(discord.VoiceClient):
@@ -89,7 +93,6 @@ class LavalinkVoiceClient(discord.VoiceClient):
         # disconnect
         player.channel_id = None
         self.cleanup()
-
 
 class Music(commands.Cog):
     def __init__(self, bot):
@@ -646,6 +649,84 @@ class Music(commands.Cog):
                 )
             paginator = pages.Paginator(pages=pages_list)
             await paginator.respond(ctx.interaction, ephemeral=False)
+
+    @slash_command()
+    async def equalizer(self, ctx):
+        """ Send equalizer dashboard """
+        await ctx.defer()
+
+        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+        eq = player.fetch('eq', Equalizer())
+
+        selector = f'{" " * 8}^^^'
+        await ctx.respond(f'```diff\n{eq.visualise()}\n{selector}```', view=EqualizerButton(ctx, player, eq, 0))
+
+class EqualizerButton(discord.ui.View):
+    def __init__(self, ctx, player, eq, selected):
+        super().__init__()
+        self.ctx = ctx
+        self.player = player
+        self.eq = eq
+        self.selected = selected
+
+    @discord.ui.button(label="", row=0, style=discord.ButtonStyle.primary, emoji="⬅")
+    async def left(self, button, interaction):
+        self.selected = max(self.selected - 1, 0)
+        result = await self.button_interact()
+        await interaction.response.edit_message(content=result)
+
+    @discord.ui.button(label="", row=0, style=discord.ButtonStyle.primary, emoji="➡")
+    async def right(self, button, interaction):
+        self.selected = min(self.selected + 1, 14)
+        result = await self.button_interact()
+        await interaction.response.edit_message(content=result)
+    
+    @discord.ui.button(label="", row=0, style=discord.ButtonStyle.primary, emoji="⬆")
+    async def up(self, button, interaction):
+
+        gain = min(self.eq.get_gain(self.selected) + 0.1, 1.0)
+        self.eq.set_gain(self.selected, gain)
+        await self.apply_gains(self.player, self.eq.bands)
+        result = await self.button_interact()
+
+        await interaction.response.edit_message(content=result)
+    
+    @discord.ui.button(label="", row=0, style=discord.ButtonStyle.primary, emoji="⬇")
+    async def down(self, button, interaction):
+
+        gain = max(self.eq.get_gain(self.selected) - 0.1, -0.25)
+        self.eq.set_gain(self.selected, gain)
+        await self.apply_gains(self.player, self.eq.bands)
+        result = await self.button_interact()
+
+        await interaction.response.edit_message(content=result)
+
+    @discord.ui.button(label="", row=0, style=discord.ButtonStyle.danger, emoji="🔄")
+    async def reset(self, button, interaction):
+        for band in range(self.eq._band_count):
+            self.eq.set_gain(band, 0.0)
+
+        await self.apply_gains(self.player, self.eq.bands)
+
+        result = await self.button_interact()
+
+        await interaction.response.edit_message(content=result)
+    
+
+    async def button_interact(self):
+        self.player.store('eq', self.eq)
+        selector = f'{" " * 8}{"    " * self.selected}^^^'
+        return f"```diff\n{self.eq.visualise()}\n{selector}```"
+
+    async def apply_gains(self, player, gains):
+        if isinstance(gains, list):
+            e = llEq()
+            e.update(bands=[(x, y) for x, y in enumerate(gains)])
+            await player.set_filter(e)
+        elif isinstance(gains, dict):
+            await player.set_gain(gains['band'], gains['gain'])
+
+        await player._apply_filters()
 
 def setup(bot):
     bot.add_cog(Music(bot))

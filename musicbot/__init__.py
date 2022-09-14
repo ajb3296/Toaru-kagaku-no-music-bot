@@ -9,7 +9,7 @@ if not os.path.exists("musicbot/config.py"):
     make_config()
 
 # Bot version
-BOT_VER = "V.3.1"
+BOT_VER = "V.3.2"
 
 # enable logging
 logging.basicConfig(

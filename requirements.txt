@@ -5,5 +5,4 @@ psutil
 requests
 lxml
 chardet
-aiohttp
 billboard.py

@@ -51,6 +51,7 @@ class Help (commands.Cog) :
                 embed.add_field(name=get_lan(ctx.author.id, "help_music_repeat_command"), value=get_lan(ctx.author.id, "help_music_repeat_info"), inline=False)
                 embed.add_field(name=get_lan(ctx.author.id, "help_music_seek_command"), value=get_lan(ctx.author.id, "help_music_seek_info"), inline=False)
                 embed.add_field(name=get_lan(ctx.author.id, "help_music_remove_command"), value=get_lan(ctx.author.id, "help_music_remove_info"), inline=False)
+                embed.add_field(name=get_lan(ctx.author.id, "help_music_equalizer_command"), value=get_lan(ctx.author.id, "help_music_equalizer_info"), inline=False)
                 embed.set_footer(text=BOT_NAME_TAG_VER)
                 await ctx.respond(embed=embed)
 
