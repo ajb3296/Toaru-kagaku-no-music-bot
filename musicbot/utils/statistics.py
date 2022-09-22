@@ -44,7 +44,8 @@ class Statistics_Db:
         conn = sqlite3.connect(statistics_db_path, isolation_level=None)
         c = conn.cursor()
         try:
-            c.execute(f"SELECT * FROM {table_name} WHERE video_id=:Id", {"Id": video_id})
+            query = "SELECT * FROM {table_name} WHERE video_id={video_id}"
+            c.execute(query.format(table_name=table_name, video_id=video_id))
         except sqlite3.OperationalError:
             conn.close()
             return None
@@ -57,7 +58,8 @@ class Statistics_Db:
         c = conn.cursor()
         # 내림차순으로 정렬
         try:
-            c.execute(f"SELECT * FROM {table_name} ORDER BY count DESC")
+            query = "SELECT * FROM {table_name} ORDER BY count DESC"
+            c.execute(query.format(table_name=table_name))
         except sqlite3.OperationalError:
             return None
         temp = c.fetchall()

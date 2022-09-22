@@ -38,8 +38,8 @@
 
 ### Troubleshoot
 
-차트 사이트 파싱중 SSL 인증서 관련 문제가 발생했을 경우 :<br>
+~~차트 사이트 파싱중 SSL 인증서 관련 문제가 발생했을 경우 :~~<br>
 
-`/etc/ssl/openssl.cnf` 파일을 연 후 `CipherString`을 `DEFAULT@SECLEVEL=2`에서 `DEFAULT@SECLEVEL=1`로 변경 후 시스템을 재부팅 합니다.<br>
+~~`/etc/ssl/openssl.cnf` 파일을 연 후 `CipherString`을 `DEFAULT@SECLEVEL=2`에서 `DEFAULT@SECLEVEL=1`로 변경 후 시스템을 재부팅 합니다.~~<br>
 
 도움 주신분 : [KeonWoo PARK](https://github.com/parkkw472)

@@ -11,7 +11,7 @@ class About (commands.Cog) :
 
     @slash_command()
     async def about (self, ctx):
-        """ Let me tell you about me! """    
+        """ Let me tell you about me! """
         players = 0
         playing_players = 0
         for node in self.bot.lavalink.node_manager.nodes:
