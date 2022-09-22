@@ -4,4 +4,4 @@ import multiprocessing
 
 def child_process():
     print(f"Child process PID : {multiprocessing.current_process().pid}")
-    subprocess.call([get_java_path(), '-jar', 'Lavalink.jar'])
+    subprocess.call([get_java_path(), '-jar', 'Lavalink.jar'], shell=False)

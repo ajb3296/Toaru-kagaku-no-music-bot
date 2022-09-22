@@ -31,8 +31,10 @@ class Other (commands.Cog) :
     async def softver(self, ctx) :
         """ Let me tell you the version of the modules! """
         java_path = get_java_path()
-        javaver = subprocess.check_output([java_path, '-version'], stderr=subprocess.STDOUT, encoding='utf-8')
-        lavalinkver = subprocess.check_output([java_path, '-jar', 'Lavalink.jar', '--version'], stderr=subprocess.STDOUT, encoding='utf-8')
+        args = [java_path, '-version']
+        javaver = subprocess.check_output(args, stderr=subprocess.STDOUT, shell=False, encoding='utf-8')
+        args = [java_path, '-jar', 'Lavalink.jar', '--version']
+        lavalinkver = subprocess.check_output(args, stderr=subprocess.STDOUT, shell=False, encoding='utf-8')
         embed=discord.Embed(title=get_lan(ctx.author.id, "other_soft_ver"), color=color_code)
         embed.add_field(name="Python Ver", value=("%s %s") %(platform.python_implementation(), platform.python_version()), inline=False)
         embed.add_field(name="Discord.py Ver", value=discord.__version__, inline=False)
