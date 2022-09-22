@@ -29,8 +29,8 @@ class Other (commands.Cog) :
     @slash_command()
     async def softver(self, ctx) :
         """ Let me tell you the version of the modules! """
-        javaver = subprocess.check_output("java --version", shell=True, encoding='utf-8')
-        lavalinkver = subprocess.check_output("java -jar Lavalink.jar --version", shell=True, encoding='utf-8')
+        javaver = subprocess.check_output(['java', '-version'], stderr=subprocess.STDOUT, encoding='utf-8')
+        lavalinkver = subprocess.check_output(['java', '-jar', 'Lavalink.jar', '--version'], stderr=subprocess.STDOUT, encoding='utf-8')
         embed=discord.Embed(title=get_lan(ctx.author.id, "other_soft_ver"), color=color_code)
         embed.add_field(name="Python Ver", value=("%s %s") %(platform.python_implementation(), platform.python_version()), inline=False)
         embed.add_field(name="Discord.py Ver", value=discord.__version__, inline=False)
@@ -45,7 +45,7 @@ class Other (commands.Cog) :
         """ Let me tell you the server's uptime! """
         uptime_string = str(datetime.timedelta(seconds=int(time.time() - psutil.boot_time())))
         embed=discord.Embed(title=get_lan(ctx.author.id, "other_uptime"),
-                            description=uptime_string,
+                            description=f"```{uptime_string}```",
                             color=color_code)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
