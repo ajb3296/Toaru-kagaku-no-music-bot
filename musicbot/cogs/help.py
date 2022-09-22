@@ -10,7 +10,7 @@ class Help (commands.Cog) :
         self.bot = bot
 
     @slash_command()
-    async def help (self, ctx, *, help_option : Option(str, "Choose help menu.", choices=["INFO", "GENERAL", "MUSIC", "CHART"])) :
+    async def help (self, ctx, *, help_option : Option(str, description="Choose help menu.", choices=["INFO", "GENERAL", "MUSIC", "CHART"])) :
         """ Send help """
         if help_option is not None:
             help_option = help_option.upper()

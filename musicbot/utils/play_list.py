@@ -20,7 +20,7 @@ async def play_list(player, ctx, musics, playmsg):
         loading_dot_count += 1
         if loading_dot_count == 4:
             loading_dot_count = 1
-        for a in range(0, loading_dot_count):
+        for _ in range(0, loading_dot_count):
             loading_dot = loading_dot + "."
 
         embed=discord.Embed(title=get_lan(ctx.author.id,

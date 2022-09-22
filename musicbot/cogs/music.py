@@ -455,7 +455,7 @@ class Music(commands.Cog):
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_shuffle_off"), description='', color=color_code)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
-    
+
     @slash_command()
     async def volume(self, ctx, volume: int = None):
         """ Changes or display the volume """
@@ -485,12 +485,12 @@ class Music(commands.Cog):
         )
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
-    
+
     @slash_command()
     async def pause(self, ctx):
         """ Pause or resume music! """
         await ctx.defer()
-        
+
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         if not player.is_playing:
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_not_playing"), description='', color=color_code)
@@ -523,7 +523,7 @@ class Music(commands.Cog):
         await ctx.followup.send(embed=embed)
 
     @slash_command()
-    async def chartplay(self, ctx, *, chart : Option(str, "Choose chart.", choices=["Melon", "Billboard", "Billboard Japan"]), count : int = 10):
+    async def chartplay(self, ctx, *, chart : Option(str, description="Choose chart.", choices=["Melon", "Billboard", "Billboard Japan"]), count : int = 10):
         """ Add the top 10 songs on the selected chart to your playlist! """
         await ctx.defer()
 

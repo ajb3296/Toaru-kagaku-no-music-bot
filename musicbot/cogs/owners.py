@@ -165,7 +165,7 @@ class Owners (commands.Cog) :
             numa = numb - page
             for a in range(numa, numb):
                 try:
-                    srvr = srvr + get_lan(ctx.author.id, "owners_server_list_info").format(server_name=botguild[a], server_members_count=botguild[a].member_count)
+                    srvr += get_lan(ctx.author.id, "owners_server_list_info").format(server_name=botguild[a], server_members_count=botguild[a].member_count)
                 except IndexError:
                     break
 

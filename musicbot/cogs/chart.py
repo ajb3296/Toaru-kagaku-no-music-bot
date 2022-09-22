@@ -11,7 +11,7 @@ class Chart (commands.Cog) :
         self.bot = bot
 
     @slash_command()
-    async def chart(self, ctx, *, chart : Option(str, "Choose chart.", choices=["Melon", "Billboard", "Billboard Japan"])):
+    async def chart(self, ctx, *, chart : Option(str, description="Choose chart.", choices=["Melon", "Billboard", "Billboard Japan"])):
         """ I will tell you from the 1st to the 10th place on the chart site """
         await ctx.defer()
 
