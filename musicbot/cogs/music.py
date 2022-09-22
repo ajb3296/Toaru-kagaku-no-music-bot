@@ -603,7 +603,7 @@ class Music(commands.Cog):
                     arg = difflib.get_close_matches(arg, files, 1, 0.65)[0]
                     if arg is None:
                         raise Exception("Can't find music")
-                        
+
                 f = open(f"{anilistpath}/{arg}.txt", 'r')
                 list_str = f.read()
                 f.close()

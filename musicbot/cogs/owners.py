@@ -125,7 +125,7 @@ class Owners (commands.Cog) :
         embed.add_field(name="Kernel", value=platform.version(), inline=False)
         embed.add_field(name="Architecture", value=platform.machine(), inline=False)
         embed.add_field(name="CPU Usage", value=str(psutil.cpu_percent()) +"%", inline=False)
-        memorystr = str(round((psutil.virtual_memory().used / (1024.0 ** 3)), 1)) + "GB" + " / " + str(round((psutil.virtual_memory().total / (1024.0 ** 3)), 1)) + "GB"
+        memorystr = f"{round((psutil.virtual_memory().used / (1024.0 ** 3)), 1)}GB / {round((psutil.virtual_memory().total / (1024.0 ** 3)), 1)}GB"
         embed.add_field(name="Memory Usage", value=memorystr, inline=False)
         embed.add_field(name="Python Ver", value=("%s %s") %(platform.python_implementation(), platform.python_version()), inline=False)
         embed.add_field(name="Py-cord.py Ver", value=discord.__version__, inline=False)
@@ -172,8 +172,12 @@ class Owners (commands.Cog) :
             pages_list.append(
                 [
                     discord.Embed(title = get_lan(ctx.author.id, "owners_server_list_title").format(BOT_NAME=self.bot.user.name),
-                                  description=get_lan(ctx.author.id, "owners_server_list_description2").format(server_count=len(self.bot.guilds), members_count=len(self.bot.users), servers=srvr),
-                                  color=color_code
+                                description=get_lan(ctx.author.id, "owners_server_list_description2").format(
+                                    server_count=len(self.bot.guilds),
+                                    members_count=len(self.bot.users),
+                                    servers=srvr
+                                ),
+                                color=color_code
                     ).set_footer(text=f"{get_lan(ctx.author.id, 'owners_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
                 ]
             )
