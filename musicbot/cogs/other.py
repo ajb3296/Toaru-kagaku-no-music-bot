@@ -1,8 +1,11 @@
+import time
+import psutil
 import discord
 import lavalink
-from discord.ext import commands
 import platform
+import datetime
 import subprocess
+from discord.ext import commands
 from discord.commands import slash_command
 
 from musicbot.utils.language import get_lan
@@ -40,9 +43,9 @@ class Other (commands.Cog) :
     @slash_command()
     async def uptime(self, ctx):
         """ Let me tell you the server's uptime! """
-        res = subprocess.check_output("uptime", shell=False, encoding='utf-8')
+        uptime_string = str(datetime.timedelta(seconds=int(time.time() - psutil.boot_time())))
         embed=discord.Embed(title=get_lan(ctx.author.id, "other_uptime"),
-                            description="```%s```" %res.replace(',  ', '\n').replace(', ', '\n').replace(': ', ' : ')[1:],
+                            description=uptime_string,
                             color=color_code)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
