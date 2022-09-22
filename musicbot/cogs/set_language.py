@@ -7,17 +7,17 @@ from discord.commands import slash_command, Option
 from musicbot.utils.language import get_lan
 from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code
 
-lanPack = []
+lan_pack = []
 for file in os.listdir("musicbot/languages"):
     if file.endswith(".json"):
-        lanPack.append(file.replace(".json", ""))
+        lan_pack.append(file.replace(".json", ""))
 
 class Language (commands.Cog) :
     def __init__ (self, bot) :
         self.bot = bot
 
     @slash_command()
-    async def language (self, ctx, lang : Option(str, "Choose language pack.", choices=lanPack)) :
+    async def language (self, ctx, lang : Option(str, "Choose language pack.", choices=lan_pack)) :
         """ Apply the language pack. """
         if lang is None:
             files = ""

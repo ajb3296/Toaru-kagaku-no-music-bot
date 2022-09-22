@@ -80,6 +80,7 @@ class Statistics_Db:
             c.execute(f"UPDATE {table_name} SET count=:count WHERE video_id=:video_id", {"count": edit_count, 'video_id': video_id})
         conn.close()
 
+
 if __name__ == "__main__":
     # For test
     statistics = Statistics

@@ -140,7 +140,11 @@ class Owners (commands.Cog) :
         page = 10
         # 페이지 지정값이 없고, 총 서버수가 10 이하일 경우
         if len(self.bot.guilds) <= page:
-            embed = discord.Embed(title = get_lan(ctx.author.id, "owners_server_list_title").format(BOT_NAME=self.bot.user.name), description=get_lan(ctx.author.id, "owners_server_list_description").format(server_count=len(self.bot.guilds), members_count=len(self.bot.users)), color=color_code)
+            embed = discord.Embed(title = get_lan(ctx.author.id, "owners_server_list_title").format(BOT_NAME=self.bot.user.name),
+                                  description=get_lan(ctx.author.id, "owners_server_list_description").format(server_count=len(self.bot.guilds),
+                                  members_count=len(self.bot.users)),
+                                  color=color_code
+            )
             srvr = str()
             for i in self.bot.guilds:
                 srvr = srvr + get_lan(ctx.author.id, "owners_server_list_info").format(server_name=i, server_members_count=i.member_count)
@@ -167,7 +171,10 @@ class Owners (commands.Cog) :
 
             pages_list.append(
                 [
-                    discord.Embed(title = get_lan(ctx.author.id, "owners_server_list_title").format(BOT_NAME=self.bot.user.name), description=get_lan(ctx.author.id, "owners_server_list_description2").format(server_count=len(self.bot.guilds), members_count=len(self.bot.users), servers=srvr), color=color_code).set_footer(text=f"{get_lan(ctx.author.id, 'owners_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
+                    discord.Embed(title = get_lan(ctx.author.id, "owners_server_list_title").format(BOT_NAME=self.bot.user.name),
+                                  description=get_lan(ctx.author.id, "owners_server_list_description2").format(server_count=len(self.bot.guilds), members_count=len(self.bot.users), servers=srvr),
+                                  color=color_code
+                    ).set_footer(text=f"{get_lan(ctx.author.id, 'owners_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
                 ]
             )
         paginator = pages.Paginator(pages=pages_list)

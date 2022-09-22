@@ -77,7 +77,7 @@ class EqualizerButton(discord.ui.View):
         self.selected = min(self.selected + 1, 14)
         result = await self.button_interact()
         await interaction.response.edit_message(content=result)
-    
+
     @discord.ui.button(label="", row=0, style=discord.ButtonStyle.primary, emoji="⬆")
     async def up(self, button, interaction):
 
@@ -87,7 +87,7 @@ class EqualizerButton(discord.ui.View):
         result = await self.button_interact()
 
         await interaction.response.edit_message(content=result)
-    
+
     @discord.ui.button(label="", row=0, style=discord.ButtonStyle.primary, emoji="⬇")
     async def down(self, button, interaction):
 
@@ -108,7 +108,6 @@ class EqualizerButton(discord.ui.View):
         result = await self.button_interact()
 
         await interaction.response.edit_message(content=result)
-    
 
     async def button_interact(self):
         self.player.store('eq', self.eq)

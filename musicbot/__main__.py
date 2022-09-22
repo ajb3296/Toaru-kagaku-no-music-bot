@@ -62,6 +62,7 @@ class Toaru_kagaku_no_music_bot (commands.Bot) :
             return
         await self.process_commands (message)
 
+
 intents = discord.Intents.default()
 intents.messages = True
 intents.guilds = True

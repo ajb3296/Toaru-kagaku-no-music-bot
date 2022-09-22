@@ -282,7 +282,10 @@ class Music(commands.Cog):
         if not ctx.author.voice or (player.is_connected and ctx.author.voice.channel.id != int(player.channel_id)):
             # Abuse prevention. Users not in voice channels, or not in the same voice channel as the bot
             # may not disconnect the bot.
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_dc_not_connect_my_voice_channel").format(name=ctx.author.name), description='', color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_dc_not_connect_my_voice_channel").format(name=ctx.author.name),
+                                description='',
+                                color=color_code
+            )
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
 
@@ -358,7 +361,10 @@ class Music(commands.Cog):
             queue_list = ''
             for index, track in enumerate(player.queue):
                 queue_list += f'`{index + 1}.` [**{track.title}**]({track.uri})\n'
-            embed = discord.Embed(description=get_lan(ctx.author.id, "music_q").format(lenQ=len(player.queue), queue_list=queue_list), colour=color_code)
+            embed = discord.Embed(description=get_lan(ctx.author.id, "music_q").format(lenQ=len(player.queue),
+                                  queue_list=queue_list),
+                                  colour=color_code
+            )
             embed.set_footer(text=f'{get_lan(ctx.author.id, "music_page")}\n{BOT_NAME_TAG_VER}')
             return await ctx.followup.send(embed=embed)
 
@@ -371,13 +377,15 @@ class Music(commands.Cog):
             queue_list = ''
             numb = (items_per_page * i)
             numa = numb - items_per_page
-            
+
             for index, track in enumerate(player.queue[numa:numb], start=numa):
                 queue_list += f'`{index + 1}.` [**{track.title}**]({track.uri})\n'
 
             pages_list.append(
                 [
-                    discord.Embed(description=get_lan(ctx.author.id, "music_q").format(lenQ=len(player.queue), queue_list=queue_list), color=color_code).set_footer(text=f"{get_lan(ctx.author.id, 'music_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
+                    discord.Embed(description=get_lan(ctx.author.id, "music_q").format(lenQ=len(player.queue), queue_list=queue_list),
+                                  color=color_code
+                    ).set_footer(text=f"{get_lan(ctx.author.id, 'music_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
                 ]
             )
         paginator = pages.Paginator(pages=pages_list)
@@ -456,16 +464,25 @@ class Music(commands.Cog):
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         if volume is None:
             volicon = await volumeicon(player.volume)
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_now_vol").format(volicon=volicon, volume=player.volume), description='', color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_now_vol").format(volicon=volicon, volume=player.volume),
+                                description='',
+                                color=color_code
+            )
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
         if volume > 1000 or volume < 1:
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_input_over_vol"), description=get_lan(ctx.author.id, "music_default_vol"), color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_input_over_vol"),
+                                description=get_lan(ctx.author.id, "music_default_vol"),
+                                color=color_code
+            )
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
         await player.set_volume(volume)
         volicon = await volumeicon(player.volume)
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_set_vol").format(volicon=volicon, volume=player.volume), description='', color=color_code)
+        embed=discord.Embed(title=get_lan(ctx.author.id, "music_set_vol").format(volicon=volicon, volume=player.volume),
+                            description='',
+                            color=color_code
+        )
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
     
@@ -489,7 +506,7 @@ class Music(commands.Cog):
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_pause"), description='', color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.followup.send(embed=embed)
-    
+
     @slash_command()
     async def seek(self, ctx, *, seconds: int):
         """ Adjust the music play time in seconds by the number after the command! """
@@ -498,7 +515,10 @@ class Music(commands.Cog):
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         track_time = player.position + (seconds * 1000)
         await player.seek(track_time)
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_seek_move_to").format(move_time=lavalink.utils.format_time(track_time)), description='', color=self.normal_color)
+        embed=discord.Embed(title=get_lan(ctx.author.id, "music_seek_move_to").format(move_time=lavalink.utils.format_time(track_time)),
+                            description='',
+                            color=self.normal_color
+        )
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
@@ -567,7 +587,10 @@ class Music(commands.Cog):
         files = sorted(files)
         # 재생목록 총 개수
         if arg == "-a":
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_len_list").format(files_len=len(files)), description=get_lan(ctx.author.id, "music_len_list").format(files_len=len(files)), color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_len_list").format(files_len=len(files)),
+                                description=get_lan(ctx.author.id, "music_len_list").format(files_len=len(files)),
+                                color=color_code
+            )
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
 
@@ -640,7 +663,9 @@ class Music(commands.Cog):
                         break
                 pages_list.append(
                     [
-                        discord.Embed(title=get_lan(ctx.author.id, "music_playlist_list"), description=filelist, color=color_code).set_footer(text=f"{get_lan(ctx.author.id, 'music_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
+                        discord.Embed(title=get_lan(ctx.author.id, "music_playlist_list"),
+                                    description=filelist, color=color_code
+                        ).set_footer(text=f"{get_lan(ctx.author.id, 'music_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
                     ]
                 )
             paginator = pages.Paginator(pages=pages_list)

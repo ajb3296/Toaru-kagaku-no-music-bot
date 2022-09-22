@@ -18,13 +18,13 @@ class Chart (commands.Cog) :
         if chart is not None:
             chart = chart.upper()
         if chart == "MELON":
-            title, artist = await get_melon()
+            title, artist = await get_melon(10)
             embed=discord.Embed(title=get_lan(ctx.author.id, "chart_melon_chart"), color=color_code)
         elif chart == "BILLBOARD":
-            title, artist = await get_billboard()
+            title, artist = await get_billboard(10)
             embed=discord.Embed(title=get_lan(ctx.author.id, "chart_billboard_chart"), color=color_code)
         elif chart == "BILLBOARD JAPAN":
-            title, artist = await get_billboardjp()
+            title, artist = await get_billboardjp(10)
             embed=discord.Embed(title=get_lan(ctx.author.id, "chart_billboardjp_chart"), color=color_code)
         for i in range(0, 10):
             embed.add_field(name=str(i+1) + ".", value = f"{artist[i]} - {title[i]}", inline=False)
