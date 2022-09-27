@@ -38,9 +38,14 @@ class Toaru_kagaku_no_music_bot (commands.Bot) :
         # Lavalink Download
         if not os.path.exists("Lavalink.jar"):
             LOGGER.info("Lavalink Downloading...")
-            a = requests.get("https://api.github.com/repos/Cog-Creators/Lavalink-Jars/releases")
+            a = requests.get("https://api.github.com/repos/freyacodes/Lavalink/releases")
             b = json.loads(a.text)
-            request.urlretrieve(f"https://github.com/Cog-Creators/Lavalink-Jars/releases/download/{b[0]['tag_name']}/Lavalink.jar", "Lavalink.jar")
+            lavalink_download_link = f"https://github.com/freyacodes/Lavalink/releases/download/{b[0]['tag_name']}/Lavalink.jar"
+
+            if lavalink_download_link.lower().startswith('http'):
+                request.urlretrieve(lavalink_download_link, "Lavalink.jar")
+            else:
+                raise ValueError from None
 
         process = multiprocessing.Process(target=child_process)
         process.start()
