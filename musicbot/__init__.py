@@ -4,10 +4,6 @@ import logging
 
 from musicbot.utils.make_config import make_config
 
-# Create the config file if it doesn't exist
-if not os.path.exists("musicbot/config.py"):
-    make_config()
-
 # Bot version
 BOT_VER = "V.3.2"
 
@@ -49,6 +45,9 @@ if ENV:
     port = int(os.environ.get('port', 2333))
 
 else:
+    # Create the config file if it doesn't exist
+    if not os.path.exists("musicbot/config.py"):
+        make_config()
     from musicbot.config import Development as Config
 
     TOKEN = Config.TOKEN
