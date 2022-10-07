@@ -26,7 +26,7 @@
     "help_general_invite_info": "저랑 다른 서버에서 놀고싶으세요? 당신이 서버의 관리자라면 저를 서버에 초대할 수 있어요!",
     "help_general_java_command": "`/java`",
     "help_general_java_info": "서버에 설치된 자바 버전을 알려드려요!",
-    "help_general_softver_command": "`/version`",
+    "help_general_softver_command": "`/softver`",
     "help_general_softver_info": "관련 모듈 버전을 알려드려요!",
     "help_general_uptime_command": "`/uptime`",
     "help_general_uptime_info": "서버가 부팅으로부터 얼마나 지났는지를 알려드려요!",
