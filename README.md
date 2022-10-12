@@ -1,11 +1,15 @@
-# Toaru-kagaku-no-music-bot
-
-<a href="https://discord.gg/etzmFDGFVg"><img src="https://img.shields.io/discord/803935936219578368?color=7289da&logo=discord&logoColor=white" alt="Discord server" /></a>
-<a href="https://discord.com/oauth2/authorize?client_id=714140461840728144&permissions=3165184&scope=bot"><img src="https://koreanbots.dev/api/widget/bots/servers/714140461840728144.svg" alt="Server count" /></a>
-<a href="https://www.codefactor.io/repository/github/ajb3296/toaru-kagaku-no-music-bot"><img src="https://www.codefactor.io/repository/github/ajb3296/toaru-kagaku-no-music-bot/badge" alt="CodeFactor" /></a>
-<a href="https://www.codacy.com/gh/ajb3296/Toaru-kagaku-no-music-bot/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ajb3296/Toaru-kagaku-no-music-bot&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/a077da0e48aa4adbad939e0e43042e60" alt="Codacy"/></a>
-
-[English README](https://github.com/ajb3296/Toaru-kagaku-no-music-bot/blob/main/README.en.md)
+<div style="display: inline-block;">
+    <img class="fit-picture" src="./image/tk-musicbot-head.jpg" alt="Toaru-kagaku-no-musicbot" width="200" style="border-radius: 50%; float: left; margin: 0 30px 0 0;">
+    <div style="display: inline-block; float: left;">
+        <h1>어떤 과학의 음악봇</h1>
+        <a>사용하기 쉽고 편한, 여러 편의기능이 있는 디스코드 음악봇</a><br><br>
+        <a href="https://github.com/ajb3296/Toaru-kagaku-no-music-bot/blob/main/README.en.md"><img src="https://img.shields.io/badge/README-EN-blue"></a><br>
+        <a href="https://discord.gg/etzmFDGFVg"><img src="https://img.shields.io/discord/803935936219578368?color=7289da&logo=discord&logoColor=white" alt="Discord server" /></a>
+        <a href="https://discord.com/oauth2/authorize?client_id=714140461840728144&permissions=3165184&scope=bot"><img src="https://koreanbots.dev/api/widget/bots/servers/714140461840728144.svg" alt="Server count" /></a>
+        <a href="https://www.codefactor.io/repository/github/ajb3296/toaru-kagaku-no-music-bot"><img src="https://www.codefactor.io/repository/github/ajb3296/toaru-kagaku-no-music-bot/badge" alt="CodeFactor" /></a>
+        <a href="https://www.codacy.com/gh/ajb3296/Toaru-kagaku-no-music-bot/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ajb3296/Toaru-kagaku-no-music-bot&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/a077da0e48aa4adbad939e0e43042e60" alt="Codacy"/></a>
+    </div>
+</div>
 
 ## Heroku Deploy
 
