@@ -14,7 +14,7 @@ async def add_today_table():
         # Set table name
         table_name = datetime2str(datetime.datetime.today())
         # Create table
-        c.execute(f"CREATE TABLE IF NOT EXISTS {table_name} (video_id TEXT, count INTEGER)")
+        c.execute(f"CREATE TABLE IF NOT EXISTS {table_name} (id integer PRIMARY KEY AUTOINCREMENT, video_id text, count int)")
         conn.close()
 
         # wait 1 day
@@ -36,7 +36,7 @@ async def add_missing_table():
         # Set table name
         table_name = datetime2str(first_date)
         # Create table
-        c.execute(f"CREATE TABLE IF NOT EXISTS {table_name} (video_id TEXT, count INTEGER)")
+        c.execute(f"CREATE TABLE IF NOT EXISTS {table_name} (id integer PRIMARY KEY AUTOINCREMENT, video_id text, count int)")
         # Set date
         first_date += datetime.timedelta(days=1)
     conn.close()

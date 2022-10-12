@@ -2,6 +2,7 @@ import re
 import os
 import math
 import difflib
+import traceback
 
 import discord
 import lavalink
@@ -125,6 +126,8 @@ class Music(commands.Cog):
             # This shouldn't be a problem as the only errors thrown in this cog are from `ensure_voice`
             # which contain a reason string, such as "Join a voicechannel" etc. You can modify the above
             # if you want to do things differently.
+        else:
+            print(traceback.format_exc())
 
     async def ensure_voice(self, ctx):
         """ This check ensures that the bot and command author are in the same voicechannel. """
