@@ -10,6 +10,8 @@ from urllib import request
 from discord.ext import commands
 
 from musicbot.lavalinkstart import child_process
+from musicbot.background.db_management import add_today_table
+
 from musicbot import LOGGER, TOKEN, EXTENSIONS, BOT_NAME_TAG_VER
 
 async def status_task():
@@ -61,6 +63,7 @@ class Toaru_kagaku_no_music_bot (commands.Bot) :
             status = discord.Status.online,
         )
         bot.loop.create_task(status_task())
+        bot.loop.create_task(add_today_table())
 
     async def on_message (self, message) :
         if message.author.bot:
