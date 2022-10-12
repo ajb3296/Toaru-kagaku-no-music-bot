@@ -1,7 +1,7 @@
-<div style="display: inline-block;">
-    <img class="fit-picture" src="./image/tk-musicbot-head.jpg" alt="Toaru-kagaku-no-musicbot" width="200" style="border-radius: 50%; float: left; margin: 0 30px 0 0;">
-    <div style="display: inline-block; float: left;">
-        <h1>어떤 과학의 음악봇</h1>
+<div align="center">
+    <img align="left" class="fit-picture" src="https://images.weserv.nl/?url=github.com/ajb3296/Toaru-kagaku-no-music-bot/raw/main/image/tk-musicbot-head.jpg?v=4&h=200&w=200&fit=cover&mask=circle&maxage=7d" alt="Toaru-kagaku-no-musicbot" width="200px" height="200px">
+    <div align="left">
+        <h1>Toaru Kagaku no musicbot</h1>
         <a>사용하기 쉽고 편한, 여러 편의기능이 있는 디스코드 음악봇</a><br><br>
         <a href="https://github.com/ajb3296/Toaru-kagaku-no-music-bot/blob/main/README.en.md"><img src="https://img.shields.io/badge/README-EN-blue"></a><br>
         <a href="https://discord.gg/etzmFDGFVg"><img src="https://img.shields.io/discord/803935936219578368?color=7289da&logo=discord&logoColor=white" alt="Discord server" /></a>

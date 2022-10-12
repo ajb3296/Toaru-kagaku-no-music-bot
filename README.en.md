@@ -1,6 +1,6 @@
-<div style="display: inline-block;">
-    <img class="fit-picture" src="./image/tk-musicbot-head.jpg" alt="Toaru-kagaku-no-musicbot" width="200" style="border-radius: 50%; float: left; margin: 0 30px 0 0;">
-    <div style="display: inline-block; float: left;">
+<div align="center">
+    <img align="left" class="fit-picture" src="https://images.weserv.nl/?url=github.com/ajb3296/Toaru-kagaku-no-music-bot/raw/main/image/tk-musicbot-head.jpg?v=4&h=200&w=200&fit=cover&mask=circle&maxage=7d" alt="Toaru-kagaku-no-musicbot" width="200px" height="200px">
+    <div align="left">
         <h1>Toaru Kagaku no musicbot</h1>
         <a>Discord music bot that is easy to use and has many convenient functions</a><br><br>
         <a href="https://github.com/ajb3296/Toaru-kagaku-no-music-bot/blob/main/README.md"><img src="https://img.shields.io/badge/README-KO-blue"></a><br>
