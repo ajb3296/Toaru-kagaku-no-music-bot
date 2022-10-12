@@ -10,6 +10,7 @@
         <a href="https://www.codacy.com/gh/ajb3296/Toaru-kagaku-no-music-bot/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ajb3296/Toaru-kagaku-no-music-bot&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/a077da0e48aa4adbad939e0e43042e60" alt="Codacy"/></a>
     </div>
 </div>
+<br><br>
 
 ## Heroku Deploy
 
