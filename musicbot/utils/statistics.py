@@ -14,7 +14,7 @@ class Statistics:
         # Set table name
         table_name = f"date{datetime.today().strftime('%Y%m%d')}"
         # Get play count from db
-        statisticsdb = StatisticsDb
+        statisticsdb = StatisticsDb()
         temp = statisticsdb.get(table_name, video_id)
         # Set count
         if temp is None:
@@ -28,12 +28,11 @@ class Statistics:
         # Set table name
         table_name = f"date{datetime.today().strftime('%Y%m%d')}"
         # Get play count from db
-        statisticsdb = StatisticsDb
+        statisticsdb = StatisticsDb()
         temp = statisticsdb.get(table_name, video_id)
         # Set count
-        if temp is None:
-            num = 1
-        else:
+        num = 1
+        if temp is not None:
             num = temp[2] - 1
         statisticsdb.write(table_name, video_id, num)
 
@@ -45,8 +44,7 @@ class StatisticsDb:
         conn = sqlite3.connect(self.db_path, isolation_level=None)
         c = conn.cursor()
         try:
-            query = "SELECT * FROM {table_name} WHERE video_id={video_id}"
-            c.execute(query.format(table_name=table_name, video_id=video_id))
+            c.execute(f"SELECT * FROM {table_name} WHERE video_id=:video_id", {"video_id": video_id})
         except sqlite3.OperationalError:
             conn.close()
             return None
