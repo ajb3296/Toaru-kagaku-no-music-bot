@@ -35,7 +35,7 @@ async def play_list(player, ctx, musics, playmsg):
         nofind = 0
         while True:
             results = await player.node.get_tracks(query)
-            if results['loadType'] == 'PLAYLIST_LOADED' or not results or not results['tracks']:
+            if results.load_type == 'PLAYLIST_LOADED' or not results or not results.tracks:
                 if nofind < 3:
                     nofind += 1
                 elif nofind == 3:
@@ -45,21 +45,21 @@ async def play_list(player, ctx, musics, playmsg):
                         passmusic = f"{passmusic}\n{music}"
             else:
                 break
-        track = results['tracks'][0]
+        track = results.tracks[0]
 
         # Music statistical
-        Statistics.up(track['info']['identifier'])
+        Statistics.up(track.identifier)
 
         if playmusic == get_lan(ctx.author.id, "music_none"):
             playmusic = music
         else:
             playmusic = f"{playmusic}\n{music}"
         if trackcount != 1:
-            info = track['info']
+            thumbnail = track.identifier
             trackcount = 1
         track = lavalink.models.AudioTrack(track, ctx.author.id, recommended=True)
         player.add(requester=ctx.author.id, track=track)
 
         if not player.is_playing:
             await player.play()
-    return playmsg, player, info, playmusic, passmusic
+    return playmsg, player, thumbnail, playmusic, passmusic

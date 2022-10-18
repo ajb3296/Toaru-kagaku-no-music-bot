@@ -14,7 +14,7 @@ from musicbot.utils.volumeicon import volumeicon
 from musicbot.utils.get_chart import get_melon, get_billboard, get_billboardjp
 from musicbot.utils.play_list import play_list
 from musicbot.utils.statistics import Statistics
-from musicbot import LOGGER, BOT_ID, color_code, BOT_NAME_TAG_VER, host, psw, region
+from musicbot import LOGGER, BOT_ID, color_code, BOT_NAME_TAG_VER, host, psw, region, port
 from musicbot.utils.equalizer import Equalizer, EqualizerButton
 
 url_rx = re.compile(r'https?://(?:www\.)?.+')
@@ -37,7 +37,7 @@ class LavalinkVoiceClient(discord.VoiceClient):
             self.client.lavalink = lavalink.Client(client.user.id)
             self.client.lavalink.add_node(
                     host,
-                    2333,
+                    port,
                     psw,
                     region,
                     'default-node')
@@ -97,7 +97,7 @@ class Music(commands.Cog):
 
         if not hasattr(bot, 'lavalink'):  # This ensures the client isn't overwritten during cog reloads.
             bot.lavalink = lavalink.Client(BOT_ID)
-            bot.lavalink.add_node(host, 2333, psw, region, "default-node")  # Host, Port, Password, Region, Name
+            bot.lavalink.add_node(host, port, psw, region, "default-node")  # Host, Port, Password, Region, Name
 
         lavalink.add_event_hook(self.track_hook)
 
@@ -128,15 +128,10 @@ class Music(commands.Cog):
             # if you want to do things differently.
         else:
             print(traceback.format_exc())
-
+    
     async def ensure_voice(self, ctx):
         """ This check ensures that the bot and command author are in the same voicechannel. """
-        try:
-            voice_channel = str(ctx.author.voice.channel.rtc_region)
-        except AttributeError:
-            raise commands.CommandInvokeError(get_lan(ctx.author.id, "music_not_connected_voice_channel"))
-
-        player = self.bot.lavalink.player_manager.create(ctx.guild.id, endpoint=voice_channel)
+        player = self.bot.lavalink.player_manager.create(ctx.guild.id)
         # Create returns a player if one exists, otherwise creates.
         # This line is important because it ensures that a player always exists for a guild.
 
@@ -153,7 +148,8 @@ class Music(commands.Cog):
             # execution state of the command goes no further.
             raise commands.CommandInvokeError(get_lan(ctx.author.id, "music_come_in_voice_channel"))
 
-        if not player.is_connected:
+        v_client = ctx.voice_client
+        if not v_client:
             if not should_connect:
                 raise commands.CommandInvokeError(get_lan(ctx.author.id, "music_not_connected_voice_channel"))
 
@@ -165,7 +161,7 @@ class Music(commands.Cog):
             player.store('channel', ctx.channel.id)
             await ctx.author.voice.channel.connect(cls=LavalinkVoiceClient)
         else:
-            if int(player.channel_id) != ctx.author.voice.channel.id:
+            if v_client.channel.id != ctx.author.voice.channel.id:
                 raise commands.CommandInvokeError(get_lan(ctx.author.id, "music_come_in_my_voice_channel"))
 
     async def track_hook(self, event):
@@ -211,7 +207,7 @@ class Music(commands.Cog):
 
             # Results could be None if Lavalink returns an invalid response (non-JSON/non-200 (OK)).
             # ALternatively, resullts['tracks'] could be an empty array if the query yielded no tracks.
-            if not results or not results['tracks']:
+            if not results or not results.tracks:
                 if nofind < 3:
                     nofind += 1
                 elif nofind == 3:
@@ -229,38 +225,39 @@ class Music(commands.Cog):
         #   SEARCH_RESULT   - query prefixed with either ytsearch: or scsearch:.
         #   NO_MATCHES      - query yielded no results
         #   LOAD_FAILED     - most likely, the video encountered an exception during loading.
-        if results['loadType'] == 'PLAYLIST_LOADED':
-            tracks = results['tracks']
+        if results.load_type == 'PLAYLIST_LOADED':
+            tracks = results.tracks
 
             trackcount = 0
 
             for track in tracks:
                 if trackcount != 1:
-                    info = track['info']
+                    thumbnail = track.identifier
                     trackcount = 1
                 # Music statistical(for playlist)
-                Statistics.up(track['info']['identifier'])
+                Statistics.up(track.identifier)
 
                 # Add all of the tracks from the playlist to the queue.
                 player.add(requester=ctx.author.id, track=track)
 
             embed.title = get_lan(ctx.author.id, "music_play_playlist")
-            embed.description = f'{results["playlistInfo"]["name"]} - {len(tracks)} tracks'
+            embed.description = f'{results.playlist_info.name} - {len(tracks)} tracks'
+
         else:
-            track = results['tracks'][0]
+            track = results.tracks[0]
             embed.title = get_lan(ctx.author.id, "music_play_music")
-            embed.description = f'[{track["info"]["title"]}]({track["info"]["uri"]})'
-            info = track['info']
+            embed.description = f'[{track.title}]({track.uri})'
+            thumbnail = track.identifier
 
             # Music statistical
-            Statistics.up(info['identifier'])
+            Statistics.up(track.identifier)
 
             # You can attach additional information to audiotracks through kwargs, however this involves
             # constructing the AudioTrack class yourself.
             track = lavalink.models.AudioTrack(track, ctx.author.id, recommended=True)
             player.add(requester=ctx.author.id, track=track)
 
-        embed.set_thumbnail(url="http://img.youtube.com/vi/%s/0.jpg" %(info['identifier']))
+        embed.set_thumbnail(url=f"http://img.youtube.com/vi/{thumbnail}/0.jpg")
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
@@ -276,7 +273,7 @@ class Music(commands.Cog):
 
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
 
-        if not player.is_connected:
+        if not ctx.voice_client:
             # We can't disconnect, if we're not connected.
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_dc_not_connect_voice_channel"), description='', color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)
@@ -286,9 +283,7 @@ class Music(commands.Cog):
             # Abuse prevention. Users not in voice channels, or not in the same voice channel as the bot
             # may not disconnect the bot.
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_dc_not_connect_my_voice_channel").format(name=ctx.author.name),
-                                description='',
-                                color=color_code
-            )
+                                color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
 
@@ -368,7 +363,7 @@ class Music(commands.Cog):
                                   queue_list=queue_list),
                                   colour=color_code
             )
-            embed.set_footer(text=f'{get_lan(ctx.author.id, "music_page")}\n{BOT_NAME_TAG_VER}')
+            embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
 
         # 총 페이지수 계산
@@ -543,32 +538,32 @@ class Music(commands.Cog):
             embed.set_footer(text=BOT_NAME_TAG_VER)
             playmsg = await ctx.followup.send(embed=embed)
             title, artist = await get_melon(count)
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_melon_chart_play"), description='', color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_melon_chart_play"), color=color_code)
 
         elif chart == "BILLBOARD":
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_parsing_billboard"), color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             playmsg = await ctx.followup.send(embed=embed)
             title, artist = await get_billboard(count)
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_billboard_chart_play"), description='', color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_billboard_chart_play"), color=color_code)
 
         elif chart == "BILLBOARD JAPAN":
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_parsing_billboardjp"), color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             playmsg = await ctx.followup.send(embed=embed)
             title, artist = await get_billboardjp(count)
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_billboardjp_chart_play"), description='', color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_billboardjp_chart_play"), color=color_code)
 
         musics = []
         for i in range(0, count):
             musics.append(f'{artist[i]} {title[i]}')
 
         # Play music list
-        playmsg, player, info, playmusic, passmusic = await play_list(player, ctx, musics, playmsg)
+        playmsg, player, thumbnail, playmusic, passmusic = await play_list(player, ctx, musics, playmsg)
 
         embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
         embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
-        embed.set_thumbnail(url=f"http://img.youtube.com/vi/{info['identifier']}/0.jpg")
+        embed.set_thumbnail(url=f"http://img.youtube.com/vi/{thumbnail}/0.jpg")
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await playmsg.edit(embed=embed)
         if not player.is_playing:
@@ -629,12 +624,12 @@ class Music(commands.Cog):
             embed.set_footer(text=BOT_NAME_TAG_VER)
             playmsg = await ctx.respond(embed=embed)
 
-            playmsg, player, info, playmusic, passmusic = await play_list(player, ctx, music_list, playmsg)
+            playmsg, player, thumbnail, playmusic, passmusic = await play_list(player, ctx, music_list, playmsg)
 
             embed=discord.Embed(title=f":arrow_forward: | {arg}", description='', color=color_code)
             embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
             embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
-            embed.set_thumbnail(url=f"http://img.youtube.com/vi/{info['identifier']}/0.jpg")
+            embed.set_thumbnail(url=f"http://img.youtube.com/vi/{thumbnail}/0.jpg")
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await playmsg.edit(embed=embed)
             if not player.is_playing:
