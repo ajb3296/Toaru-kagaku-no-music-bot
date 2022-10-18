@@ -61,7 +61,7 @@ class LavalinkVoiceClient(discord.VoiceClient):
                 }
         await self.lavalink.voice_update_handler(lavalink_data)
 
-    async def connect(self, *, timeout: float, reconnect: bool) -> None:
+    async def connect(self, *, timeout: float, reconnect: bool, self_deaf: bool = False, self_mute: bool = False) -> None:
         """
         Connect the bot to the voice channel and create a player_manager
         if it doesn't exist yet.
@@ -70,7 +70,7 @@ class LavalinkVoiceClient(discord.VoiceClient):
         self.lavalink.player_manager.create(guild_id=self.channel.guild.id)
         await self.channel.guild.change_voice_state(channel=self.channel)
 
-    async def disconnect(self, *, force: bool) -> None:
+    async def disconnect(self, *, force: bool = False) -> None:
         """
         Handles the disconnect.
         Cleans up running player and leaves the voice client.
@@ -148,6 +148,15 @@ class Music(commands.Cog):
             # execution state of the command goes no further.
             raise commands.CommandInvokeError(get_lan(ctx.author.id, "music_come_in_voice_channel"))
 
+        # If it is playing but not connected to the voice channel, stop the music being played and connect to the voice channel
+        if not player.is_connected and ctx.voice_client:
+            try:
+                player.queue.clear()
+                await player.stop()
+                await ctx.voice_client.disconnect(force=True)
+            except AttributeError:
+                pass
+
         v_client = ctx.voice_client
         if not v_client:
             if not should_connect:
@@ -192,6 +201,7 @@ class Music(commands.Cog):
 
         # Get the player for this guild from cache.
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+
         # Remove leading and trailing <>. <> may be used to suppress embedding links in Discord.
         query = query.strip('<>')
 
