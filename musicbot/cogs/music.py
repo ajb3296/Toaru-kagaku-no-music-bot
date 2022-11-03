@@ -6,6 +6,7 @@ import traceback
 
 import discord
 import lavalink
+from discord import option
 from discord.ext import commands, pages
 from discord.commands import slash_command, Option
 
@@ -128,7 +129,7 @@ class Music(commands.Cog):
             # if you want to do things differently.
         else:
             print(traceback.format_exc())
-    
+
     async def ensure_voice(self, ctx):
         """ This check ensures that the bot and command author are in the same voicechannel. """
         player = self.bot.lavalink.player_manager.create(ctx.guild.id)
@@ -187,14 +188,15 @@ class Music(commands.Cog):
         """ Connect to voice channel! """
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         if not player.is_connected:
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_connect_voice_channel"), description='', color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_connect_voice_channel"), color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.respond(embed=embed)
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_already_connected_voice_channel"), description='', color=color_code)
+        embed=discord.Embed(title=get_lan(ctx.author.id, "music_already_connected_voice_channel"), color=color_code)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         return await ctx.respond(embed=embed)
 
     @slash_command()
+    @option("query", description="찾고싶은 음악의 제목이나 링크를 입력하세요")
     async def play(self, ctx, *, query: str):
         """ Searches and plays a song from a given query. """
         await ctx.defer()
@@ -216,7 +218,7 @@ class Music(commands.Cog):
             results = await player.node.get_tracks(query)
 
             # Results could be None if Lavalink returns an invalid response (non-JSON/non-200 (OK)).
-            # ALternatively, resullts['tracks'] could be an empty array if the query yielded no tracks.
+            # ALternatively, results['tracks'] could be an empty array if the query yielded no tracks.
             if not results or not results.tracks:
                 if nofind < 3:
                     nofind += 1
@@ -285,7 +287,7 @@ class Music(commands.Cog):
 
         if not ctx.voice_client:
             # We can't disconnect, if we're not connected.
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_dc_not_connect_voice_channel"), description='', color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "music_dc_not_connect_voice_channel"), color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
 
@@ -305,7 +307,7 @@ class Music(commands.Cog):
         # Disconnect from the voice channel.
         await ctx.voice_client.disconnect(force=True)
 
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_dc_disconnected"), description='', color=color_code)
+        embed=discord.Embed(title=get_lan(ctx.author.id, "music_dc_disconnected"), color=color_code)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
@@ -428,6 +430,7 @@ class Music(commands.Cog):
         await ctx.followup.send(embed=embed)
 
     @slash_command()
+    @option("index", description="Queue에서 제거하고 싶은 음악이 몇 번째 음악인지 입력해 주세요")
     async def remove(self, ctx, index: int):
         """ Remove music from the playlist! """
         await ctx.defer()
@@ -465,6 +468,7 @@ class Music(commands.Cog):
         await ctx.followup.send(embed=embed)
 
     @slash_command()
+    @option("volume", description="볼륨값을 입력하세요", min_value=1, max_value=1000, default=100)
     async def volume(self, ctx, volume: int = None):
         """ Changes or display the volume """
         await ctx.defer()
@@ -516,6 +520,7 @@ class Music(commands.Cog):
             await ctx.followup.send(embed=embed)
 
     @slash_command()
+    @option("seconds", description="이동할 초를 입력하세요")
     async def seek(self, ctx, *, seconds: int):
         """ Adjust the music play time in seconds by the number after the command! """
         await ctx.defer()
@@ -580,6 +585,7 @@ class Music(commands.Cog):
             await player.play()
 
     @slash_command()
+    @option("arg", description="재생할 플레이리스트의 제목을 입력해 주세요")
     async def list(self, ctx, *, arg: str = None):
         """ Load playlists or play the music from that playlist! """
         await ctx.defer()
