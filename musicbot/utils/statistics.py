@@ -57,8 +57,7 @@ class StatisticsDb:
         c = conn.cursor()
         # 내림차순으로 정렬
         try:
-            query = "SELECT * FROM {table_name} ORDER BY count DESC"
-            c.execute(query.format(table_name=table_name))
+            c.execute(f"SELECT * FROM {table_name} ORDER BY count DESC")
         except sqlite3.OperationalError:
             return None
         temp = c.fetchall()

@@ -163,7 +163,13 @@ class Owners (commands.Cog) :
 
         # 총 페이지수 계산
         botguild = self.bot.guilds
-        allpage = math.ceil(len(botguild) / page)
+        # 인원 수 많은 서버부터 표시
+        guilds = []
+        for guild in botguild:
+            guilds.append([guild, guild.member_count])
+        guilds.sort(key=lambda x: (x[1], x[0]))
+
+        allpage = math.ceil(len(guilds) / page)
 
         pages_list = []
         for i in range(1, allpage+1):
@@ -172,7 +178,7 @@ class Owners (commands.Cog) :
             numa = numb - page
             for a in range(numa, numb):
                 try:
-                    srvr += get_lan(ctx.author.id, "owners_server_list_info").format(server_name=botguild[a], server_members_count=botguild[a].member_count)
+                    srvr += get_lan(ctx.author.id, "owners_server_list_info").format(server_name=guilds[a][0], server_members_count=guilds[a][1])
                 except IndexError:
                     break
 
