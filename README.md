@@ -1,5 +1,5 @@
 <div align="center">
-    <img align="left" class="fit-picture" src="https://images.weserv.nl/?url=github.com/ajb3296/Toaru-kagaku-no-music-bot/raw/main/image/tk-musicbot-head.jpg?v=4&h=200&w=200&fit=cover&mask=circle&maxage=7d" alt="Toaru-kagaku-no-musicbot" width="200px" height="200px">
+    <img align="left" class="fit-picture" src="./image/tk-musicbot-head-circle.png" alt="Toaru-kagaku-no-musicbot" width="200px" height="200px">
     <div align="left">
         <h1>Toaru Kagaku no musicbot</h1>
         <a>사용하기 쉽고 편한, 여러 편의기능이 있는 디스코드 음악봇</a><br><br>
