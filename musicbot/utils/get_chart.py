@@ -14,8 +14,11 @@ async def get_melon(count = 10):
     title = []
     artist = []
     for num in range(0, count):
-        title.append(musics[num].find("div", {"class" : "ellipsis rank01"}).find("a").text)
-        artist.append(musics[num].find("div", {"class" : "ellipsis rank02"}).find("a").text)
+        try:
+            title.append(musics[num].find("div", {"class" : "ellipsis rank01"}).find("a").text)
+            artist.append(musics[num].find("div", {"class" : "ellipsis rank02"}).find("a").text)
+        except:
+            break
     return title, artist
 
 async def get_billboard(count = 10):
@@ -23,8 +26,11 @@ async def get_billboard(count = 10):
     title = []
     artist = []
     for num in range(0, count):
-        title.append(chart[num].title)
-        artist.append(chart[num].artist)
+        try:
+            title.append(chart[num].title)
+            artist.append(chart[num].artist)
+        except:
+            pass
     return title, artist
 
 async def get_billboardjp(count = 10):
@@ -32,6 +38,9 @@ async def get_billboardjp(count = 10):
     title = []
     artist = []
     for num in range(0, count):
-        title.append(chart[num].title)
-        artist.append(chart[num].artist)
+        try:
+            title.append(chart[num].title)
+            artist.append(chart[num].artist)
+        except:
+            pass
     return title, artist
