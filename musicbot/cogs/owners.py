@@ -166,8 +166,8 @@ class Owners (commands.Cog) :
         # 인원 수 많은 서버부터 표시
         guilds = []
         for guild in botguild:
-            guilds.append([guild, int(guild.member_count)])
-        guilds.sort(key=lambda x: (x[0], -x[1]))
+            guilds.append([guild.name, int(guild.member_count)])
+        guilds.sort(key=lambda x: (-x[1], x[0]))
 
         allpage = math.ceil(len(guilds) / page)
 
