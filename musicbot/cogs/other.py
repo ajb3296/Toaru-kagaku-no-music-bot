@@ -10,7 +10,6 @@ from discord.commands import slash_command
 
 from musicbot.utils.language import get_lan
 from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code
-from musicbot.utils.get_java_path import get_java_path
 
 class Other (commands.Cog) :
     def __init__ (self, bot) :
@@ -30,11 +29,8 @@ class Other (commands.Cog) :
     @slash_command()
     async def softver(self, ctx) :
         """ Let me tell you the version of the modules! """
-        java_path = get_java_path()
-        args = [java_path, '-version']
-        javaver = subprocess.check_output(args, stderr=subprocess.STDOUT, encoding='utf-8')
-        args = [java_path, '-jar', 'Lavalink.jar', '--version']
-        lavalinkver = subprocess.check_output(args, stderr=subprocess.STDOUT, encoding='utf-8')
+        javaver = subprocess.check_output('java --version', stderr=subprocess.STDOUT, encoding='utf-8')
+        lavalinkver = subprocess.check_output('java -jar Lavalink.jar', stderr=subprocess.STDOUT, encoding='utf-8')
         embed=discord.Embed(title=get_lan(ctx.author.id, "other_soft_ver"), color=color_code)
         embed.add_field(name="Python Ver", value=("%s %s") %(platform.python_implementation(), platform.python_version()), inline=False)
         embed.add_field(name="Discord.py Ver", value=discord.__version__, inline=False)

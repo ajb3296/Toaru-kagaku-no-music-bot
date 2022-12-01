@@ -20,11 +20,11 @@ def get_lan(user_id, text):
                 language = default_language
         conn.close()
         # read language file
-        with open(f"musicbot/languages/{language}.json") as f:
+        with open(f"musicbot/languages/{language}.json", encoding="utf-8") as f:
             language_data = json.load(f)
         return language_data[text]
 
     else:
-        with open(f"musicbot/languages/{default_language}.json") as f:
+        with open(f"musicbot/languages/{default_language}.json", encoding="utf-8") as f:
             language_data = json.load(f)
         return language_data[text]
