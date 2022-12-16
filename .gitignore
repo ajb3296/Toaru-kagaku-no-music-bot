@@ -7,7 +7,7 @@ userdata.db
 statistics.db
 test.py
 node_modules
-
+start.sh
 
 
 # Byte-compiled / optimized / DLL files
