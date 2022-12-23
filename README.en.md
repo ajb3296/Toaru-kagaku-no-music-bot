@@ -12,10 +12,6 @@
 </div>
 <br><br>
 
-## Heroku Deploy
-
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/ajb3296/Toaru-kagaku-no-music-bot/tree/main)
-
 ## Note
 
 [Lavalink Download](https://github.com/freyacodes/Lavalink/releases)<br>
@@ -29,12 +25,6 @@
 * [EZPaginator](https://github.com/khk4912/EZPaginator)
 
 ## How to install
-
-### How to use it with Heroku
-
-1. Click the Heroku Deploy button above.
-2. Set config
-3. Deploy!
 
 ### How to use it as a computer
 
