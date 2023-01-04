@@ -15,6 +15,9 @@ class Chart (commands.Cog) :
         """ I will tell you from the 1st to the 10th place on the chart site """
         await ctx.defer()
 
+        title = None
+        artist = None
+
         if chart is not None:
             chart = chart.upper()
         if chart == "MELON":
@@ -26,8 +29,9 @@ class Chart (commands.Cog) :
         elif chart == "BILLBOARD JAPAN":
             title, artist = await get_billboardjp(10)
             embed=discord.Embed(title=get_lan(ctx.author.id, "chart_billboardjp_chart"), color=color_code)
-        for i in range(0, 10):
-            embed.add_field(name=str(i+1) + ".", value = f"{artist[i]} - {title[i]}", inline=False)
+        if title is None or artist is None:
+            for i in range(0, 10):
+                embed.add_field(name=str(i+1) + ".", value = f"{artist[i]} - {title[i]}", inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 

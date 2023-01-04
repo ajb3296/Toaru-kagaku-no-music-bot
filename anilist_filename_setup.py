@@ -1,4 +1,4 @@
-# For windows
+# 윈도우에서 파일명에 사용할 수 없는 문자를 제거하고, 파일명을 정규화합니다.
 
 import os
 import re

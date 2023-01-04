@@ -8,6 +8,7 @@ statistics.db
 test.py
 node_modules
 start.sh
+.vscode
 
 
 # Byte-compiled / optimized / DLL files
