@@ -237,6 +237,7 @@ class Music(commands.Cog):
         #   SEARCH_RESULT   - query prefixed with either ytsearch: or scsearch:.
         #   NO_MATCHES      - query yielded no results
         #   LOAD_FAILED     - most likely, the video encountered an exception during loading.
+        thumbnail = None
         if results.load_type == 'PLAYLIST_LOADED':
             tracks = results.tracks
 
@@ -247,7 +248,7 @@ class Music(commands.Cog):
                     thumbnail = track.identifier
                     trackcount = 1
                 # Music statistical(for playlist)
-                Statistics.up(track.identifier)
+                Statistics().up(track.identifier)
 
                 # Add all of the tracks from the playlist to the queue.
                 player.add(requester=ctx.author.id, track=track)
@@ -262,14 +263,15 @@ class Music(commands.Cog):
             thumbnail = track.identifier
 
             # Music statistical
-            Statistics.up(track.identifier)
+            Statistics().up(track.identifier)
 
             # You can attach additional information to audiotracks through kwargs, however this involves
             # constructing the AudioTrack class yourself.
             track = lavalink.models.AudioTrack(track, ctx.author.id, recommended=True)
             player.add(requester=ctx.author.id, track=track)
 
-        embed.set_thumbnail(url=f"http://img.youtube.com/vi/{thumbnail}/0.jpg")
+        if thumbnail is not None:
+            embed.set_thumbnail(url=f"http://img.youtube.com/vi/{thumbnail}/0.jpg")
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
@@ -420,14 +422,16 @@ class Music(commands.Cog):
         else:
             player.set_loop(0)
 
+        embed = None
         if player.loop == 0:
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_repeat_off"), description='', color=color_code)
         elif player.loop == 1:
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_repeat_one"), description='', color=color_code)
         elif player.loop == 2:
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_repeat_all"), description='', color=color_code)
-        embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.followup.send(embed=embed)
+        if embed is not None:
+            embed.set_footer(text=BOT_NAME_TAG_VER)
+            await ctx.followup.send(embed=embed)
 
     @slash_command()
     @option("index", description="Queue에서 제거하고 싶은 음악이 몇 번째 음악인지 입력해 주세요")
@@ -469,7 +473,7 @@ class Music(commands.Cog):
 
     @slash_command()
     @option("volume", description="볼륨값을 입력하세요", min_value=1, max_value=1000, default=100)
-    async def volume(self, ctx, volume: int = None):
+    async def volume(self, ctx, volume: (int | None) = None):
         """ Changes or display the volume """
         await ctx.defer()
 
@@ -530,7 +534,7 @@ class Music(commands.Cog):
         await player.seek(track_time)
         embed=discord.Embed(title=get_lan(ctx.author.id, "music_seek_move_to").format(move_time=lavalink.utils.format_time(track_time)),
                             description='',
-                            color=self.normal_color
+                            color=color_code
         )
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
@@ -539,6 +543,11 @@ class Music(commands.Cog):
     async def chartplay(self, ctx, *, chart : Option(str, description="Choose chart.", choices=["Melon", "Billboard", "Billboard Japan"]), count : int = 10):
         """ Add the top 10 songs on the selected chart to your playlist! """
         await ctx.defer()
+
+        embed = None
+        artist = None
+        title = None
+        playmsg = None
 
         if count > 100:
             count = 100
@@ -570,23 +579,26 @@ class Music(commands.Cog):
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_billboardjp_chart_play"), color=color_code)
 
         musics = []
-        for i in range(0, count):
-            musics.append(f'{artist[i]} {title[i]}')
+        if artist is not None and title is not None:
+            for i in range(0, count):
+                musics.append(f'{artist[i]} {title[i]}')
 
         # Play music list
         playmsg, player, thumbnail, playmusic, passmusic = await play_list(player, ctx, musics, playmsg)
 
-        embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
-        embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
-        embed.set_thumbnail(url=f"http://img.youtube.com/vi/{thumbnail}/0.jpg")
-        embed.set_footer(text=BOT_NAME_TAG_VER)
-        await playmsg.edit(embed=embed)
-        if not player.is_playing:
-            await player.play()
+        if embed is not None:
+            embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
+            embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
+            if thumbnail is not None:
+                embed.set_thumbnail(url=f"http://img.youtube.com/vi/{thumbnail}/0.jpg")
+            embed.set_footer(text=BOT_NAME_TAG_VER)
+            await playmsg.edit(embed=embed)
+            if not player.is_playing:
+                await player.play()
 
     @slash_command()
     @option("arg", description="재생할 플레이리스트의 제목을 입력해 주세요")
-    async def list(self, ctx, *, arg: str = None):
+    async def list(self, ctx, *, arg: (str | None) = None):
         """ Load playlists or play the music from that playlist! """
         await ctx.defer()
 
@@ -645,7 +657,8 @@ class Music(commands.Cog):
             embed=discord.Embed(title=f":arrow_forward: | {arg}", description='', color=color_code)
             embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
             embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
-            embed.set_thumbnail(url=f"http://img.youtube.com/vi/{thumbnail}/0.jpg")
+            if thumbnail is not None:
+                embed.set_thumbnail(url=f"http://img.youtube.com/vi/{thumbnail}/0.jpg")
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await playmsg.edit(embed=embed)
             if not player.is_playing:
@@ -657,7 +670,7 @@ class Music(commands.Cog):
             page = 15
             # 총 리스트 수가 page개 이하일 경우
             if len(files) <= page:
-                embed=discord.Embed(title=get_lan(ctx.author.id, "music_playlist_list"), description="\n".join(file), color=color_code)
+                embed=discord.Embed(title=get_lan(ctx.author.id, "music_playlist_list"), description="\n".join(files), color=color_code)
                 embed.set_footer(text=BOT_NAME_TAG_VER)
                 return await ctx.followup.send(embed=embed)
 

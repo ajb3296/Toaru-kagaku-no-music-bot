@@ -33,7 +33,7 @@ class Other (commands.Cog) :
         lavalinkver = subprocess.check_output(['java', '-jar', 'Lavalink.jar', '--version'], stderr=subprocess.STDOUT, encoding='utf-8')
         embed=discord.Embed(title=get_lan(ctx.author.id, "other_soft_ver"), color=color_code)
         embed.add_field(name="Python Ver", value=("%s %s") %(platform.python_implementation(), platform.python_version()), inline=False)
-        embed.add_field(name="Discord.py Ver", value=discord.__version__, inline=False)
+        embed.add_field(name="Discord.py Ver", value=str(discord.__version__), inline=False)
         embed.add_field(name="Lavalink.py Ver", value=lavalink.__version__, inline=False)
         embed.add_field(name="Java Ver", value=f"```{javaver}```", inline=False)
         embed.add_field(name="Lavalink Ver", value=f"```{lavalinkver}```", inline=False)

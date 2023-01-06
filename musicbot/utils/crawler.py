@@ -9,8 +9,8 @@ async def getReqJSON (url : str) :
         data = await r.read()
       return json.loads(data)
 
-async def getReqTEXT (url : str, header : str = None) :
-    if not header:
+async def getReqTEXT (url : str, header: (dict | None) = None):
+    if header is None:
         async with aiohttp.ClientSession () as session:
             async with session.get (url = url) as r :
                 data = await r.text()
@@ -20,8 +20,8 @@ async def getReqTEXT (url : str, header : str = None) :
             data = await r.text()
         return data
 
-async def getReq (url : str, header : str = None) :
-    if not header:
+async def getReq (url : str, header: (dict | None) = None) :
+    if header is None:
         async with aiohttp.ClientSession () as session:
             async with session.get (url) as r :
                 return r

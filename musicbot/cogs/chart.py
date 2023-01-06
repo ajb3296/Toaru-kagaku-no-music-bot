@@ -17,6 +17,7 @@ class Chart (commands.Cog) :
 
         title = None
         artist = None
+        embed = None
 
         if chart is not None:
             chart = chart.upper()
@@ -29,11 +30,13 @@ class Chart (commands.Cog) :
         elif chart == "BILLBOARD JAPAN":
             title, artist = await get_billboardjp(10)
             embed=discord.Embed(title=get_lan(ctx.author.id, "chart_billboardjp_chart"), color=color_code)
-        if title is None or artist is None:
-            for i in range(0, 10):
-                embed.add_field(name=str(i+1) + ".", value = f"{artist[i]} - {title[i]}", inline=False)
-        embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.followup.send(embed=embed)
+
+        if embed is not None:
+            if title is not None and artist is not None:
+                for i in range(0, 10):
+                    embed.add_field(name=str(i + 1) + ".", value = f"{artist[i]} - {title[i]}", inline=False)
+            embed.set_footer(text=BOT_NAME_TAG_VER)
+            await ctx.followup.send(embed=embed)
 
 def setup (bot) :
     bot.add_cog (Chart (bot))

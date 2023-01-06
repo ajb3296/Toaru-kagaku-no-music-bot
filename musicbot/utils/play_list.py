@@ -13,6 +13,7 @@ async def play_list(player, ctx, musics, playmsg):
     playmusic = get_lan(ctx.author.id, "music_none")
     passmusic = get_lan(ctx.author.id, "music_none")
     loading_dot_count = 0
+    thumbnail = None
 
     for music in musics:
         # ... 개수 변경
@@ -48,7 +49,7 @@ async def play_list(player, ctx, musics, playmsg):
         track = results.tracks[0]
 
         # Music statistical
-        Statistics.up(track.identifier)
+        Statistics().up(track.identifier)
 
         if playmusic == get_lan(ctx.author.id, "music_none"):
             playmusic = music

@@ -30,7 +30,7 @@ class About (commands.Cog) :
 
         embed=discord.Embed(title=get_lan(ctx.author.id, "about_bot_info"), description=AboutBot, color=color_code)
         embed.add_field(name="Github", value="[https://github.com/ajb3296/Toaru-kagaku-no-music-bot](<https://github.com/ajb3296/Toaru-kagaku-no-music-bot>)", inline=False)
-        embed.add_field(name=get_lan(ctx.author.id, "about_guild_count"), value=len(self.bot.guilds), inline=True)
+        embed.add_field(name=get_lan(ctx.author.id, "about_guild_count"), value=str(len(self.bot.guilds)), inline=True)
         embed.add_field(name=get_lan(ctx.author.id, "about_number_of_music_playback_servers"),
             value=f"lavalink: {players}({playing_players} playing)\nvoice channel count: {player_server_count} playing",
             inline=True)
