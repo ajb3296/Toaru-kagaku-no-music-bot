@@ -21,6 +21,7 @@ class Chart (commands.Cog) :
 
         if chart is not None:
             chart = chart.upper()
+            print(chart)
         if chart == "MELON":
             title, artist = await get_melon(10)
             embed=discord.Embed(title=get_lan(ctx.author.id, "chart_melon_chart"), color=color_code)

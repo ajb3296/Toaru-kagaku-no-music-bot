@@ -473,7 +473,7 @@ class Music(commands.Cog):
 
     @slash_command()
     @option("volume", description="볼륨값을 입력하세요", min_value=1, max_value=1000, default=100)
-    async def volume(self, ctx, volume: (int | None) = None):
+    async def volume(self, ctx, volume: int = None):
         """ Changes or display the volume """
         await ctx.defer()
 
@@ -598,7 +598,7 @@ class Music(commands.Cog):
 
     @slash_command()
     @option("arg", description="재생할 플레이리스트의 제목을 입력해 주세요")
-    async def list(self, ctx, *, arg: (str | None) = None):
+    async def list(self, ctx, *, arg: str = None):
         """ Load playlists or play the music from that playlist! """
         await ctx.defer()
 
