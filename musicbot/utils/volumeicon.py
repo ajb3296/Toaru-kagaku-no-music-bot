@@ -1,4 +1,4 @@
-async def volumeicon(vol : int):
+async def volumeicon(vol : int) -> str:
     if vol >= 1 and vol <= 10:
         volicon = ":mute:"
     elif vol >= 11 and vol <= 30:

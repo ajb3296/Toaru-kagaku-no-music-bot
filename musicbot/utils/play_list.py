@@ -8,7 +8,8 @@ from musicbot import color_code
 
 url_rx = re.compile(r'https?://(?:www\.)?.+')
 
-async def play_list(player, ctx, musics, playmsg):
+async def play_list(player, ctx, musics: list, playmsg):
+    """ 음악 리스트의 음악 재생 """
     trackcount = 0
     playmusic = get_lan(ctx.author.id, "music_none")
     passmusic = get_lan(ctx.author.id, "music_none")

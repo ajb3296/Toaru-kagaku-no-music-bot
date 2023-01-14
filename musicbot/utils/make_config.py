@@ -1,6 +1,7 @@
 import re
 
-def make_config():
+def make_config() -> None:
+    """ config.py 생성 """
     token = input("Enter your bot token : ")
     owners = input("Enter owners id, If there are multiple owners, separate them with a comma : ")
     owners = set(int(x) for x in owners.split(','))

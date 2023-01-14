@@ -2,7 +2,8 @@ import os
 import json
 import sqlite3
 
-def get_lan(user_id, text):
+def get_lan(user_id, text: str):
+    """ user_id 가 선택한 언어를 반환 """
     default_language = "en"
     userdata_db_path = "userdata.db"
 

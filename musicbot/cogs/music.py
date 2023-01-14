@@ -77,20 +77,20 @@ class LavalinkVoiceClient(discord.VoiceClient):
         Cleans up running player and leaves the voice client.
         """
         player = self.lavalink.player_manager.get(self.channel.guild.id)
+        if player is not None:
+            # no need to disconnect if we are not connected
+            if not force and not player.is_connected:
+                return
 
-        # no need to disconnect if we are not connected
-        if not force and not player.is_connected:
-            return
+            # None means disconnect
+            await self.channel.guild.change_voice_state(channel=None)
 
-        # None means disconnect
-        await self.channel.guild.change_voice_state(channel=None)
-
-        # update the channel_id of the player to None
-        # this must be done because the on_voice_state_update that
-        # would set channel_id to None doesn't get dispatched after the
-        # disconnect
-        player.channel_id = None
-        self.cleanup()
+            # update the channel_id of the player to None
+            # this must be done because the on_voice_state_update that
+            # would set channel_id to None doesn't get dispatched after the
+            # disconnect
+            player.channel_id = None
+            self.cleanup()
 
 class Music(commands.Cog):
     def __init__(self, bot):
@@ -540,7 +540,7 @@ class Music(commands.Cog):
         await ctx.followup.send(embed=embed)
 
     @slash_command()
-    async def chartplay(self, ctx, *, chart : Option(str, description="Choose chart.", choices=["Melon", "Billboard", "Billboard Japan"]), count : int = 10):
+    async def chartplay(self, ctx, *, chart: Option(str, description="Choose chart.", choices=["Melon", "Billboard", "Billboard Japan"]), count : int = 10):
         """ Add the top 10 songs on the selected chart to your playlist! """
         await ctx.defer()
 
@@ -598,7 +598,7 @@ class Music(commands.Cog):
 
     @slash_command()
     @option("arg", description="재생할 플레이리스트의 제목을 입력해 주세요")
-    async def list(self, ctx, *, arg: str = None):
+    async def list(self, ctx, *, arg = None):
         """ Load playlists or play the music from that playlist! """
         await ctx.defer()
 

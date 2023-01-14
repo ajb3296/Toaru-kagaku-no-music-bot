@@ -14,7 +14,7 @@ class Equalizer:
                       '400', '630', '1K', '1.6', '2.5', '4K',
                       '6.3', '10K', '16K')
 
-    def set_gain(self, band: int, gain: float):
+    def set_gain(self, band: int, gain: float) -> None:
         if band < 0 or band >= self._band_count:
             raise IndexError(f'Band {band} does not exist!')
 
@@ -22,13 +22,13 @@ class Equalizer:
 
         self.bands[band] = gain
 
-    def get_gain(self, band: int):
+    def get_gain(self, band: int) -> float:
         if band < 0 or band >= self._band_count:
             raise IndexError(f'Band {band} does not exist!')
 
         return self.bands[band]
 
-    def visualise(self):
+    def visualise(self) -> str:
         block = ''
         bands = [f'{self.freqs[band]:>3}' for band in range(self._band_count)]
         bottom = (' ' * 8) + ' '.join(bands)
@@ -59,7 +59,7 @@ class Equalizer:
         return block
 
 class EqualizerButton(discord.ui.View):
-    def __init__(self, ctx, player, eq, selected):
+    def __init__(self, ctx, player, eq, selected: int):
         super().__init__()
         self.ctx = ctx
         self.player = player
@@ -74,6 +74,7 @@ class EqualizerButton(discord.ui.View):
 
     @discord.ui.button(label="", row=0, style=discord.ButtonStyle.primary, emoji="➡")
     async def right(self, button, interaction):
+
         self.selected = min(self.selected + 1, 14)
         result = await self.button_interact()
         await interaction.response.edit_message(content=result)
@@ -109,12 +110,12 @@ class EqualizerButton(discord.ui.View):
 
         await interaction.response.edit_message(content=result)
 
-    async def button_interact(self):
+    async def button_interact(self) -> str:
         self.player.store('eq', self.eq)
         selector = f'{" " * 8}{"    " * self.selected}^^^'
         return f"```diff\n{self.eq.visualise()}\n{selector}```"
 
-    async def apply_gains(self, player, gains):
+    async def apply_gains(self, player, gains: dict) -> None:
         if isinstance(gains, list):
             e = llEq()
             e.update(bands=[(x, y) for x, y in enumerate(gains)])

@@ -14,6 +14,7 @@ class Statistics:
         self.statisticsdb = StatisticsDb()
 
     def up(self, video_id: str) -> None:
+        """ 비디오 재생 횟수를 1 증가시킵니다 """
         # Set table name
         table_name = f"date{datetime.today().strftime('%Y%m%d')}"
         # Get play count from db
@@ -27,6 +28,7 @@ class Statistics:
 
     # 이게 왜 필요했더라...언젠간 쓰겠지
     def down(self, video_id: str) -> None:
+        """ 비디오 재생 횟수를 1 감소시킵니다 """
         # Set table name
         table_name = f"date{datetime.today().strftime('%Y%m%d')}"
         # Get play count from db
@@ -41,7 +43,8 @@ class StatisticsDb:
     def __init__(self):
         self.db_path = "statistics.db"
 
-    def get(self, table_name, video_id) -> tuple | None:
+    def get(self, table_name: str, video_id: str) -> tuple | None:
+        """ 비디오 아이디로 데이터를 가져옴 """
         conn = sqlite3.connect(self.db_path, isolation_level=None)
         c = conn.cursor()
         try:
@@ -53,7 +56,8 @@ class StatisticsDb:
         conn.close()
         return temp
 
-    def get_all(self, table_name) -> list | None:
+    def get_all(self, table_name: str) -> list | None:
+        """ 테이블의 모든 데이터를 가져옴 """
         conn = sqlite3.connect(self.db_path, isolation_level=None)
         c = conn.cursor()
         # 내림차순으로 정렬
@@ -65,7 +69,7 @@ class StatisticsDb:
         conn.close()
         return temp
 
-    def write(self, table_name, video_id, edit_count = 1) -> None:
+    def write(self, table_name: str, video_id: str, edit_count: int = 1) -> None:
         # Create table if it doesn't exist
         conn = sqlite3.connect(self.db_path, isolation_level=None)
         c = conn.cursor()
