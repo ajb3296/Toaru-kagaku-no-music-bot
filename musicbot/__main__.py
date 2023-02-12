@@ -1,15 +1,17 @@
 import os
+import re
 import time
 import json
 import discord
 import asyncio
 import requests
+import subprocess
 import multiprocessing
 from urllib import request
 
 from discord.ext import commands
 
-from musicbot.lavalinkstart import child_process
+from musicbot.lavalinkstart import start_lavalink
 from musicbot.background.db_management import add_today_table
 
 from musicbot import LOGGER, TOKEN, EXTENSIONS, BOT_NAME_TAG_VER
@@ -37,19 +39,24 @@ class Toaru_kagaku_no_music_bot (commands.Bot) :
         )
         self.remove_command("help")
 
-        # Lavalink Download
-        if not os.path.exists("Lavalink.jar"):
-            LOGGER.info("Lavalink Downloading...")
-            a = requests.get("https://api.github.com/repos/freyacodes/Lavalink/releases")
-            b = json.loads(a.text)
-            lavalink_download_link = f"https://github.com/freyacodes/Lavalink/releases/download/{b[0]['tag_name']}/Lavalink.jar"
+        # 현재 라바링크 버전
+        now_lavalinkver = None
+        if os.path.exists("Lavalink.jar"):
+            lavalinkver = subprocess.check_output(['java', '-jar', 'Lavalink.jar', '--version'], stderr=subprocess.STDOUT, encoding='utf-8')
+            now_lavalinkver = re.search(r"Version:\s+(\d+\.\d+\.\d+)", lavalinkver).group(1)
 
-            if lavalink_download_link.lower().startswith('http'):
-                request.urlretrieve(lavalink_download_link, "Lavalink.jar")
-            else:
-                raise ValueError from None
+        # 최신 라바링크 버전
+        latest_lavalink_tag = json.loads(requests.get("https://api.github.com/repos/freyacodes/Lavalink/releases").text)[0]['tag_name']
 
-        process = multiprocessing.Process(target=child_process)
+        # 최신 라바링크 버전과 다를 경우
+        if now_lavalinkver != latest_lavalink_tag:
+            LOGGER.info("Latest Lavalink downloading...")
+            LOGGER.info(f"v{now_lavalinkver} -> v{latest_lavalink_tag}")
+            lavalink_download_link = f"https://github.com/freyacodes/Lavalink/releases/download/{latest_lavalink_tag}/Lavalink.jar"
+
+            request.urlretrieve(lavalink_download_link, "Lavalink.jar")
+
+        process = multiprocessing.Process(target=start_lavalink)
         process.start()
         time.sleep(20)
 

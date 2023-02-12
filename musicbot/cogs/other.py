@@ -1,6 +1,9 @@
+import re
+import json
 import time
 import psutil
 import discord
+import requests
 import lavalink
 import platform
 import datetime
@@ -30,13 +33,18 @@ class Other (commands.Cog) :
     async def softver(self, ctx) :
         """ Let me tell you the version of the modules! """
         javaver = subprocess.check_output(['java', '--version'], stderr=subprocess.STDOUT, encoding='utf-8')
+        # 현재 라바링크 버전
         lavalinkver = subprocess.check_output(['java', '-jar', 'Lavalink.jar', '--version'], stderr=subprocess.STDOUT, encoding='utf-8')
+        now_lavalinkver = re.search(r"Version:\s+(\d+\.\d+\.\d+)", lavalinkver).group(1)
+        # 최신 라바링크 버전
+        latest_lavalink_tag = json.loads(requests.get("https://api.github.com/repos/freyacodes/Lavalink/releases").text)[0]['tag_name']
+
         embed=discord.Embed(title=get_lan(ctx.author.id, "other_soft_ver"), color=color_code)
         embed.add_field(name="Python Ver", value=("%s %s") %(platform.python_implementation(), platform.python_version()), inline=False)
         embed.add_field(name="Discord.py Ver", value=str(discord.__version__), inline=False)
         embed.add_field(name="Lavalink.py Ver", value=lavalink.__version__, inline=False)
         embed.add_field(name="Java Ver", value=f"```{javaver}```", inline=False)
-        embed.add_field(name="Lavalink Ver", value=f"```{lavalinkver}```", inline=False)
+        embed.add_field(name="Lavalink Ver", value=f"```{now_lavalinkver} (Latest: {latest_lavalink_tag})```", inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
 
