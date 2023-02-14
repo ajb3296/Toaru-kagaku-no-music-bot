@@ -55,7 +55,12 @@ class Toaru_kagaku_no_music_bot (commands.Bot) :
             lavalink_download_link = f"https://github.com/freyacodes/Lavalink/releases/download/{latest_lavalink_tag}/Lavalink.jar"
 
             request.urlretrieve(lavalink_download_link, "Lavalink.jar")
+        
+        # 라바링크 버전이 최신일 경우
+        else:
+            LOGGER.info("Lavalink is latest version.")
 
+        LOGGER.info("Lavalink starting...")
         process = multiprocessing.Process(target=start_lavalink)
         process.start()
         time.sleep(20)

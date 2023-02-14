@@ -32,7 +32,10 @@ class Other (commands.Cog) :
     @slash_command()
     async def softver(self, ctx) :
         """ Let me tell you the version of the modules! """
-        javaver = subprocess.check_output(['java', '--version'], stderr=subprocess.STDOUT, encoding='utf-8')
+        # 현재 자바 버전
+        javaver = subprocess.check_output(['java', '-version'], stderr=subprocess.STDOUT, encoding='utf-8')
+        now_javaver = re.search(r"version\s+\"(\d+.\d+.\d+)\"", javaver).group(1)
+
         # 현재 라바링크 버전
         lavalinkver = subprocess.check_output(['java', '-jar', 'Lavalink.jar', '--version'], stderr=subprocess.STDOUT, encoding='utf-8')
         now_lavalinkver = re.search(r"Version:\s+(\d+\.\d+\.\d+)", lavalinkver).group(1)
@@ -43,8 +46,8 @@ class Other (commands.Cog) :
         embed.add_field(name="Python Ver", value=("%s %s") %(platform.python_implementation(), platform.python_version()), inline=False)
         embed.add_field(name="Discord.py Ver", value=str(discord.__version__), inline=False)
         embed.add_field(name="Lavalink.py Ver", value=lavalink.__version__, inline=False)
-        embed.add_field(name="Java Ver", value=f"```{javaver}```", inline=False)
-        embed.add_field(name="Lavalink Ver", value=f"```{now_lavalinkver} (Latest: {latest_lavalink_tag})```", inline=False)
+        embed.add_field(name="Java Ver", value=now_javaver, inline=False)
+        embed.add_field(name="Lavalink Ver", value=f"{now_lavalinkver} (Latest: {latest_lavalink_tag})", inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
 

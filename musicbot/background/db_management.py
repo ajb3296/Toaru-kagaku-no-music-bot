@@ -41,15 +41,16 @@ async def add_missing_table():
         first_date += datetime.timedelta(days=1)
     conn.close()
 
-def str2datetime(date):
+def str2datetime(date: str) -> datetime.datetime:
     date_time_obj = datetime.datetime.strptime(date, 'date%Y%m%d')
     return date_time_obj
 
-def datetime2str(date):
+def datetime2str(date: datetime.datetime):
     str_date = date.strftime("date%Y%m%d")
     return str_date
 
-def get_table_list(path):
+def get_table_list(path) -> list[str]:
+    """ 테이블 리스트 반환 """
     conn = sqlite3.connect(path, isolation_level=None)
     c = conn.cursor()
     c.execute("SELECT * FROM sqlite_sequence ORDER BY name ASC") # 오름차순으로 정렬
@@ -58,7 +59,7 @@ def get_table_list(path):
 
     return table_list
 
-def duplicate_processing(): # 데이터베이스 읽기가 안됐을 때 중복 생성된 레코드 처리
+def duplicate_processing() -> None: # 데이터베이스 읽기가 안됐을 때 중복 생성된 레코드 처리
     path = StatisticsDb().db_path
     table_list = get_table_list(path)
 
