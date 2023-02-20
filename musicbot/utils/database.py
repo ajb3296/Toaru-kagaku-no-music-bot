@@ -19,7 +19,7 @@ class Database():
         """ lavalink pid 저장 """
         con = sqlite3.connect(self.path, isolation_level=None)
         cur = con.cursor()
-        
+
         # read pid from lavalink table
         cur.execute("SELECT * FROM lavalink")
 

@@ -9,12 +9,15 @@ import subprocess
 import multiprocessing
 from urllib import request
 
+import topgg
+from koreanbots.integrations.discord import DiscordpyKoreanbots
+
 from discord.ext import commands
 
 from musicbot.lavalinkstart import start_lavalink
 from musicbot.background.db_management import add_today_table
 
-from musicbot import LOGGER, TOKEN, EXTENSIONS, BOT_NAME_TAG_VER
+from musicbot import LOGGER, TOKEN, EXTENSIONS, BOT_NAME_TAG_VER, koreanbot_token, topgg_token
 
 async def status_task():
     while True:
@@ -57,7 +60,7 @@ class Toaru_kagaku_no_music_bot (commands.Bot) :
             lavalink_download_link = f"https://github.com/freyacodes/Lavalink/releases/download/{latest_lavalink_tag}/Lavalink.jar"
 
             request.urlretrieve(lavalink_download_link, "Lavalink.jar")
-        
+
         # 라바링크 버전이 최신일 경우
         else:
             LOGGER.info("Lavalink is latest version.")
@@ -90,4 +93,8 @@ intents.messages = True
 intents.guilds = True
 
 bot = Toaru_kagaku_no_music_bot ()
+if koreanbot_token is not None:
+    kb = DiscordpyKoreanbots(bot, koreanbot_token, run_task=True)
+if topgg_token is not None:
+    topgg.DBLClient(bot, topgg_token, autopost=True, post_shard_count=True)
 bot.run(TOKEN)

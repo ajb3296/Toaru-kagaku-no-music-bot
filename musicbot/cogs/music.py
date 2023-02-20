@@ -175,6 +175,7 @@ class Music(commands.Cog):
             if v_client.channel.id != ctx.author.voice.channel.id:
                 raise commands.CommandInvokeError(get_lan(ctx.author.id, "music_come_in_my_voice_channel"))
 
+        # 반복 상태 설정
         loop = Database().get_loop(ctx.guild.id)
         if loop is not None:
             player.set_loop(loop)
@@ -426,7 +427,7 @@ class Music(commands.Cog):
             player.set_loop(1)
         else:
             player.set_loop(0)
-            
+
         Database().set_loop(ctx.guild.id, player.loop)
 
         embed = None

@@ -12,6 +12,7 @@ class Config(object):
     BOT_TAG = "#" # 태그
     BOT_ID = 123456789      # 봇 아이디
     AboutBot = "" # 봇 정보
+    color_code = 0xc68e6e # 색상코드
 
     # Music
     host = "localhost"
@@ -19,7 +20,9 @@ class Config(object):
     region = "eu" # 리전
     port = 2333
 
-    color_code = 0xc68e6e # 색상코드
+    # 봇 홍보용 사이트
+    koreanbot_token = None
+    topgg_token = None
 
 class Production(Config):
     LOGGER = False

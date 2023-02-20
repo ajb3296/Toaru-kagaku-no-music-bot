@@ -32,6 +32,12 @@ class Other (commands.Cog) :
     @slash_command()
     async def softver(self, ctx):
         """ Let me tell you the version of the modules! """
+        # 최신 py-cord 버전
+        latest_pycord_tag = json.loads(requests.get("https://api.github.com/repos/Pycord-Development/pycord/releases").text)[0]['tag_name']
+
+        # 최신 lavalink.py 버전
+        latest_lavalink_py_tag = json.loads(requests.get("https://api.github.com/repos/Devoxin/Lavalink.py/releases").text)[0]['tag_name']
+
         # 현재 자바 버전
         javaver = subprocess.check_output(['java', '-version'], stderr=subprocess.STDOUT, encoding='utf-8')
         now_javaver = re.search(r"version\s+\"(\d+.\d+.\d+)\"", javaver)
@@ -53,8 +59,8 @@ class Other (commands.Cog) :
 
         embed=discord.Embed(title=get_lan(ctx.author.id, "other_soft_ver"), color=color_code)
         embed.add_field(name="Python Ver", value=f"{platform.python_implementation()} {platform.python_version()}", inline=False)
-        embed.add_field(name="Discord.py Ver", value=str(discord.__version__), inline=False)
-        embed.add_field(name="Lavalink.py Ver", value=lavalink.__version__, inline=False)
+        embed.add_field(name="Pycord.py Ver", value=f"{discord.__version__} (Latest: {latest_pycord_tag})", inline=False)
+        embed.add_field(name="Lavalink.py Ver", value=f"{lavalink.__version__} (Latest: {latest_lavalink_py_tag})", inline=False)
         embed.add_field(name="Java Ver", value=now_javaver, inline=False)
         embed.add_field(name="Lavalink Ver", value=f"{now_lavalinkver} (Latest: {latest_lavalink_tag})", inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)

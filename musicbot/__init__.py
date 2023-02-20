@@ -37,6 +37,9 @@ psw = Config.psw
 region = Config.region
 port = Config.port
 
+koreanbot_token = Config.koreanbot_token
+topgg_token = Config.topgg_token
+
 EXTENSIONS = []
 for file in os.listdir("musicbot/cogs"):
     if file.endswith(".py"):

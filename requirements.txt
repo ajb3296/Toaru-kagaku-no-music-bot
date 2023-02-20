@@ -6,3 +6,5 @@ requests
 lxml
 chardet
 billboard.py
+koreanbots
+topggpy
