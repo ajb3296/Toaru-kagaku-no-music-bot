@@ -1,6 +1,7 @@
 import discord
+from discord import option
 from discord.ext import commands
-from discord.commands import slash_command, Option
+from discord.commands import slash_command
 
 from musicbot.utils.language import get_lan
 from musicbot.utils.get_chart import get_melon, get_billboard, get_billboardjp
@@ -11,7 +12,8 @@ class Chart (commands.Cog) :
         self.bot = bot
 
     @slash_command()
-    async def chart(self, ctx, *, chart : Option(str, description="Choose chart.", choices=["Melon", "Billboard", "Billboard Japan"])):
+    @option("chart", description="Choose chart", choices=["Melon", "Billboard", "Billboard Japan"])
+    async def chart(self, ctx, *, chart: str):
         """ I will tell you from the 1st to the 10th place on the chart site """
         await ctx.defer()
 

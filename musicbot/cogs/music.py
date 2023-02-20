@@ -8,7 +8,7 @@ import discord
 import lavalink
 from discord import option
 from discord.ext import commands, pages
-from discord.commands import slash_command, Option
+from discord.commands import slash_command
 
 from musicbot.utils.language import get_lan
 from musicbot.utils.volumeicon import volumeicon
@@ -17,6 +17,7 @@ from musicbot.utils.play_list import play_list
 from musicbot.utils.statistics import Statistics
 from musicbot import LOGGER, BOT_ID, color_code, BOT_NAME_TAG_VER, host, psw, region, port
 from musicbot.utils.equalizer import Equalizer, EqualizerButton
+from musicbot.utils.database import Database
 
 url_rx = re.compile(r'https?://(?:www\.)?.+')
 
@@ -174,6 +175,10 @@ class Music(commands.Cog):
             if v_client.channel.id != ctx.author.voice.channel.id:
                 raise commands.CommandInvokeError(get_lan(ctx.author.id, "music_come_in_my_voice_channel"))
 
+        loop = Database().get_loop(ctx.guild.id)
+        if loop is not None:
+            player.set_loop(loop)
+
     async def track_hook(self, event):
         if isinstance(event, lavalink.events.QueueEndEvent):
             # When this track_hook receives a "QueueEndEvent" from lavalink.py
@@ -229,7 +234,7 @@ class Music(commands.Cog):
             else:
                 break
 
-        embed = discord.Embed(color=color_code) #discord.Color.blurple()
+        embed = discord.Embed(color=color_code) # discord.Color.blurple()
 
         # Valid loadTypes are:
         #   TRACK_LOADED    - single video/direct URL)
@@ -421,6 +426,8 @@ class Music(commands.Cog):
             player.set_loop(1)
         else:
             player.set_loop(0)
+            
+        Database().set_loop(ctx.guild.id, player.loop)
 
         embed = None
         if player.loop == 0:
@@ -472,7 +479,7 @@ class Music(commands.Cog):
         await ctx.followup.send(embed=embed)
 
     @slash_command()
-    @option("volume", description="볼륨값을 입력하세요", min_value=1, max_value=1000, default=100)
+    @option("volume", description="볼륨값을 입력하세요", min_value=1, max_value=1000, default=100, required = False)
     async def volume(self, ctx, volume: int = None):
         """ Changes or display the volume """
         await ctx.defer()
@@ -493,7 +500,13 @@ class Music(commands.Cog):
             )
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
+        # 볼륨 설정
         await player.set_volume(volume)
+        
+        # DB에 볼륨 저장
+        # Database().set_volume(ctx.guild.id, volume)
+
+        # 볼륨 아이콘 가져오기
         volicon = await volumeicon(player.volume)
         embed=discord.Embed(title=get_lan(ctx.author.id, "music_set_vol").format(volicon=volicon, volume=player.volume),
                             description='',
@@ -540,7 +553,9 @@ class Music(commands.Cog):
         await ctx.followup.send(embed=embed)
 
     @slash_command()
-    async def chartplay(self, ctx, *, chart: Option(str, description="Choose chart.", choices=["Melon", "Billboard", "Billboard Japan"]), count : int = 10):
+    @option("chart", description="Choose chart", choices=["Melon", "Billboard", "Billboard Japan"])
+    @option("count", description="Enter the number of chart songs to play", min_value = 1, max_value = 100, default = 10)
+    async def chartplay(self, ctx, *, chart: str, count: int):
         """ Add the top 10 songs on the selected chart to your playlist! """
         await ctx.defer()
 

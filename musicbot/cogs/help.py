@@ -1,6 +1,7 @@
 import discord
+from discord import option
 from discord.ext import commands
-from discord.commands import slash_command, Option
+from discord.commands import slash_command
 
 from musicbot.utils.language import get_lan
 from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code, OWNERS, EXTENSIONS
@@ -10,7 +11,8 @@ class Help (commands.Cog) :
         self.bot = bot
 
     @slash_command()
-    async def help (self, ctx, *, help_option : Option(str, description="Choose help menu.", choices=["INFO", "GENERAL", "MUSIC", "CHART"])) :
+    @option("help_option", description="Choose help menu", choices=["INFO", "GENERAL", "MUSIC", "CHART"])
+    async def help (self, ctx, *, help_option: str):
         """ Send help """
         if help_option is not None:
             help_option = help_option.upper()

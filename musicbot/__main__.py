@@ -43,7 +43,9 @@ class Toaru_kagaku_no_music_bot (commands.Bot) :
         now_lavalinkver = None
         if os.path.exists("Lavalink.jar"):
             lavalinkver = subprocess.check_output(['java', '-jar', 'Lavalink.jar', '--version'], stderr=subprocess.STDOUT, encoding='utf-8')
-            now_lavalinkver = re.search(r"Version:\s+(\d+\.\d+\.\d+)", lavalinkver).group(1)
+            now_lavalinkver = re.search(r"Version:\s+(\d+\.\d+\.\d+)", lavalinkver)
+            if now_lavalinkver is not None:
+                now_lavalinkver = now_lavalinkver.group(1)
 
         # 최신 라바링크 버전
         latest_lavalink_tag = json.loads(requests.get("https://api.github.com/repos/freyacodes/Lavalink/releases").text)[0]['tag_name']

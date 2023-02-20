@@ -9,17 +9,17 @@ def get_lan(user_id, text: str):
 
     # if the userdata file exists
     if os.path.exists(userdata_db_path):
-        conn = sqlite3.connect(userdata_db_path, isolation_level=None)
-        c = conn.cursor()
-        c.execute("SELECT * FROM userdata WHERE id=:Id", {"Id": user_id})
-        temp = c.fetchone()
+        con = sqlite3.connect(userdata_db_path, isolation_level=None)
+        cur = con.cursor()
+        cur.execute("SELECT * FROM userdata WHERE id=:Id", {"Id": user_id})
+        temp = cur.fetchone()
         if temp is None:
             language = default_language
         else:
             language = temp[1]
             if not os.path.exists(f"musicbot/languages/{language}.json"):
                 language = default_language
-        conn.close()
+        con.close()
         # read language file
         with open(f"musicbot/languages/{language}.json", encoding="utf-8") as f:
             language_data = json.load(f)
