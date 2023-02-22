@@ -32,6 +32,7 @@ class Other (commands.Cog) :
     @slash_command()
     async def softver(self, ctx):
         """ Let me tell you the version of the modules! """
+        await ctx.defer()
         # 최신 py-cord 버전
         latest_pycord_tag = json.loads(requests.get("https://api.github.com/repos/Pycord-Development/pycord/releases").text)[0]['tag_name']
 
@@ -64,7 +65,7 @@ class Other (commands.Cog) :
         embed.add_field(name="Java Ver", value=now_javaver, inline=False)
         embed.add_field(name="Lavalink Ver", value=f"{now_lavalinkver} (Latest: {latest_lavalink_tag})", inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.respond(embed=embed)
+        await ctx.followup.send(embed=embed)
 
     @slash_command()
     async def uptime(self, ctx):
@@ -76,6 +77,6 @@ class Other (commands.Cog) :
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
 
-def setup (bot) :
+def setup (bot):
     bot.add_cog (Other (bot))
     LOGGER.info('Other loaded!')
