@@ -179,6 +179,11 @@ class Music(commands.Cog):
         loop = Database().get_loop(ctx.guild.id)
         if loop is not None:
             player.set_loop(loop)
+        
+        # 셔플 상태 설정
+        shuffle = Database().get_shuffle(ctx.guild.id)
+        if shuffle is not None:
+            player.set_shuffle(shuffle)
 
     async def track_hook(self, event):
         if isinstance(event, lavalink.events.QueueEndEvent):
@@ -471,7 +476,12 @@ class Music(commands.Cog):
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_not_playing"), description='', color=color_code)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
-        player.shuffle = not player.shuffle
+
+        player.set_shuffle(not player.shuffle)
+
+        # 셔플 상태 저장
+        Database().set_shuffle(ctx.guild.id, player.shuffle)
+
         if player.shuffle:
             embed=discord.Embed(title=get_lan(ctx.author.id, "music_shuffle_on"), description='', color=color_code)
         else:
