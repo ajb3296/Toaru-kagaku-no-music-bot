@@ -13,6 +13,11 @@
 <br><br>
 <a href="https://www.instagram.com/jsl__054"><img src="https://img.shields.io/badge/Illustrator_Instagram-E4405F?style=flat&logo=Instagram&logoColor=white"></img></a>
 
+## Features
+
+* Lavalink 자동 업데이트
+* 이퀄라이저 지원
+
 ## Note
 
 [Lavalink Download](https://github.com/freyacodes/Lavalink/releases)<br>
@@ -31,11 +36,3 @@
 
 1. `python -m musicbot` 명령어를 실행한다.
 2. 프로그램의 안내에 따라 진행한다
-
-### Troubleshoot
-
-~~차트 사이트 파싱중 SSL 인증서 관련 문제가 발생했을 경우 :~~<br>
-
-~~`/etc/ssl/openssl.cnf` 파일을 연 후 `CipherString`을 `DEFAULT@SECLEVEL=2`에서 `DEFAULT@SECLEVEL=1`로 변경 후 시스템을 재부팅 합니다.~~<br>
-
-도움 주신분 : [KeonWoo PARK](https://github.com/parkkw472)

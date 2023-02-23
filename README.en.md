@@ -13,6 +13,11 @@
 <br><br>
 <a href="https://www.instagram.com/jsl__054"><img src="https://img.shields.io/badge/Illustrator_Instagram-E4405F?style=flat&logo=Instagram&logoColor=white"></img></a>
 
+## Features
+
+* Lavalink auto update
+* Equalizer setting support
+
 ## Note
 
 [Lavalink Download](https://github.com/freyacodes/Lavalink/releases)<br>
@@ -31,11 +36,3 @@
 
 1. Run `python -m musicbot`
 2. Proceed according to the instructions of the program.
-
-### Troubleshoot
-
-~~If an SSL certificate-related problem occurs during parsing of the chart site :~~<br>
-
-~~To do this you need to open up /etc/ssl/openssl.cnf and change `CipherString` from `DEFAULT@SECLEVEL=2` to `DEFAULT@SECLEVEL=1` Then you will have to reboot your system.~~<br>
-
-Thanks to [KeonWoo PARK](https://github.com/parkkw472)
