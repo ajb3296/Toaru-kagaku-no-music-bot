@@ -281,6 +281,9 @@ class Music(commands.Cog):
             track = lavalink.models.AudioTrack(track, ctx.author.id, recommended=True)
             player.add(requester=ctx.author.id, track=track)
 
+        if not player.is_playing:
+            embed.add_field(name=get_lan(ctx.author.id, "music_shuffle"), value=get_lan(ctx.author.id, "music_shuffle_already_on") if player.shuffle else get_lan(ctx.author.id, "music_shuffle_already_off"), inline=True)
+            embed.add_field(name=get_lan(ctx.author.id, "music_repeat"), value=[get_lan(ctx.author.id, "music_repeat_already_off"), get_lan(ctx.author.id, "music_repeat_already_one"), get_lan(ctx.author.id, "music_repeat_already_on")][player.loop], inline=True)
         if thumbnail is not None:
             embed.set_thumbnail(url=f"http://img.youtube.com/vi/{thumbnail}/0.jpg")
         embed.set_footer(text=BOT_NAME_TAG_VER)

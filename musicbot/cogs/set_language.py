@@ -18,7 +18,7 @@ class Language (commands.Cog) :
         self.bot = bot
 
     @slash_command()
-    @option("help_option", description="Choose language pack", choices=lan_pack)
+    @option("lang", description="Choose language pack", choices=lan_pack)
     async def language (self, ctx, lang: str):
         """ Apply the language pack. """
         if lang is None:
