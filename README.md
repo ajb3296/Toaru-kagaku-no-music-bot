@@ -30,9 +30,11 @@
 * [lavalink.py](https://github.com/Devoxin/Lavalink.py)
 * [EZPaginator](https://github.com/khk4912/EZPaginator)
 
-## How to install
-
-### 컴퓨터로 사용하는 방법
+## 설치법
 
 1. `python -m musicbot` 명령어를 실행한다.
 2. 프로그램의 안내에 따라 진행한다
+
+## Dashboard
+
+[Github](https://github.com/ajb3296/Toaru-kagaku-no-music-bot-dashboard)

@@ -32,7 +32,9 @@
 
 ## How to install
 
-### How to use it as a computer
-
 1. Run `python -m musicbot`
 2. Proceed according to the instructions of the program.
+
+## Dashboard
+
+[Github](https://github.com/ajb3296/Toaru-kagaku-no-music-bot-dashboard)
