@@ -1,4 +1,3 @@
-import os
 import time
 import discord
 import asyncio
@@ -11,7 +10,6 @@ from discord.ext import commands
 
 from musicbot.lavalinkstart import start_lavalink, download_lavalink
 from musicbot.background.db_management import add_today_table
-from musicbot.background.dashboard import dashboard_check
 
 from musicbot import LOGGER, TOKEN, EXTENSIONS, BOT_NAME_TAG_VER, koreanbot_token, topgg_token
 
@@ -37,10 +35,6 @@ class Toaru_kagaku_no_music_bot (commands.Bot) :
             intents=intents
         )
         self.remove_command("help")
-
-        # 대시보드 연결
-        dashboard_path_update_process = multiprocessing.Process(target=dashboard_check)
-        dashboard_path_update_process.start()
 
         # 라바링크 업데이트 확인 및 다운로드
         download_lavalink()

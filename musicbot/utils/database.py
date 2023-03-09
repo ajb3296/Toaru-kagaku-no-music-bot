@@ -33,7 +33,7 @@ class Database():
             cur.execute(f"UPDATE {self.loop_table} SET loop=:loop WHERE guild_id=:guild_id", {"loop": loop, 'guild_id': guild})
 
         con.close()
-    
+
     def get_loop(self, guild_id: int) -> int | None:
         """ 모든 루프설정 가져오기 """
         con = sqlite3.connect(self.path, isolation_level=None)

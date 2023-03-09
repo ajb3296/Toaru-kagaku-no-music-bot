@@ -13,7 +13,7 @@ def get_lavalink_ver() -> tuple[str | None, str]:
     """ lavalink 최신버전 가져오기 """
     # 최신 라바링크 버전
     latest_lavalink_tag = json.loads(requests.get("https://api.github.com/repos/freyacodes/Lavalink/releases").text)[0]['tag_name']
-    
+
     # 현재 라바링크 버전
     now_lavalinkver = None
     if os.path.exists("Lavalink.jar"):

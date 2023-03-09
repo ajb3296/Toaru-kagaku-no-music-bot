@@ -179,7 +179,7 @@ class Music(commands.Cog):
         loop = Database().get_loop(ctx.guild.id)
         if loop is not None:
             player.set_loop(loop)
-        
+
         # 셔플 상태 설정
         shuffle = Database().get_shuffle(ctx.guild.id)
         if shuffle is not None:
@@ -725,6 +725,23 @@ class Music(commands.Cog):
                 )
             paginator = pages.Paginator(pages=pages_list)
             await paginator.respond(ctx.interaction, ephemeral=False)
+
+    @slash_command()
+    @option("speed", description="재생 속도를 입력해 주세요")
+    async def speed(self, ctx, speed: float):
+        """ Change the music speed """
+        from lavalink.filters import Timescale
+        await ctx.defer()
+
+        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+
+        if not player.is_playing:
+            return await ctx.followup.send(get_lan(ctx.author.id, "music_not_playing"))
+
+        timescale = Timescale().update(speed=1.5)
+        print(timescale)
+        await player.set_filter(timescale)
+        await ctx.followup.send("test")
 
     @slash_command()
     async def equalizer(self, ctx):

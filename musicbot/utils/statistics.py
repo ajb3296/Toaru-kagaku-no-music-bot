@@ -25,7 +25,7 @@ class Statistics:
         else:
             num = temp[2] + 1
         self.statisticsdb.write(table_name, video_id, num)
-    
+
     def get_week(self) -> dict[str, int]:
         """ 이번주의 통계를 가져옵니다 """
         week_data = {}
