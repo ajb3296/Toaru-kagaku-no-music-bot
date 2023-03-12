@@ -7,22 +7,22 @@ if not __name__.endswith("sample_config"):
 class Config(object):
     TOKEN = '' # 봇 토큰
     OWNERS = [123456789] # 관리자의 아이디
-    DebugServer = [] # 채널 id
+    DEBUG_SERVER = [] # 채널 id
     BOT_NAME = "" # 봇 이름
     BOT_TAG = "#" # 태그
     BOT_ID = 123456789      # 봇 아이디
-    AboutBot = "" # 봇 정보
-    color_code = 0xc68e6e # 색상코드
+    ABOUT_BOT = "" # 봇 정보
+    COLOR_CODE = 0xc68e6e # 색상코드
 
     # Music
-    host = "localhost"
-    psw = "" # 컴퓨터 비밀번호
-    region = "eu" # 리전
-    port = 2333
+    HOST = "localhost"
+    PSW = "" # 컴퓨터 비밀번호
+    REGION = "eu" # 리전
+    PORT = 2333
 
     # 봇 홍보용 사이트
-    koreanbot_token = None
-    topgg_token = None
+    KOREANBOT_TOKEN = None
+    TOPGG_TOKEN = None
 
 class Production(Config):
     LOGGER = False

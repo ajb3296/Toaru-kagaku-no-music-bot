@@ -4,7 +4,7 @@ from discord.ext import commands
 from discord.commands import slash_command
 
 from musicbot.utils.language import get_lan
-from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code, OWNERS, EXTENSIONS
+from musicbot import LOGGER, BOT_NAME_TAG_VER, COLOR_CODE, OWNERS, EXTENSIONS
 
 class Help (commands.Cog) :
     def __init__ (self, bot) :
@@ -17,7 +17,7 @@ class Help (commands.Cog) :
         if help_option is not None:
             help_option = help_option.upper()
         if help_option == "GENERAL" or help_option == "일반":
-            embed=discord.Embed(title=get_lan(ctx.author.id, "help_general"), description="", color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "help_general"), description="", color=COLOR_CODE)
 
             if "about" in EXTENSIONS:
                 embed.add_field(name=get_lan(ctx.author.id, "help_general_about_command"),
@@ -58,7 +58,7 @@ class Help (commands.Cog) :
             if "music" in EXTENSIONS:
                 embed=discord.Embed(title=get_lan(ctx.author.id, "help_music"),
                                 description=get_lan(ctx.author.id, "help_music_description"),
-                                color=color_code)
+                                color=COLOR_CODE)
                 embed.add_field(name=get_lan(ctx.author.id, "help_music_connect_command"),
                                 value=get_lan(ctx.author.id, "help_music_connect_info"),
                                 inline=False)
@@ -104,7 +104,7 @@ class Help (commands.Cog) :
         elif help_option == "CHART" or help_option == "차트재생" or help_option == "차트":
             embed=discord.Embed(title=get_lan(ctx.author.id, "help_chart"),
                                 description='',
-                                color=color_code)
+                                color=COLOR_CODE)
             if "chart" in EXTENSIONS:
                 embed.add_field(name=get_lan(ctx.author.id, "help_chart_chart_command"),
                                 value=get_lan(ctx.author.id, "help_chart_chart_info"),
@@ -125,7 +125,7 @@ class Help (commands.Cog) :
         else:
             embed=discord.Embed(title=get_lan(ctx.author.id, "help"),
                                 description=get_lan(ctx.author.id, "help_info").format(bot_name=self.bot.user.name),
-                                color=color_code)
+                                color=COLOR_CODE)
             embed.add_field(name=get_lan(ctx.author.id, "help_general_command"),
                             value=get_lan(ctx.author.id, "help_general_command_info"),
                             inline=False)

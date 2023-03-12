@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.commands import slash_command
 
 from musicbot.utils.language import get_lan
-from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code, AboutBot
+from musicbot import LOGGER, BOT_NAME_TAG_VER, COLOR_CODE, ABOUT_BOT
 
 class About (commands.Cog) :
     def __init__ (self, bot):
@@ -28,7 +28,7 @@ class About (commands.Cog) :
             players += stats.players
             playing_players += stats.playing_players
 
-        embed=discord.Embed(title=get_lan(ctx.author.id, "about_bot_info"), description=AboutBot, color=color_code)
+        embed=discord.Embed(title=get_lan(ctx.author.id, "about_bot_info"), description=ABOUT_BOT, color=COLOR_CODE)
         embed.add_field(name="Github", value="[https://github.com/ajb3296/Toaru-kagaku-no-music-bot](<https://github.com/ajb3296/Toaru-kagaku-no-music-bot>)", inline=False)
         embed.add_field(name=get_lan(ctx.author.id, "about_guild_count"), value=str(len(self.bot.guilds)), inline=True)
         embed.add_field(name=get_lan(ctx.author.id, "about_number_of_music_playback_servers"),

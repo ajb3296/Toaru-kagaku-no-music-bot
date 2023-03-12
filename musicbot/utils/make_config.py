@@ -9,7 +9,7 @@ def make_config() -> None:
     for i in owners:
         owners_result += f"{i},"
 
-    DebugServer = input("Enter DebugServer id, If there are multiple DebugServer, separate them with a comma : ")
+    DebugServer = input("Enter DEBUG_SERVER id, If there are multiple DEBUG_SERVER, separate them with a comma : ")
     DebugServer = set(int(x) for x in DebugServer.split(','))
     DebugServer_result = ""
     for i in DebugServer:
@@ -30,14 +30,14 @@ class Development(Config):
 
     TOKEN = "{token}"
     OWNERS = [{owners_result}]
-    DebugServer = [{DebugServer_result}]
+    DEBUG_SERVER = [{DebugServer_result}]
     BOT_NAME = "{bot_name}"
     BOT_TAG = "#{bot_tag}"
     BOT_ID = {bot_id}
-    AboutBot = f"""{AboutBot}"""
+    ABOUT_BOT = f"""{AboutBot}"""
 
     # Music
-    psw = "{com_psw}"''')
+    PSW = "{com_psw}"''')
     file.close()
 
     print("Config file creation success")

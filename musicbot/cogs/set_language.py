@@ -6,7 +6,7 @@ from discord.ext import commands
 from discord.commands import slash_command
 
 from musicbot.utils.language import get_lan
-from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code
+from musicbot import LOGGER, BOT_NAME_TAG_VER, COLOR_CODE
 
 lan_pack = []
 for file in os.listdir("musicbot/languages"):
@@ -27,12 +27,12 @@ class Language (commands.Cog) :
                 if file.endswith(".json"):
                     files = files + file.replace(".json", "") + "\n"
 
-            embed=discord.Embed(title=get_lan(ctx.author.id, "set_language_pack_list"), description=files, color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "set_language_pack_list"), description=files, color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.respond(embed=embed)
 
         if not os.path.exists(f"musicbot/languages/{lang}.json"):
-            embed=discord.Embed(title=get_lan(ctx.author.id, "set_language_pack_not_exist"), color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "set_language_pack_not_exist"), color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.respond(embed=embed)
 
@@ -45,11 +45,11 @@ class Language (commands.Cog) :
         if a is None:
             # add user data
             cur.execute(f"INSERT INTO userdata VALUES({ctx.author.id}, '{lang}')")
-            embed=discord.Embed(title=get_lan(ctx.author.id, "set_language_complete"), description=f"{lang}", color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "set_language_complete"), description=f"{lang}", color=COLOR_CODE)
         else:
             # modify user data
             cur.execute("UPDATE userdata SET language=:language WHERE id=:id", {"language": lang, 'id': ctx.author.id})
-            embed=discord.Embed(title=get_lan(ctx.author.id, "set_language_complete"), description=f"{a[1]} --> {lang}", color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "set_language_complete"), description=f"{a[1]} --> {lang}", color=COLOR_CODE)
         con.close()
 
         embed.set_footer(text=BOT_NAME_TAG_VER)

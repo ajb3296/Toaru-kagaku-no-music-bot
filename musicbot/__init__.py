@@ -26,19 +26,19 @@ from musicbot.config import Development as Config
 
 TOKEN = Config.TOKEN
 OWNERS = Config.OWNERS
-DebugServer = Config.DebugServer
+DEBUG_SERVER = Config.DEBUG_SERVER
 BOT_NAME = Config.BOT_NAME
 BOT_TAG = Config.BOT_TAG
 BOT_ID = Config.BOT_ID
-color_code = Config.color_code
-AboutBot = Config.AboutBot
-host = Config.host
-psw = Config.psw
-region = Config.region
-port = Config.port
+COLOR_CODE = Config.COLOR_CODE
+ABOUT_BOT = Config.ABOUT_BOT
+HOST = Config.HOST
+PSW = Config.PSW
+REGION = Config.REGION
+PORT = Config.PORT
 
-koreanbot_token = Config.koreanbot_token
-topgg_token = Config.topgg_token
+KOREANBOT_TOKEN = Config.KOREANBOT_TOKEN
+TOPGG_TOKEN = Config.TOPGG_TOKEN
 
 EXTENSIONS = []
 for file in os.listdir("musicbot/cogs"):
@@ -49,14 +49,14 @@ BOT_NAME_TAG_VER = "%s%s | %s" %(BOT_NAME, BOT_TAG, BOT_VER)
 
 f = open("application.yml", 'w')
 f.write(f"""server:
-  port: {port}
-  address: {host}
+  port: {PORT}
+  address: {HOST}
 spring:
   main:
     banner-mode: log
 lavalink:
   server:
-    password: "{psw}"
+    password: "{PSW}"
     sources:
       youtube: true
       bandcamp: true

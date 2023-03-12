@@ -5,7 +5,7 @@ from discord.commands import slash_command
 
 from musicbot.utils.language import get_lan
 from musicbot.utils.get_chart import get_melon, get_billboard, get_billboardjp
-from musicbot import LOGGER, BOT_NAME_TAG_VER, color_code
+from musicbot import LOGGER, BOT_NAME_TAG_VER, COLOR_CODE
 
 class Chart (commands.Cog) :
     def __init__ (self, bot) :
@@ -25,13 +25,13 @@ class Chart (commands.Cog) :
             chart = chart.upper()
         if chart == "MELON":
             title, artist = await get_melon(10)
-            embed=discord.Embed(title=get_lan(ctx.author.id, "chart_melon_chart"), color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "chart_melon_chart"), color=COLOR_CODE)
         elif chart == "BILLBOARD":
             title, artist = await get_billboard(10)
-            embed=discord.Embed(title=get_lan(ctx.author.id, "chart_billboard_chart"), color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "chart_billboard_chart"), color=COLOR_CODE)
         elif chart == "BILLBOARD JAPAN":
             title, artist = await get_billboardjp(10)
-            embed=discord.Embed(title=get_lan(ctx.author.id, "chart_billboardjp_chart"), color=color_code)
+            embed=discord.Embed(title=get_lan(ctx.author.id, "chart_billboardjp_chart"), color=COLOR_CODE)
 
         if embed is not None:
             if title is not None and artist is not None:

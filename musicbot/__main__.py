@@ -11,7 +11,7 @@ from discord.ext import commands
 from musicbot.lavalinkstart import start_lavalink, download_lavalink
 from musicbot.background.db_management import add_today_table
 
-from musicbot import LOGGER, TOKEN, EXTENSIONS, BOT_NAME_TAG_VER, koreanbot_token, topgg_token
+from musicbot import LOGGER, TOKEN, EXTENSIONS, BOT_NAME_TAG_VER, KOREANBOT_TOKEN, TOPGG_TOKEN
 
 async def status_task():
     while True:
@@ -67,8 +67,8 @@ intents.messages = True
 intents.guilds = True
 
 bot = Toaru_kagaku_no_music_bot ()
-if koreanbot_token is not None:
-    kb = DiscordpyKoreanbots(bot, koreanbot_token, run_task=True)
-if topgg_token is not None:
-    topgg.DBLClient(bot, topgg_token, autopost=True, post_shard_count=True)
+if KOREANBOT_TOKEN is not None:
+    kb = DiscordpyKoreanbots(bot, KOREANBOT_TOKEN, run_task=True)
+if TOPGG_TOKEN is not None:
+    topgg.DBLClient(bot, TOPGG_TOKEN, autopost=True, post_shard_count=True)
 bot.run(TOKEN)
