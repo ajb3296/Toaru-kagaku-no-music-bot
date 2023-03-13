@@ -99,7 +99,7 @@ class Music(commands.Cog):
 
         if not hasattr(bot, 'lavalink'):  # This ensures the client isn't overwritten during cog reloads.
             bot.lavalink = lavalink.Client(BOT_ID)
-            bot.lavalink.add_node(host, PORT, PSW, REGION, "default-node")  # Host, Port, Password, Region, Name
+            bot.lavalink.add_node(HOST, PORT, PSW, REGION, "default-node")  # Host, Port, Password, Region, Name
 
         lavalink.add_event_hook(self.track_hook)
 
