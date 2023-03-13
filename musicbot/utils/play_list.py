@@ -4,7 +4,7 @@ import lavalink
 
 from musicbot.utils.language import get_lan
 from musicbot.utils.statistics import Statistics
-from musicbot import color_code
+from musicbot import COLOR_CODE
 
 url_rx = re.compile(r'https?://(?:www\.)?.+')
 
@@ -28,7 +28,7 @@ async def play_list(player, ctx, musics: list, playmsg):
         embed=discord.Embed(title=get_lan(ctx.author.id,
                             "music_adding_music").format(loading_dot=loading_dot),
                             description=music,
-                            color=color_code
+                            color=COLOR_CODE
         )
         await playmsg.edit(embed=embed)
         query = music
