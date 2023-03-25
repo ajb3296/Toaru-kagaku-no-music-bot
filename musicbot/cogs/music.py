@@ -394,7 +394,7 @@ class Music(commands.Cog):
                 queue_list += f'`{index + 1}.` [**{track.title}**]({track.uri})\n'
             embed = discord.Embed(description=get_lan(ctx.author.id, "music_q").format(lenQ=len(player.queue),
                                   queue_list=queue_list),
-                                  colour=COLOR_CODE
+                                  color=COLOR_CODE
             )
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
@@ -521,9 +521,6 @@ class Music(commands.Cog):
             return await ctx.followup.send(embed=embed)
         # 볼륨 설정
         await player.set_volume(volume)
-        
-        # DB에 볼륨 저장
-        # Database().set_volume(ctx.guild.id, volume)
 
         # 볼륨 아이콘 가져오기
         volicon = await volumeicon(player.volume)
