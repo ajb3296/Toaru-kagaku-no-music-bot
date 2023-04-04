@@ -11,7 +11,10 @@ async def get_melon(count: int = 10) -> tuple[list[str], list[str]]:
     melon_url = 'https://www.melon.com/chart/index.htm'
     data = await getReqTEXT (melon_url, header)
     parse = BeautifulSoup(data, 'lxml')
+    
     musics = parse.find_all("tr", {"class" : "lst50"})
+    musics += parse.find_all("tr", {"class" : "lst100"})
+
     title = []
     artist = []
     for num in range(0, count):
