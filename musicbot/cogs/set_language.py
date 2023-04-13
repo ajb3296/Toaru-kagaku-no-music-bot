@@ -13,8 +13,8 @@ for file in os.listdir("musicbot/languages"):
     if file.endswith(".json"):
         lan_pack.append(file.replace(".json", ""))
 
-class Language (commands.Cog) :
-    def __init__ (self, bot) :
+class Language(commands.Cog):
+    def __init__(self, bot):
         self.bot = bot
 
     @slash_command()
@@ -55,6 +55,6 @@ class Language (commands.Cog) :
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
 
-def setup (bot) :
-    bot.add_cog (Language (bot))
+def setup (bot):
+    bot.add_cog(Language(bot))
     LOGGER.info('Language loaded!')

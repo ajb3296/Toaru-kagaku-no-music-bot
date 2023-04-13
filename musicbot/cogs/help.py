@@ -6,13 +6,13 @@ from discord.commands import slash_command
 from musicbot.utils.language import get_lan
 from musicbot import LOGGER, BOT_NAME_TAG_VER, COLOR_CODE, OWNERS, EXTENSIONS
 
-class Help (commands.Cog) :
-    def __init__ (self, bot) :
+class Help(commands.Cog):
+    def __init__(self, bot):
         self.bot = bot
 
     @slash_command()
     @option("help_option", description="Choose help menu", choices=["INFO", "GENERAL", "MUSIC", "CHART"])
-    async def help (self, ctx, *, help_option: str):
+    async def help(self, ctx, *, help_option: str):
         """ Send help """
         if help_option is not None:
             help_option = help_option.upper()
@@ -147,6 +147,6 @@ class Help (commands.Cog) :
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.respond(embed=embed)
 
-def setup (bot) :
-    bot.add_cog (Help (bot))
+def setup(bot):
+    bot.add_cog(Help(bot))
     LOGGER.info('Help loaded!')

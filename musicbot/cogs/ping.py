@@ -4,8 +4,8 @@ from discord.ext import commands
 from discord.commands import slash_command
 from musicbot import LOGGER, BOT_NAME_TAG_VER, COLOR_CODE
 
-class Ping (commands.Cog) :
-    def __init__ (self, bot) :
+class Ping(commands.Cog):
+    def __init__(self, bot):
         self.bot = bot
 
     @slash_command()
@@ -27,6 +27,6 @@ class Ping (commands.Cog) :
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await message.edit_original_message(embed=embed)
 
-def setup (bot) :
-    bot.add_cog (Ping (bot))
+def setup (bot):
+    bot.add_cog(Ping(bot))
     LOGGER.info('Ping loaded!')

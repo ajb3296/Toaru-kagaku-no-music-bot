@@ -11,8 +11,8 @@ from discord.commands import slash_command
 from musicbot.utils.language import get_lan
 from musicbot import LOGGER, COLOR_CODE, BOT_NAME_TAG_VER, EXTENSIONS, DEBUG_SERVER
 
-class Owners (commands.Cog):
-    def __init__ (self, bot):
+class Owners(commands.Cog):
+    def __init__(self, bot):
         self.bot = bot
         self._last_members = None
         self.color = COLOR_CODE
@@ -208,6 +208,6 @@ class Owners (commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
 
-def setup (bot):
-    bot.add_cog (Owners (bot))
+def setup(bot):
+    bot.add_cog(Owners(bot))
     LOGGER.info('Owners Loaded!')

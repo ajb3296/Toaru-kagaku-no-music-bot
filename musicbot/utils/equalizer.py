@@ -66,6 +66,8 @@ class EqualizerButton(discord.ui.View):
         self.eq = eq
         self.selected = selected
 
+    # 부동소수점 연산 오류 있음
+    # 수정 예정
     @discord.ui.button(label="", row=0, style=discord.ButtonStyle.primary, emoji="⬅")
     async def left(self, button, interaction):
         self.selected = max(self.selected - 1, 0)

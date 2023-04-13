@@ -7,8 +7,8 @@ from musicbot.utils.language import get_lan
 from musicbot.utils.get_chart import get_melon, get_billboard, get_billboardjp
 from musicbot import LOGGER, BOT_NAME_TAG_VER, COLOR_CODE
 
-class Chart (commands.Cog) :
-    def __init__ (self, bot) :
+class Chart(commands.Cog):
+    def __init__(self, bot):
         self.bot = bot
 
     @slash_command()
@@ -40,6 +40,6 @@ class Chart (commands.Cog) :
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.followup.send(embed=embed)
 
-def setup (bot) :
-    bot.add_cog (Chart (bot))
+def setup(bot):
+    bot.add_cog(Chart(bot))
     LOGGER.info('Chart loaded!')

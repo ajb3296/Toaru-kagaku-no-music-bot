@@ -5,12 +5,12 @@ from discord.commands import slash_command
 from musicbot.utils.language import get_lan
 from musicbot import LOGGER, BOT_NAME_TAG_VER, COLOR_CODE, ABOUT_BOT
 
-class About (commands.Cog) :
-    def __init__ (self, bot):
+class About(commands.Cog):
+    def __init__(self, bot):
         self.bot = bot
 
     @slash_command()
-    async def about (self, ctx):
+    async def about(self, ctx):
         """ Let me tell you about me! """
         player_server_count = 0
         for i in self.bot.guilds:
@@ -37,6 +37,6 @@ class About (commands.Cog) :
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
 
-def setup (bot) :
-    bot.add_cog (About (bot))
+def setup(bot):
+    bot.add_cog(About(bot))
     LOGGER.info('About loaded!')
