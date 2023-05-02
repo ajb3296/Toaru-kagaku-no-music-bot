@@ -6,6 +6,7 @@ from discord.commands import slash_command
 from musicbot.utils.language import get_lan
 from musicbot import LOGGER, BOT_NAME_TAG_VER, COLOR_CODE, OWNERS, EXTENSIONS
 
+
 class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -146,6 +147,7 @@ class Help(commands.Cog):
                                 inline=False)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.respond(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Help(bot))

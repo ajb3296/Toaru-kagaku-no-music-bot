@@ -93,6 +93,7 @@ class LavalinkVoiceClient(discord.VoiceClient):
             player.channel_id = None
             self.cleanup()
 
+
 class Music(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -756,6 +757,7 @@ class Music(commands.Cog):
 
         selector = f'{" " * 8}^^^'
         await ctx.respond(f'```diff\n{eq.visualise()}\n{selector}```', view=EqualizerButton(ctx, player, eq, 0))
+
 
 def setup(bot):
     bot.add_cog(Music(bot))

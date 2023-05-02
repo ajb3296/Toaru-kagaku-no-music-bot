@@ -17,12 +17,12 @@ async def status_task():
     while True:
         try:
             await bot.change_presence(
-                activity = discord.Game ("/help : 도움말"),
+                activity = discord.Game("/help : 도움말"),
                 status = discord.Status.online,
             )
             await asyncio.sleep(10)
             await bot.change_presence(
-                activity = discord.Game (f"{len(bot.guilds)}개의 서버에서 놀고있어요!"),
+                activity = discord.Game(f"{len(bot.guilds)}개의 서버에서 놀고있어요!"),
                 status = discord.Status.online,
             )
             await asyncio.sleep(10)
@@ -30,7 +30,7 @@ async def status_task():
             pass
 
 class Toaru_kagaku_no_music_bot(commands.Bot):
-    def __init__ (self):
+    def __init__(self):
         super().__init__(
             intents=intents
         )
@@ -47,7 +47,7 @@ class Toaru_kagaku_no_music_bot(commands.Bot):
         for i in EXTENSIONS:
             self.load_extension("musicbot.cogs." + i)
 
-    async def on_ready (self):
+    async def on_ready(self):
         LOGGER.info(BOT_NAME_TAG_VER)
         await self.change_presence(
             activity = discord.Game("/help : 도움말"),
@@ -56,7 +56,7 @@ class Toaru_kagaku_no_music_bot(commands.Bot):
         bot.loop.create_task(status_task())
         bot.loop.create_task(add_today_table())
 
-    async def on_message (self, message):
+    async def on_message(self, message):
         if message.author.bot:
             return
         await self.process_commands(message)

@@ -13,6 +13,7 @@ for file in os.listdir("musicbot/languages"):
     if file.endswith(".json"):
         lan_pack.append(file.replace(".json", ""))
 
+
 class Language(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

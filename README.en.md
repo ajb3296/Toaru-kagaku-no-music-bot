@@ -3,7 +3,7 @@
     <div align="left">
         <h1>Toaru Kagaku no musicbot</h1>
         <a>Discord music bot that is easy to use and has many convenient functions</a><br><br>
-        <a href="https://github.com/ajb3296/Toaru-kagaku-no-music-bot/blob/main/README.md"><img src="https://img.shields.io/badge/README-KO-blue"></a><br>
+        <a href="https://github.com/ajb3296/Toaru-kagaku-no-music-bot/blob/main/README.md"><img src="https://img.shields.io/badge/README-KO-blue" alt="Korean README"></a><br>
         <a href="https://discord.gg/etzmFDGFVg"><img src="https://img.shields.io/discord/803935936219578368?color=7289da&logo=discord&logoColor=white" alt="Discord server" /></a>
         <a href="https://discord.com/oauth2/authorize?client_id=714140461840728144&permissions=3165184&scope=bot"><img src="https://koreanbots.dev/api/widget/bots/servers/714140461840728144.svg" alt="Server count" /></a>
         <a href="https://www.codefactor.io/repository/github/ajb3296/toaru-kagaku-no-music-bot"><img src="https://www.codefactor.io/repository/github/ajb3296/toaru-kagaku-no-music-bot/badge" alt="CodeFactor" /></a>
@@ -11,7 +11,7 @@
     </div>
 </div>
 <br><br>
-<a href="https://www.instagram.com/jsl__054"><img src="https://img.shields.io/badge/Illustrator_Instagram-E4405F?style=flat&logo=Instagram&logoColor=white"></img></a>
+<a href="https://www.instagram.com/jsl__054"><img src="https://img.shields.io/badge/Illustrator_Instagram-E4405F?style=flat&logo=Instagram&logoColor=white" alt="Illustrator_Instagram"></a>
 
 ## Features
 

@@ -3,7 +3,7 @@
     <div align="left">
         <h1>Toaru Kagaku no musicbot</h1>
         <a>사용하기 쉽고 편한, 여러 편의기능이 있는 디스코드 음악봇</a><br><br>
-        <a href="https://github.com/ajb3296/Toaru-kagaku-no-music-bot/blob/main/README.en.md"><img src="https://img.shields.io/badge/README-EN-blue"></a><br>
+        <a href="https://github.com/ajb3296/Toaru-kagaku-no-music-bot/blob/main/README.en.md"><img src="https://img.shields.io/badge/README-EN-blue" alt="English README"></a><br>
         <a href="https://discord.gg/etzmFDGFVg"><img src="https://img.shields.io/discord/803935936219578368?color=7289da&logo=discord&logoColor=white" alt="Discord server" /></a>
         <a href="https://discord.com/oauth2/authorize?client_id=714140461840728144&permissions=3165184&scope=bot"><img src="https://koreanbots.dev/api/widget/bots/servers/714140461840728144.svg" alt="Server count" /></a>
         <a href="https://www.codefactor.io/repository/github/ajb3296/toaru-kagaku-no-music-bot"><img src="https://www.codefactor.io/repository/github/ajb3296/toaru-kagaku-no-music-bot/badge" alt="CodeFactor" /></a>
@@ -11,7 +11,7 @@
     </div>
 </div>
 <br><br>
-<a href="https://www.instagram.com/jsl__054"><img src="https://img.shields.io/badge/Illustrator_Instagram-E4405F?style=flat&logo=Instagram&logoColor=white"></img></a>
+<a href="https://www.instagram.com/jsl__054"><img src="https://img.shields.io/badge/Illustrator_Instagram-E4405F?style=flat&logo=Instagram&logoColor=white" alt="Illustrator_Instagram"></a>
 
 ## Features
 
@@ -23,7 +23,7 @@
 [Lavalink Download](https://github.com/freyacodes/Lavalink/releases)<br>
 [Lavalink Download(for arm or 32bit)](https://github.com/Cog-Creators/Lavalink-Jars/releases)
 
-* 이 프로그램은 [GNU GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.html) 을 따릅니다.
+* [GNU GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.html) 라이선스를 따릅니다.
 
 ### 참고
 

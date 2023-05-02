@@ -11,6 +11,7 @@ from discord.commands import slash_command
 from musicbot.utils.language import get_lan
 from musicbot import LOGGER, COLOR_CODE, BOT_NAME_TAG_VER, EXTENSIONS, DEBUG_SERVER
 
+
 class Owners(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -22,28 +23,36 @@ class Owners(commands.Cog):
     @discord.default_permissions(administrator=True)
     async def dev_help(self, ctx):
         """ 개발자용 도움말 """
-        embed=discord.Embed(title=get_lan(ctx.author.id, "help_dev"), description=get_lan(ctx.author.id, "help_dev_description"), color=COLOR_CODE)
-        embed.add_field(name=get_lan(ctx.author.id, "help_dev_serverlist_command"), value=get_lan(ctx.author.id, "help_dev_serverlist_info"), inline=False)
-        embed.add_field(name=get_lan(ctx.author.id, "help_dev_modules_command"), value=get_lan(ctx.author.id, "help_dev_modules_info"), inline=False)
-        embed.add_field(name=get_lan(ctx.author.id, "help_dev_load_command"), value=get_lan(ctx.author.id, "help_dev_load_info"), inline=False)
-        embed.add_field(name=get_lan(ctx.author.id, "help_dev_unload_command"), value=get_lan(ctx.author.id, "help_dev_unload_info"), inline=False)
-        embed.add_field(name=get_lan(ctx.author.id, "help_dev_reload_command"), value=get_lan(ctx.author.id, "help_dev_reload_info"), inline=False)
-        embed.add_field(name=get_lan(ctx.author.id, "help_dev_serverinfo_command"), value=get_lan(ctx.author.id, "help_dev_serverinfo_info"), inline=False)
-        embed.add_field(name=get_lan(ctx.author.id, "help_dev_broadcast_command"), value=get_lan(ctx.author.id, "help_dev_broadcast_info"), inline=False)
+        embed = discord.Embed(title=get_lan(ctx.author.id, "help_dev"),
+                              description=get_lan(ctx.author.id, "help_dev_description"), color=COLOR_CODE)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_serverlist_command"),
+                        value=get_lan(ctx.author.id, "help_dev_serverlist_info"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_modules_command"),
+                        value=get_lan(ctx.author.id, "help_dev_modules_info"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_load_command"),
+                        value=get_lan(ctx.author.id, "help_dev_load_info"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_unload_command"),
+                        value=get_lan(ctx.author.id, "help_dev_unload_info"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_reload_command"),
+                        value=get_lan(ctx.author.id, "help_dev_reload_info"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_serverinfo_command"),
+                        value=get_lan(ctx.author.id, "help_dev_serverinfo_info"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "help_dev_broadcast_command"),
+                        value=get_lan(ctx.author.id, "help_dev_broadcast_info"), inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
 
     @slash_command(guild_ids=DEBUG_SERVER)
     @discord.default_permissions(administrator=True)
-    async def load (self, ctx, module):
+    async def load(self, ctx, module):
         """ 모듈을 로드합니다. """
         try:
             self.bot.load_extension("musicbot.cogs." + module)
             LOGGER.info(f"로드 성공!\n모듈: {module}")
-            embed = discord.Embed (
-                title = get_lan(ctx.author.id, "owners_load_success"),
-                description = get_lan(ctx.author.id, "owners_module").format(module=module),
-                color = self.color
+            embed = discord.Embed(
+                title=get_lan(ctx.author.id, "owners_load_success"),
+                description=get_lan(ctx.author.id, "owners_module").format(module=module),
+                color=self.color
             )
             if f"*~~{module}~~*" in EXTENSIONS:
                 EXTENSIONS[EXTENSIONS.index(f"*~~{module}~~*")] = module
@@ -51,61 +60,61 @@ class Owners(commands.Cog):
                 EXTENSIONS.append(module)
         except Exception as error:
             LOGGER.error(f"로드 실패!\n에러: {error}")
-            embed = discord.Embed (
-                title = get_lan(ctx.author.id, "owners_load_fail"),
-                description = get_lan(ctx.author.id, "owners_error").format(error=error),
-                color = self.error_color
+            embed = discord.Embed(
+                title=get_lan(ctx.author.id, "owners_load_fail"),
+                description=get_lan(ctx.author.id, "owners_error").format(error=error),
+                color=self.error_color
             )
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.respond(embed = embed)
+        await ctx.respond(embed=embed)
 
     @slash_command(guild_ids=DEBUG_SERVER)
     @discord.default_permissions(administrator=True)
-    async def reload (self, ctx, module):
+    async def reload(self, ctx, module):
         """ 모듈을 리로드합니다. """
         try:
             self.bot.reload_extension("musicbot.cogs." + module)
             LOGGER.info(f"리로드 성공!\n모듈: {module}")
-            embed = discord.Embed (
-                title = get_lan(ctx.author.id, "owners_reload_success"),
-                description = get_lan(ctx.author.id, "owners_module").format(module=module),
-                color = self.color
+            embed = discord.Embed(
+                title=get_lan(ctx.author.id, "owners_reload_success"),
+                description=get_lan(ctx.author.id, "owners_module").format(module=module),
+                color=self.color
             )
         except Exception as error:
             LOGGER.error(f"리로드 실패!\n에러: {error}")
-            embed = discord.Embed (
-                title = get_lan(ctx.author.id, "owners_reload_fail"),
-                description = f'에러: {error}',
-                color = self.error_color
+            embed = discord.Embed(
+                title=get_lan(ctx.author.id, "owners_reload_fail"),
+                description=f'에러: {error}',
+                color=self.error_color
             )
             if module in EXTENSIONS:
                 EXTENSIONS[EXTENSIONS.index(module)] = f"*~~{module}~~*"
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.respond(embed = embed)
+        await ctx.respond(embed=embed)
 
     @slash_command(guild_ids=DEBUG_SERVER)
     @discord.default_permissions(administrator=True)
-    async def unload (self, ctx, module):
+    async def unload(self, ctx, module):
         """ 모듈을 언로드합니다. """
         try:
             self.bot.unload_extension("musicbot.cogs." + module)
             LOGGER.info(f"언로드 성공!\n모듈: {module}")
-            embed = discord.Embed (
-                title = get_lan(ctx.author.id, "owners_unload_success"),
-                description = get_lan(ctx.author.id, "owners_module").format(module=module),
-                color = self.color
+            embed = discord.Embed(
+                title=get_lan(ctx.author.id, "owners_unload_success"),
+                description=get_lan(ctx.author.id, "owners_module").format(module=module),
+                color=self.color
             )
             if module in EXTENSIONS:
                 EXTENSIONS[EXTENSIONS.index(module)] = f"*~~{module}~~*"
         except Exception as error:
             LOGGER.error(f"언로드 실패!\n에러: {error}")
-            embed = discord.Embed (
-                title = get_lan(ctx.author.id, "owners_unload_fail"),
-                description = f'에러: {error}',
-                color = self.error_color
+            embed = discord.Embed(
+                title=get_lan(ctx.author.id, "owners_unload_fail"),
+                description=f'에러: {error}',
+                color=self.error_color
             )
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.respond(embed = embed)
+        await ctx.respond(embed=embed)
 
     @slash_command(guild_ids=DEBUG_SERVER)
     @discord.default_permissions(administrator=True)
@@ -117,7 +126,7 @@ class Owners(commands.Cog):
                 modulenum += 1
         modulenum = get_lan(ctx.author.id, 'owners_loaded_modules_len').format(modulenum=modulenum)
         e1 = "\n".join(EXTENSIONS)
-        embed=discord.Embed(title=get_lan(ctx.author.id, 'owners_modules_list'), color=COLOR_CODE)
+        embed = discord.Embed(title=get_lan(ctx.author.id, 'owners_modules_list'), color=COLOR_CODE)
         embed.add_field(name=modulenum, value=e1, inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
@@ -127,14 +136,15 @@ class Owners(commands.Cog):
     async def serverinfo(self, ctx):
         """ 봇 서버의 사양을 알려줘요! """
 
-        embed=discord.Embed(title=get_lan(ctx.author.id, 'owners_server_info'), color=COLOR_CODE)
+        embed = discord.Embed(title=get_lan(ctx.author.id, 'owners_server_info'), color=COLOR_CODE)
         embed.add_field(name="Platform", value=platform.platform(), inline=False)
         embed.add_field(name="Kernel", value=platform.version(), inline=False)
         embed.add_field(name="Architecture", value=platform.machine(), inline=False)
-        embed.add_field(name="CPU Usage", value=str(psutil.cpu_percent()) +"%", inline=False)
+        embed.add_field(name="CPU Usage", value=str(psutil.cpu_percent()) + "%", inline=False)
         memorystr = f"{round((psutil.virtual_memory().used / (1024.0 ** 3)), 1)}GB / {round((psutil.virtual_memory().total / (1024.0 ** 3)), 1)}GB"
         embed.add_field(name="Memory Usage", value=memorystr, inline=False)
-        embed.add_field(name="Python Ver", value=("%s %s") %(platform.python_implementation(), platform.python_version()), inline=False)
+        embed.add_field(name="Python Ver",
+                        value=("%s %s") % (platform.python_implementation(), platform.python_version()), inline=False)
         embed.add_field(name="Py-cord.py Ver", value=str(discord.__version__), inline=False)
         embed.add_field(name="Lavalink.py Ver", value=lavalink.__version__, inline=False)
         embed.add_field(name="Ping", value=str(round(self.bot.latency * 1000)) + "ms", inline=False)
@@ -148,17 +158,19 @@ class Owners(commands.Cog):
         page = 10
         # 페이지 지정값이 없고, 총 서버수가 10 이하일 경우
         if len(self.bot.guilds) <= page:
-            embed = discord.Embed(title = get_lan(ctx.author.id, "owners_server_list_title").format(BOT_NAME=self.bot.user.name),
-                                  description=get_lan(ctx.author.id, "owners_server_list_description").format(server_count=len(self.bot.guilds),
-                                  members_count=len(self.bot.users)),
-                                  color=COLOR_CODE
-            )
+            embed = discord.Embed(
+                title=get_lan(ctx.author.id, "owners_server_list_title").format(BOT_NAME=self.bot.user.name),
+                description=get_lan(ctx.author.id, "owners_server_list_description").format(
+                    server_count=len(self.bot.guilds),
+                    members_count=len(self.bot.users)),
+                color=COLOR_CODE
+                )
             srvr = str()
             for i in self.bot.guilds:
                 srvr = srvr + get_lan(ctx.author.id, "owners_server_list_info").format(server_name=i, server_members_count=i.member_count)
             embed.add_field(name="​", value=srvr, inline=False)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.respond(embed = embed)
+            return await ctx.respond(embed=embed)
 
         # 서버수가 10개 이상일 경우
 
@@ -173,7 +185,7 @@ class Owners(commands.Cog):
         allpage = math.ceil(len(guilds) / page)
 
         pages_list = []
-        for i in range(1, allpage+1):
+        for i in range(1, allpage + 1):
             srvr = ""
             numb = (page * i)
             numa = numb - page
@@ -185,28 +197,32 @@ class Owners(commands.Cog):
 
             pages_list.append(
                 [
-                    discord.Embed(title = get_lan(ctx.author.id, "owners_server_list_title").format(BOT_NAME=self.bot.user.name),
-                                description=get_lan(ctx.author.id, "owners_server_list_description2").format(
-                                    server_count=len(self.bot.guilds),
-                                    members_count=len(self.bot.users),
-                                    servers=srvr
-                                ),
-                                color=COLOR_CODE
-                    ).set_footer(text=f"{get_lan(ctx.author.id, 'owners_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
+                    discord.Embed(
+                        title=get_lan(ctx.author.id, "owners_server_list_title").format(BOT_NAME=self.bot.user.name),
+                        description=get_lan(ctx.author.id, "owners_server_list_description2").format(
+                            server_count=len(self.bot.guilds),
+                            members_count=len(self.bot.users),
+                            servers=srvr
+                        ),
+                        color=COLOR_CODE
+                        ).set_footer(
+                        text=f"{get_lan(ctx.author.id, 'owners_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}"
+                    )
                 ]
             )
         paginator = pages.Paginator(pages=pages_list)
         await paginator.respond(ctx.interaction, ephemeral=False)
-    
+
     @slash_command(guild_ids=DEBUG_SERVER)
     @discord.default_permissions(administrator=True)
     async def public_ip(self, ctx):
         """ 서버의 공인 IP를 알려줘요! """
         public_ip = requests.get("https://api.ipify.org").text
-        embed=discord.Embed(title="Public IP", color=COLOR_CODE)
+        embed = discord.Embed(title="Public IP", color=COLOR_CODE)
         embed.add_field(name="IP", value=public_ip, inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Owners(bot))
