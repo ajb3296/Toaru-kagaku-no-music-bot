@@ -58,14 +58,14 @@ def get_table_list(path) -> list[str]:
     """ 테이블 리스트 반환 """
     conn = sqlite3.connect(path, isolation_level=None)
     c = conn.cursor()
-    c.execute("SELECT * FROM sqlite_sequence ORDER BY name ASC") # 오름차순으로 정렬
+    c.execute("SELECT * FROM sqlite_sequence ORDER BY name ASC")  # 오름차순으로 정렬
     table_list = c.fetchall()
     conn.close()
 
     return table_list
 
 
-def duplicate_processing() -> None: # 데이터베이스 읽기가 안됐을 때 중복 생성된 레코드 처리
+def duplicate_processing() -> None:  # 데이터베이스 읽기가 안됐을 때 중복 생성된 레코드 처리
     path = StatisticsDb().db_path
     table_list = get_table_list(path)
 

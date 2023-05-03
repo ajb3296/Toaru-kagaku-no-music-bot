@@ -21,6 +21,7 @@ from musicbot.utils.database import Database
 
 url_rx = re.compile(r'https?://(?:www\.)?.+')
 
+
 class LavalinkVoiceClient(discord.VoiceClient):
     """
     This is the preferred way to handle external voice sending
@@ -122,7 +123,7 @@ class Music(commands.Cog):
 
     async def cog_command_error(self, ctx, error):
         if isinstance(error, commands.CommandInvokeError):
-            embed=discord.Embed(title=error.original, description='', color=COLOR_CODE)
+            embed = discord.Embed(title=error.original, description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.respond(embed=embed)
             # The above handles errors thrown in this cog and shows them to the user.
@@ -200,10 +201,10 @@ class Music(commands.Cog):
         """ Connect to voice channel! """
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         if not player.is_connected:
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_connect_voice_channel"), color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_connect_voice_channel"), color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.respond(embed=embed)
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_already_connected_voice_channel"), color=COLOR_CODE)
+        embed = discord.Embed(title=get_lan(ctx.author.id, "music_already_connected_voice_channel"), color=COLOR_CODE)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         return await ctx.respond(embed=embed)
 
@@ -235,13 +236,13 @@ class Music(commands.Cog):
                 if nofind < 3:
                     nofind += 1
                 elif nofind == 3:
-                    embed=discord.Embed(title=get_lan(ctx.author.id, "music_can_not_find_anything"), description='', color=COLOR_CODE)
+                    embed = discord.Embed(title=get_lan(ctx.author.id, "music_can_not_find_anything"), description='', color=COLOR_CODE)
                     embed.set_footer(text=BOT_NAME_TAG_VER)
                     return await ctx.followup.send(embed=embed)
             else:
                 break
 
-        embed = discord.Embed(color=COLOR_CODE) # discord.Color.blurple()
+        embed = discord.Embed(color=COLOR_CODE)  # discord.Color.blurple()
 
         # Valid loadTypes are:
         #   TRACK_LOADED    - single video/direct URL)
@@ -304,15 +305,17 @@ class Music(commands.Cog):
 
         if not ctx.voice_client:
             # We can't disconnect, if we're not connected.
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_dc_not_connect_voice_channel"), color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_dc_not_connect_voice_channel"), color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
 
         if not ctx.author.voice or (player.is_connected and ctx.author.voice.channel.id != int(player.channel_id)):
             # Abuse prevention. Users not in voice channels, or not in the same voice channel as the bot
             # may not disconnect the bot.
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_dc_not_connect_my_voice_channel").format(name=ctx.author.name),
-                                color=COLOR_CODE)
+            embed = discord.Embed(
+                title=get_lan(ctx.author.id, "music_dc_not_connect_my_voice_channel").format(name=ctx.author.name),
+                color=COLOR_CODE
+            )
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
 
@@ -324,7 +327,7 @@ class Music(commands.Cog):
         # Disconnect from the voice channel.
         await ctx.voice_client.disconnect(force=True)
 
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_dc_disconnected"), color=COLOR_CODE)
+        embed = discord.Embed(title=get_lan(ctx.author.id, "music_dc_disconnected"), color=COLOR_CODE)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
@@ -337,13 +340,13 @@ class Music(commands.Cog):
 
         if not player.is_playing:
             # We can't skip, if we're not playing the music.
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_not_playing"), description='', color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_not_playing"), description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
 
         await player.skip()
 
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_skip_next"), description='', color=COLOR_CODE)
+        embed = discord.Embed(title=get_lan(ctx.author.id, "music_skip_next"), description='', color=COLOR_CODE)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
@@ -354,7 +357,7 @@ class Music(commands.Cog):
 
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         if not player.current:
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_no_playing_music"), description='', color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_no_playing_music"), description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
 
@@ -366,7 +369,7 @@ class Music(commands.Cog):
         song = f'**[{player.current.title}]({player.current.uri})**\n({position}/{duration})'
         embed = discord.Embed(color=COLOR_CODE,
                               title=get_lan(ctx.author.id, "music_now_playing"), description=song)
-        
+
         # 셔플, 반복 상태
         embed.add_field(name=get_lan(ctx.author.id, "music_shuffle"), value=get_lan(ctx.author.id, "music_shuffle_already_on") if player.shuffle else get_lan(ctx.author.id, "music_shuffle_already_off"), inline=True)
         embed.add_field(name=get_lan(ctx.author.id, "music_repeat"), value=[get_lan(ctx.author.id, "music_repeat_already_off"), get_lan(ctx.author.id, "music_repeat_already_one"), get_lan(ctx.author.id, "music_repeat_already_on")][player.loop], inline=True)
@@ -382,7 +385,7 @@ class Music(commands.Cog):
 
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         if not player.queue:
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_no_music_in_the_playlist"), description='', color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_no_music_in_the_playlist"), description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
 
@@ -393,9 +396,9 @@ class Music(commands.Cog):
             queue_list = ''
             for index, track in enumerate(player.queue):
                 queue_list += f'`{index + 1}.` [**{track.title}**]({track.uri})\n'
-            embed = discord.Embed(description=get_lan(ctx.author.id, "music_q").format(lenQ=len(player.queue),
-                                  queue_list=queue_list),
-                                  color=COLOR_CODE
+            embed = discord.Embed(
+                description=get_lan(ctx.author.id, "music_q").format(lenQ=len(player.queue), queue_list=queue_list),
+                color=COLOR_CODE
             )
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
@@ -430,7 +433,7 @@ class Music(commands.Cog):
 
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         if not player.is_playing:
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_not_playing"), description='', color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_not_playing"), description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
 
@@ -446,11 +449,11 @@ class Music(commands.Cog):
 
         embed = None
         if player.loop == 0:
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_repeat_off"), description='', color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_repeat_off"), description='', color=COLOR_CODE)
         elif player.loop == 1:
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_repeat_one"), description='', color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_repeat_one"), description='', color=COLOR_CODE)
         elif player.loop == 2:
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_repeat_all"), description='', color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_repeat_all"), description='', color=COLOR_CODE)
         if embed is not None:
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.followup.send(embed=embed)
@@ -463,15 +466,15 @@ class Music(commands.Cog):
 
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         if not player.queue:
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_remove_no_wating_music"), description='', color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_remove_no_wating_music"), description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
         if index > len(player.queue) or index < 1:
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_remove_input_over").format(last_queue=len(player.queue)), description='', color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_remove_input_over").format(last_queue=len(player.queue)), description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
         removed = player.queue.pop(index - 1)  # Account for 0-index.
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_remove_form_playlist").format(remove_music=removed.title), description='', color=COLOR_CODE)
+        embed = discord.Embed(title=get_lan(ctx.author.id, "music_remove_form_playlist").format(remove_music=removed.title), description='', color=COLOR_CODE)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
@@ -482,7 +485,7 @@ class Music(commands.Cog):
 
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         if not player.is_playing:
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_not_playing"), description='', color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_not_playing"), description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
 
@@ -492,14 +495,14 @@ class Music(commands.Cog):
         Database().set_shuffle(ctx.guild.id, player.shuffle)
 
         if player.shuffle:
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_shuffle_on"), description='', color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_shuffle_on"), description='', color=COLOR_CODE)
         else:
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_shuffle_off"), description='', color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_shuffle_off"), description='', color=COLOR_CODE)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
     @slash_command()
-    @option("volume", description="볼륨값을 입력하세요", min_value=1, max_value=1000, default=100, required = False)
+    @option("volume", description="볼륨값을 입력하세요", min_value=1, max_value=1000, default=100, required=False)
     async def volume(self, ctx, volume: int = None):
         """ Changes or display the volume """
         await ctx.defer()
@@ -507,16 +510,18 @@ class Music(commands.Cog):
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         if volume is None:
             volicon = await volumeicon(player.volume)
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_now_vol").format(volicon=volicon, volume=player.volume),
-                                description='',
-                                color=COLOR_CODE
+            embed = discord.Embed(
+                title=get_lan(ctx.author.id, "music_now_vol").format(volicon=volicon, volume=player.volume),
+                description='',
+                color=COLOR_CODE
             )
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
         if volume > 1000 or volume < 1:
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_input_over_vol"),
-                                description=get_lan(ctx.author.id, "music_default_vol"),
-                                color=COLOR_CODE
+            embed = discord.Embed(
+                title=get_lan(ctx.author.id, "music_input_over_vol"),
+                description=get_lan(ctx.author.id, "music_default_vol"),
+                color=COLOR_CODE
             )
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
@@ -525,9 +530,10 @@ class Music(commands.Cog):
 
         # 볼륨 아이콘 가져오기
         volicon = await volumeicon(player.volume)
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_set_vol").format(volicon=volicon, volume=player.volume),
-                            description='',
-                            color=COLOR_CODE
+        embed = discord.Embed(
+            title=get_lan(ctx.author.id, "music_set_vol").format(volicon=volicon, volume=player.volume),
+            description='',
+            color=COLOR_CODE
         )
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
@@ -539,17 +545,17 @@ class Music(commands.Cog):
 
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         if not player.is_playing:
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_not_playing"), description='', color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_not_playing"), description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
         if player.paused:
             await player.set_pause(False)
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_resume"), description='', color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_resume"), description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.followup.send(embed=embed)
         else:
             await player.set_pause(True)
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_pause"), description='', color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_pause"), description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.followup.send(embed=embed)
 
@@ -562,16 +568,17 @@ class Music(commands.Cog):
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         track_time = player.position + (seconds * 1000)
         await player.seek(track_time)
-        embed=discord.Embed(title=get_lan(ctx.author.id, "music_seek_move_to").format(move_time=lavalink.utils.format_time(track_time)),
-                            description='',
-                            color=COLOR_CODE
+        embed = discord.Embed(
+            title=get_lan(ctx.author.id, "music_seek_move_to").format(move_time=lavalink.utils.format_time(track_time)),
+            description='',
+            color=COLOR_CODE
         )
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
     @slash_command()
     @option("chart", description="Choose chart", choices=["Melon", "Billboard", "Billboard Japan"])
-    @option("count", description="Enter the number of chart songs to play", min_value = 1, max_value = 100, default = 10)
+    @option("count", description="Enter the number of chart songs to play", min_value=1, max_value=100, default=10)
     async def chartplay(self, ctx, *, chart: str, count: int):
         """ Add the top 10 songs on the selected chart to your playlist! """
         await ctx.defer()
@@ -590,25 +597,25 @@ class Music(commands.Cog):
             chart = chart.upper()
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         if chart == "MELON":
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_parsing_melon"), color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_parsing_melon"), color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             playmsg = await ctx.followup.send(embed=embed)
             title, artist = await get_melon(count)
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_melon_chart_play"), color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_melon_chart_play"), color=COLOR_CODE)
 
         elif chart == "BILLBOARD":
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_parsing_billboard"), color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_parsing_billboard"), color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             playmsg = await ctx.followup.send(embed=embed)
             title, artist = await get_billboard(count)
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_billboard_chart_play"), color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_billboard_chart_play"), color=COLOR_CODE)
 
         elif chart == "BILLBOARD JAPAN":
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_parsing_billboardjp"), color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_parsing_billboardjp"), color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             playmsg = await ctx.followup.send(embed=embed)
             title, artist = await get_billboardjp(count)
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_billboardjp_chart_play"), color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_billboardjp_chart_play"), color=COLOR_CODE)
 
         musics = []
         if artist is not None and title is not None:
@@ -619,8 +626,8 @@ class Music(commands.Cog):
         playmsg, player, thumbnail, playmusic, passmusic = await play_list(player, ctx, musics, playmsg)
 
         if embed is not None:
-            embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
-            embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
+            embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value=playmusic, inline=False)
+            embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value=passmusic, inline=False)
             if thumbnail is not None:
                 embed.set_thumbnail(url=f"http://img.youtube.com/vi/{thumbnail}/0.jpg")
             embed.set_footer(text=BOT_NAME_TAG_VER)
@@ -630,7 +637,7 @@ class Music(commands.Cog):
 
     @slash_command()
     @option("arg", description="재생할 플레이리스트의 제목을 입력해 주세요")
-    async def list(self, ctx, *, arg = None):
+    async def list(self, ctx, *, arg=None):
         """ Load playlists or play the music from that playlist! """
         await ctx.defer()
 
@@ -645,9 +652,10 @@ class Music(commands.Cog):
         files = sorted(files)
         # 재생목록 총 개수
         if arg == "-a":
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_len_list").format(files_len=len(files)),
-                                description=get_lan(ctx.author.id, "music_len_list").format(files_len=len(files)),
-                                color=COLOR_CODE
+            embed = discord.Embed(
+                title=get_lan(ctx.author.id, "music_len_list").format(files_len=len(files)),
+                description=get_lan(ctx.author.id, "music_len_list").format(files_len=len(files)),
+                color=COLOR_CODE
             )
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.followup.send(embed=embed)
@@ -667,7 +675,11 @@ class Music(commands.Cog):
                 f.close()
 
             except Exception:
-                embed=discord.Embed(title=get_lan(ctx.author.id, "music_list_can_not_find"), description=arg, color=COLOR_CODE)
+                embed = discord.Embed(
+                    title=get_lan(ctx.author.id, "music_list_can_not_find"),
+                    description=arg,
+                    color=COLOR_CODE
+                )
                 embed.set_footer(text=BOT_NAME_TAG_VER)
                 return await ctx.followup.send(embed=embed)
 
@@ -680,15 +692,15 @@ class Music(commands.Cog):
             music_list = music_list_process
 
             # Play music list
-            embed=discord.Embed(title=get_lan(ctx.author.id, "music_list_finding"), color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "music_list_finding"), color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             playmsg = await ctx.respond(embed=embed)
 
             playmsg, player, thumbnail, playmusic, passmusic = await play_list(player, ctx, music_list, playmsg)
 
-            embed=discord.Embed(title=f":arrow_forward: | {arg}", description='', color=COLOR_CODE)
-            embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value = playmusic, inline=False)
-            embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value = passmusic, inline=False)
+            embed = discord.Embed(title=f":arrow_forward: | {arg}", description='', color=COLOR_CODE)
+            embed.add_field(name=get_lan(ctx.author.id, "music_played_music"), value=playmusic, inline=False)
+            embed.add_field(name=get_lan(ctx.author.id, "music_can_not_find_music"), value=passmusic, inline=False)
             if thumbnail is not None:
                 embed.set_thumbnail(url=f"http://img.youtube.com/vi/{thumbnail}/0.jpg")
             embed.set_footer(text=BOT_NAME_TAG_VER)
@@ -702,7 +714,7 @@ class Music(commands.Cog):
             page = 15
             # 총 리스트 수가 page개 이하일 경우
             if len(files) <= page:
-                embed=discord.Embed(title=get_lan(ctx.author.id, "music_playlist_list"), description="\n".join(files), color=COLOR_CODE)
+                embed = discord.Embed(title=get_lan(ctx.author.id, "music_playlist_list"), description="\n".join(files), color=COLOR_CODE)
                 embed.set_footer(text=BOT_NAME_TAG_VER)
                 return await ctx.followup.send(embed=embed)
 
@@ -722,14 +734,16 @@ class Music(commands.Cog):
                         break
                 pages_list.append(
                     [
-                        discord.Embed(title=get_lan(ctx.author.id, "music_playlist_list"),
-                                    description=filelist, color=COLOR_CODE
+                        discord.Embed(
+                            title=get_lan(ctx.author.id, "music_playlist_list"),
+                            description=filelist, color=COLOR_CODE
                         ).set_footer(text=f"{get_lan(ctx.author.id, 'music_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
                     ]
                 )
             paginator = pages.Paginator(pages=pages_list)
             await paginator.respond(ctx.interaction, ephemeral=False)
 
+    '''
     @slash_command()
     @option("speed", description="재생 속도를 입력해 주세요")
     async def speed(self, ctx, speed: float):
@@ -746,6 +760,7 @@ class Music(commands.Cog):
         print(timescale)
         await player.set_filter(timescale)
         await ctx.followup.send("test")
+    '''
 
     @slash_command()
     async def equalizer(self, ctx):

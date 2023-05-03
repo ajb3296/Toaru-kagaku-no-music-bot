@@ -13,23 +13,25 @@ from musicbot.background.db_management import add_today_table
 
 from musicbot import LOGGER, TOKEN, EXTENSIONS, BOT_NAME_TAG_VER, KOREANBOT_TOKEN, TOPGG_TOKEN
 
+
 async def status_task():
     while True:
         try:
             await bot.change_presence(
-                activity = discord.Game("/help : 도움말"),
-                status = discord.Status.online,
+                activity=discord.Game("/help : 도움말"),
+                status=discord.Status.online,
             )
             await asyncio.sleep(10)
             await bot.change_presence(
-                activity = discord.Game(f"{len(bot.guilds)}개의 서버에서 놀고있어요!"),
-                status = discord.Status.online,
+                activity=discord.Game(f"{len(bot.guilds)}개의 서버에서 놀고있어요!"),
+                status=discord.Status.online,
             )
             await asyncio.sleep(10)
         except Exception:
             pass
 
-class Toaru_kagaku_no_music_bot(commands.Bot):
+
+class ToaruKagakuNoMusicBot(commands.Bot):
     def __init__(self):
         super().__init__(
             intents=intents
@@ -50,8 +52,8 @@ class Toaru_kagaku_no_music_bot(commands.Bot):
     async def on_ready(self):
         LOGGER.info(BOT_NAME_TAG_VER)
         await self.change_presence(
-            activity = discord.Game("/help : 도움말"),
-            status = discord.Status.online,
+            activity=discord.Game("/help : 도움말"),
+            status=discord.Status.online,
         )
         bot.loop.create_task(status_task())
         bot.loop.create_task(add_today_table())
@@ -66,7 +68,7 @@ intents = discord.Intents.default()
 intents.messages = True
 intents.guilds = True
 
-bot = Toaru_kagaku_no_music_bot()
+bot = ToaruKagakuNoMusicBot()
 if KOREANBOT_TOKEN is not None:
     kb = DiscordpyKoreanbots(bot, KOREANBOT_TOKEN, run_task=True)
 if TOPGG_TOKEN is not None:

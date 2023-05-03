@@ -30,13 +30,21 @@ class About(commands.Cog):
             playing_players += stats.playing_players
 
         embed = discord.Embed(title=get_lan(ctx.author.id, "about_bot_info"), description=ABOUT_BOT, color=COLOR_CODE)
-        embed.add_field(name="Github",
-                        value="[https://github.com/ajb3296/Toaru-kagaku-no-music-bot](<https://github.com/ajb3296/Toaru-kagaku-no-music-bot>)",
-                        inline=False)
-        embed.add_field(name=get_lan(ctx.author.id, "about_guild_count"), value=str(len(self.bot.guilds)), inline=True)
-        embed.add_field(name=get_lan(ctx.author.id, "about_number_of_music_playback_servers"),
-                        value=f"lavalink: {players}({playing_players} playing)\nvoice channel count: {player_server_count} playing",
-                        inline=True)
+        embed.add_field(
+            name="Github",
+            value="[https://github.com/ajb3296/Toaru-kagaku-no-music-bot](<https://github.com/ajb3296/Toaru-kagaku-no-music-bot>)",
+            inline=False
+        )
+        embed.add_field(
+            name=get_lan(ctx.author.id, "about_guild_count"),
+            value=str(len(self.bot.guilds)),
+            inline=True
+        )
+        embed.add_field(
+            name=get_lan(ctx.author.id, "about_number_of_music_playback_servers"),
+            value=f"lavalink: {players}({playing_players} playing)\nvoice channel count: {player_server_count} playing",
+            inline=True
+        )
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
 

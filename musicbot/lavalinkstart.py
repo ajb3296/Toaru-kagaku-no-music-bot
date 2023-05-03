@@ -19,9 +19,11 @@ def get_lavalink_ver() -> tuple[str | None, str]:
     # 현재 라바링크 버전
     now_lavalink_ver = None
     if os.path.exists("Lavalink.jar"):
-        lavalink_ver = subprocess.check_output(['java', '-jar', 'Lavalink.jar', '--version'],
-                                              stderr=subprocess.STDOUT,
-                                              encoding='utf-8')
+        lavalink_ver = subprocess.check_output(
+            ['java', '-jar', 'Lavalink.jar', '--version'],
+            stderr=subprocess.STDOUT,
+            encoding='utf-8'
+        )
         now_lavalink_ver = re.search(r"Version:\s+(\d+\.\d+\.\d+)", lavalink_ver)
         if now_lavalink_ver is not None:
             now_lavalink_ver = now_lavalink_ver.group(1)
@@ -42,7 +44,7 @@ def download_lavalink() -> None:
 
 
 def start_lavalink() -> None:
-    """ lavalink 시작, multiprocessing으로 실행해야함 """
+    """ lavalink 시작, multiprocessing으로 실행해야 함 """
     while True:
         # Start lavalink
         sp = subprocess.Popen(["java", "-jar", "Lavalink.jar"])

@@ -45,7 +45,7 @@ for file in os.listdir("musicbot/cogs"):
     if file.endswith(".py"):
         EXTENSIONS.append(file.replace(".py", ""))
 
-BOT_NAME_TAG_VER = "%s%s | %s" %(BOT_NAME, BOT_TAG, BOT_VER)
+BOT_NAME_TAG_VER = "%s%s | %s" % (BOT_NAME, BOT_TAG, BOT_VER)
 
 f = open("application.yml", 'w')
 f.write(f"""server:

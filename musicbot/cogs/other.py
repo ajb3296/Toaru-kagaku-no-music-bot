@@ -23,10 +23,11 @@ class Other(commands.Cog):
     async def invite(self, ctx):
         """ Send you a link for invite me """
         link = f'https://discord.com/api/oauth2/authorize?client_id={self.bot.user.id}&permissions=414501391424&scope=bot%20applications.commands'
-        embed = discord.Embed(title=get_lan(ctx.author.id, "other_invite_title"),
-                              description=get_lan(ctx.author.id, "other_invite_description").format(link=link),
-                              color=COLOR_CODE
-                              )
+        embed = discord.Embed(
+            title=get_lan(ctx.author.id, "other_invite_title"),
+            description=get_lan(ctx.author.id, "other_invite_description").format(link=link),
+            color=COLOR_CODE
+        )
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.respond(embed=embed)
 
