@@ -12,7 +12,7 @@ from musicbot.lavalinkstart import start_lavalink, download_lavalink
 from musicbot.background.db_management import add_today_table
 from musicbot.background.update_cache import update_cache_process
 
-from musicbot import LOGGER, TOKEN, EXTENSIONS, BOT_NAME_TAG_VER, KOREANBOT_TOKEN, TOPGG_TOKEN
+from musicbot import LOGGER, TOKEN, EXTENSIONS, BOT_NAME_TAG_VER, KOREANBOT_TOKEN, TOPGG_TOKEN, LAVALINK_AUTO_UPDATE
 
 
 async def status_task():
@@ -40,7 +40,8 @@ class ToaruKagakuNoMusicBot(commands.Bot):
         self.remove_command("help")
 
         # 라바링크 업데이트 확인 및 다운로드
-        download_lavalink()
+        if LAVALINK_AUTO_UPDATE:
+            download_lavalink()
 
         LOGGER.info("Lavalink starting...")
         process = multiprocessing.Process(target=start_lavalink)
