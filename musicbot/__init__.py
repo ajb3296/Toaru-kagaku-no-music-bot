@@ -14,9 +14,9 @@ logging.basicConfig(
 
 LOGGER = logging.getLogger(__name__)
 
-# if version < 3.6, stop bot.
-if sys.version_info[0] < 3 or sys.version_info[1] < 6:
-    LOGGER.error("3.6 버전 이상의 Python 이 있어야 합니다. 여러 기능이 해당 Python3.6 버전을 따릅니다. 봇 종료.")
+# if version < 3.10, stop bot.
+if sys.version_info[0] < 3 or sys.version_info[1] < 10:
+    LOGGER.error("3.10 버전 이상의 Python 이 있어야 합니다. 여러 기능이 Python3.10 버전을 따릅니다. 봇 종료.")
     quit(1)
 
 # Create the config file if it doesn't exist
@@ -36,6 +36,7 @@ HOST = Config.HOST
 PSW = Config.PSW
 REGION = Config.REGION
 PORT = Config.PORT
+LAVALINK_AUTO_UPDATE = Config.LAVALINK_AUTO_UPDATE
 
 KOREANBOT_TOKEN = Config.KOREANBOT_TOKEN
 TOPGG_TOKEN = Config.TOPGG_TOKEN

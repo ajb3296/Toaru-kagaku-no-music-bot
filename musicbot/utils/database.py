@@ -10,7 +10,8 @@ shuffle:
 
 import sqlite3
 
-class Database():
+
+class Database:
     def __init__(self):
         self.path = "database.db"
         self.loop_table = "loop"

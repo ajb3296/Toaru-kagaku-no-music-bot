@@ -8,6 +8,7 @@ from musicbot import COLOR_CODE
 
 url_rx = re.compile(r'https?://(?:www\.)?.+')
 
+
 async def play_list(player, ctx, musics: list, playmsg):
     """ 음악 리스트의 음악 재생 """
     trackcount = 0
@@ -25,10 +26,10 @@ async def play_list(player, ctx, musics: list, playmsg):
         for _ in range(0, loading_dot_count):
             loading_dot = loading_dot + "."
 
-        embed=discord.Embed(title=get_lan(ctx.author.id,
-                            "music_adding_music").format(loading_dot=loading_dot),
-                            description=music,
-                            color=COLOR_CODE
+        embed = discord.Embed(
+            title=get_lan(ctx.author.id, "music_adding_music").format(loading_dot=loading_dot),
+            description=music,
+            color=COLOR_CODE
         )
         await playmsg.edit(embed=embed)
         query = music

@@ -7,7 +7,7 @@ import datetime
 import subprocess
 from urllib import request
 
-from musicbot import LOGGER
+from musicbot import LOGGER, LAVALINK_AUTO_UPDATE
 
 
 def get_lavalink_ver() -> tuple[str | None, str]:
@@ -52,8 +52,8 @@ def start_lavalink() -> None:
         while True:
             # 1시간 대기
             time.sleep(3600)
-            # 만약 새벽 4시라면
-            if datetime.datetime.now().hour == 4:
+            # 만약 새벽 4시이고 자동 업데이트가 켜져있다면
+            if datetime.datetime.now().hour == 4 and LAVALINK_AUTO_UPDATE:
                 # 만약 새 버전이 나왔다면
                 now_lavalink_ver, latest_lavalink_tag = get_lavalink_ver()
                 if now_lavalink_ver != latest_lavalink_tag:

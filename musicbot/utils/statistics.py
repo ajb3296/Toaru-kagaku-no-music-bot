@@ -9,6 +9,7 @@ ID, video_id, count
 import sqlite3
 from datetime import datetime, timedelta
 
+
 class Statistics:
     def __init__(self):
         self.statisticsdb = StatisticsDb()
@@ -29,7 +30,7 @@ class Statistics:
     def get_week(self) -> dict[str, int]:
         """ 이번주의 통계를 가져옵니다 """
         week_data = {}
-        for day in range(7): # 0 ~ 6
+        for day in range(7):  # 0 ~ 6
             # 타깃 날짜 설정
             target_date = datetime.today() - timedelta(days=day)
             table_name = f"date{target_date.strftime('%Y%m%d')}"
@@ -42,6 +43,7 @@ class Statistics:
                     week_data[video_id] = count
 
         return week_data
+
 
 class StatisticsDb:
     def __init__(self):

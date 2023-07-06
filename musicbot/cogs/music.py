@@ -418,8 +418,9 @@ class Music(commands.Cog):
 
             pages_list.append(
                 [
-                    discord.Embed(description=get_lan(ctx.author.id, "music_q").format(lenQ=len(player.queue), queue_list=queue_list),
-                                  color=COLOR_CODE
+                    discord.Embed(
+                        description=get_lan(ctx.author.id, "music_q").format(lenQ=len(player.queue), queue_list=queue_list),
+                        color=COLOR_CODE
                     ).set_footer(text=f"{get_lan(ctx.author.id, 'music_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
                 ]
             )

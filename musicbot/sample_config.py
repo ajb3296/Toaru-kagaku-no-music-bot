@@ -21,6 +21,7 @@ class Config(object):
     PSW = ""  # 컴퓨터 비밀번호
     REGION = "eu"  # 리전
     PORT = 2333
+    LAVALINK_AUTO_UPDATE = True
 
     # 봇 홍보용 사이트
     KOREANBOT_TOKEN = None

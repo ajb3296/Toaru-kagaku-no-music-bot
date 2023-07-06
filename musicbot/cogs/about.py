@@ -32,7 +32,7 @@ class About(commands.Cog):
         embed = discord.Embed(title=get_lan(ctx.author.id, "about_bot_info"), description=ABOUT_BOT, color=COLOR_CODE)
         embed.add_field(
             name="Github",
-            value="[https://github.com/ajb3296/Toaru-kagaku-no-music-bot](<https://github.com/ajb3296/Toaru-kagaku-no-music-bot>)",
+            value="[Toaru-kagaku-no-music-bot](https://github.com/ajb3296/Toaru-kagaku-no-music-bot)",
             inline=False
         )
         embed.add_field(

@@ -1,10 +1,9 @@
-async def volumeicon(vol : int) -> str:
-    if vol >= 1 and vol <= 10:
-        volicon = ":mute:"
-    elif vol >= 11 and vol <= 30:
-        volicon = ":speaker:"
-    elif vol >= 31 and vol <= 70:
-        volicon = ":sound:"
-    else:
-        volicon = ":loud_sound:"
-    return volicon
+async def volumeicon(vol: int) -> str:
+    vol_icon = ":loud_sound:"
+    if 1 <= vol <= 10:
+        vol_icon = ":mute:"
+    elif 11 <= vol <= 30:
+        vol_icon = ":speaker:"
+    elif 31 <= vol <= 70:
+        vol_icon = ":sound:"
+    return vol_icon

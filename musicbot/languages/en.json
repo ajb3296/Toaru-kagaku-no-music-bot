@@ -151,7 +151,7 @@
     "music_come_in_my_voice_channel": ":warning: | You're on another voice channel! Please come to my voice channel.",
 
     "other_invite_title": "**Invite me to the server you own!**",
-    "other_invite_description": "Thank you very much! Click [here](<{link}>) to invite me to your server!",
+    "other_invite_description": "Thank you very much! Click [here]({link}) to invite me to your server!",
     "other_java_ver": "**Java version**",
     "other_soft_ver": "**Modules version**",
     "other_uptime": "**Uptime**",

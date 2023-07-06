@@ -9,7 +9,7 @@ class Equalizer:
 
     def __init__(self):
         self._band_count = 15
-        self.bands = [0.0 for x in range(self._band_count)]
+        self.bands = [0.0 for _ in range(self._band_count)]
         self.freqs = ('25', '40', '63', '100', '160', '250',
                       '400', '630', '1K', '1.6', '2.5', '4K',
                       '6.3', '10K', '16K')
@@ -36,14 +36,12 @@ class Equalizer:
         gains = [1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.0, -0.1, -0.2, -0.25]
 
         for gain in gains:
-            prefix = ' '
+            prefix = ''
 
             if gain > 0:
                 prefix = '+'
             elif gain == 0:
                 prefix = ' '
-            else:
-                prefix = ''
 
             block += f'{prefix}{gain:.2f} | '
 
@@ -57,6 +55,7 @@ class Equalizer:
 
         block += bottom
         return block
+
 
 class EqualizerButton(discord.ui.View):
     def __init__(self, ctx, player, eq, selected: int):

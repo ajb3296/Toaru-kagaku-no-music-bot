@@ -5,6 +5,14 @@ import datetime
 from musicbot.utils.statistics import StatisticsDb
 
 
+async def caching_video_title():
+    """ 0시 0분 기준 어제자 통계 타이틀 캐싱 """
+    db = StatisticsDb()
+    while True:
+        table_name = datetime2str(datetime.datetime.today())
+        db.get_all(table_name)
+
+
 async def add_today_table():
     while True:
         # Set path

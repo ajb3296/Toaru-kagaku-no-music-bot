@@ -38,3 +38,7 @@
 ## Dashboard
 
 [Github](https://github.com/ajb3296/Toaru-kagaku-no-music-bot-dashboard)
+
+## 알려진 버그
+
+* Equalizer 부동소수점 연산 버그로 그래프가 똑바로 표기되지 않을 수 있음.
