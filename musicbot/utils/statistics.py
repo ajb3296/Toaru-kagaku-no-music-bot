@@ -6,9 +6,12 @@ ID, video_id, count
 
 """
 
-import sqlite3
+import re
+import pymysql
 from datetime import datetime, timedelta
+from musicbot import SQL_HOST, SQL_USER, SQL_PASSWORD, SQL_DB
 
+url_rx = re.compile(r'(.+)?https?://(?:www\.)?.+')
 
 class Statistics:
     def __init__(self):
@@ -16,16 +19,20 @@ class Statistics:
 
     def up(self, video_id: str) -> None:
         """ 비디오 재생 횟수를 1 증가시킵니다 """
+        # 유튜브 비디오 ID가 아닌 링크라면
+        if url_rx.match(video_id):
+            return
+        
         # Set table name
-        table_name = f"date{datetime.today().strftime('%Y%m%d')}"
+        date = datetime.today().strftime('%Y-%m-%d')
         # Get play count from db
-        temp = self.statisticsdb.get(table_name, video_id)
+        temp = self.statisticsdb.get(date, video_id)
         # Set count
         if temp is None:
             num = 1
         else:
             num = temp[2] + 1
-        self.statisticsdb.write(table_name, video_id, num)
+        self.statisticsdb.write(date, video_id, num)
 
     def get_week(self) -> dict[str, int]:
         """ 이번주의 통계를 가져옵니다 """
@@ -33,10 +40,10 @@ class Statistics:
         for day in range(7):  # 0 ~ 6
             # 타깃 날짜 설정
             target_date = datetime.today() - timedelta(days=day)
-            table_name = f"date{target_date.strftime('%Y%m%d')}"
+            date = target_date.strftime('%Y-%m-%d')
 
             # 해당 날짜의 데이터 가져오기
-            videos_data = self.statisticsdb.get_all(table_name)
+            videos_data = self.statisticsdb.get_all(date)
             if videos_data is not None:
                 for data in videos_data:
                     _, video_id, count = data
@@ -47,47 +54,47 @@ class Statistics:
 
 class StatisticsDb:
     def __init__(self):
-        self.db_path = "statistics.db"
+        self.statistics = "statistics"
 
-    def get(self, table_name: str, video_id: str) -> tuple[int, str, int] | None:
-        """ 비디오 아이디로 데이터를 가져옴 """
-        conn = sqlite3.connect(self.db_path, isolation_level=None)
-        c = conn.cursor()
+    def get(self, date: str, video_id: str) -> tuple[int, str, int] | None:
+        """ 해당 날짜와 비디오 아이디로 데이터를 가져옴 """
+        con = pymysql.connect(host=SQL_HOST, user=SQL_USER, password=SQL_PASSWORD, db=SQL_DB, charset='utf8')
+        cur = con.cursor()
         try:
-            c.execute(f"SELECT * FROM {table_name} WHERE video_id=:video_id", {"video_id": video_id})
-        except sqlite3.OperationalError:
-            conn.close()
+            cur.execute(f"SELECT * FROM {self.statistics} WHERE video_id=%s AND date=%s", (video_id, date))
+        except pymysql.err.OperationalError:
+            con.close()
             return None
-        temp = c.fetchone()
-        conn.close()
+        temp = cur.fetchone()
+        con.close()
         return temp
 
-    def get_all(self, table_name: str) -> list[tuple[int, str, int]] | None:
-        """ 테이블의 모든 데이터를 가져옴 """
-        conn = sqlite3.connect(self.db_path, isolation_level=None)
-        c = conn.cursor()
+    def get_all(self, date: str) -> tuple[tuple[int, str, int]] | None:
+        """ 해당 날짜의 모든 데이터를 가져옴 """
+        con = pymysql.connect(host=SQL_HOST, user=SQL_USER, password=SQL_PASSWORD, db=SQL_DB, charset='utf8')
+        cur = con.cursor()
         # 내림차순으로 정렬
         try:
-            c.execute(f"SELECT * FROM {table_name} ORDER BY count DESC")
-        except sqlite3.OperationalError:
+            cur.execute(f"SELECT * FROM {self.statistics} WHERE date=%s ORDER BY count DESC", (date))
+        except pymysql.err.OperationalError:
             return None
-        temp = c.fetchall()
-        conn.close()
+        temp = cur.fetchall()
+        con.close()
         return temp
 
-    def write(self, table_name: str, video_id: str, edit_count: int = 1) -> None:
+    def write(self, date: str, video_id: str, edit_count: int = 1) -> None:
         # Create table if it doesn't exist
-        conn = sqlite3.connect(self.db_path, isolation_level=None)
-        c = conn.cursor()
-        c.execute(f"CREATE TABLE IF NOT EXISTS {table_name} (id integer PRIMARY KEY AUTOINCREMENT, video_id text, count int)")
+        con = pymysql.connect(host=SQL_HOST, user=SQL_USER, password=SQL_PASSWORD, db=SQL_DB, charset='utf8')
+        cur = con.cursor()
 
         if edit_count == 1:
             # add music count
-            c.execute(f"INSERT INTO {table_name} (video_id, count) VALUES('{video_id}', {edit_count})")
+            cur.execute(f"INSERT INTO {self.statistics} (date, video_id, count) VALUES(%s, %s, %s)", (date, video_id, edit_count))
         else:
             # modify music count
-            c.execute(f"UPDATE {table_name} SET count=:count WHERE video_id=:video_id", {"count": edit_count, 'video_id': video_id})
-        conn.close()
+            cur.execute(f"UPDATE {self.statistics} SET count=%s WHERE video_id=%s AND date=%s", (edit_count, video_id, date))
+        con.commit()
+        con.close()
 
 
 if __name__ == "__main__":

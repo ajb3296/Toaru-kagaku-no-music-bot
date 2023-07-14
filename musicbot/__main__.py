@@ -9,8 +9,7 @@ from koreanbots.integrations.discord import DiscordpyKoreanbots
 from discord.ext import commands
 
 from musicbot.lavalinkstart import start_lavalink, download_lavalink
-from musicbot.background.db_management import add_today_table
-from musicbot.background.update_cache import update_cache_process
+# from musicbot.background.update_cache import update_cache_process
 
 from musicbot import LOGGER, TOKEN, EXTENSIONS, BOT_NAME_TAG_VER, KOREANBOT_TOKEN, TOPGG_TOKEN, LAVALINK_AUTO_UPDATE
 
@@ -58,7 +57,6 @@ class ToaruKagakuNoMusicBot(commands.Bot):
             status=discord.Status.online,
         )
         bot.loop.create_task(status_task())
-        bot.loop.create_task(add_today_table())
         # bot.loop.create_task(update_cache_process())
 
     async def on_message(self, message):

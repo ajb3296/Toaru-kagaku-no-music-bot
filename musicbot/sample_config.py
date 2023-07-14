@@ -27,6 +27,12 @@ class Config(object):
     KOREANBOT_TOKEN = None
     TOPGG_TOKEN = None
 
+    # SQL
+    SQL_HOST = "localhost"
+    SQL_USER = "root"
+    SQL_PASSWORD = ""
+    SQL_DB = "tkbot"
+
 
 class Production(Config):
     LOGGER = False

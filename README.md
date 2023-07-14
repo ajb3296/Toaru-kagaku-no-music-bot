@@ -29,6 +29,7 @@
 
 * [lavalink.py](https://github.com/Devoxin/Lavalink.py)
 * [EZPaginator](https://github.com/khk4912/EZPaginator)
+* [soundcloud-lib](https://github.com/3jackdaws/soundcloud-lib)
 
 ## 설치법
 

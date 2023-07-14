@@ -1,5 +1,6 @@
 import os
 import sys
+import pymysql
 import logging
 
 from musicbot.utils.make_config import make_config
@@ -37,6 +38,10 @@ PSW = Config.PSW
 REGION = Config.REGION
 PORT = Config.PORT
 LAVALINK_AUTO_UPDATE = Config.LAVALINK_AUTO_UPDATE
+SQL_HOST = Config.SQL_HOST
+SQL_USER = Config.SQL_USER
+SQL_PASSWORD = Config.SQL_PASSWORD
+SQL_DB = Config.SQL_DB
 
 KOREANBOT_TOKEN = Config.KOREANBOT_TOKEN
 TOPGG_TOKEN = Config.TOPGG_TOKEN
@@ -93,3 +98,31 @@ logging:
     root: INFO
     lavalink: INFO""")
 f.close()
+
+
+# DB 생성
+con = pymysql.connect(host=SQL_HOST,
+                       user=SQL_USER,
+                       password=SQL_PASSWORD,
+                       charset='utf8')
+cur = con.cursor()
+
+cur.execute(f"CREATE DATABASE IF NOT EXISTS tkbot")
+
+con.commit()
+con.close()
+
+con = pymysql.connect(host=SQL_HOST,
+                        user=SQL_USER,
+                        password=SQL_PASSWORD, 
+                        db=SQL_DB,
+                        charset='utf8')
+cur = con.cursor()
+
+cur.execute("CREATE TABLE IF NOT EXISTS statistics (date date, video_id text, count int)")
+cur.execute("CREATE TABLE IF NOT EXISTS language (id text, language text)")
+cur.execute("CREATE TABLE IF NOT EXISTS loop_setting (guild_id text, loop_set int)")
+cur.execute("CREATE TABLE IF NOT EXISTS shuffle (guild_id text, shuffle bool)")
+
+con.commit()
+con.close()

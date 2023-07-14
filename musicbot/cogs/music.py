@@ -3,6 +3,7 @@ import os
 import math
 import difflib
 import traceback
+from sclib import SoundcloudAPI, Track, Playlist
 
 import discord
 import lavalink
@@ -144,7 +145,7 @@ class Music(commands.Cog):
 
         # These are commands that require the bot to join a voicechannel (i.e. initiating playback).
         # Commands such as volume/skip etc don't require the bot to be in a voicechannel so don't need listing here.
-        should_connect = ctx.command.name in ('play', 'connect', 'list', 'chartplay',)
+        should_connect = ctx.command.name in ('play', 'scplay', 'connect', 'list', 'chartplay',)
 
         if not ctx.author.voice or not ctx.author.voice.channel:
             # Our cog_command_error handler catches this and sends it to the voicechannel.
@@ -288,6 +289,96 @@ class Music(commands.Cog):
 
         if thumbnail is not None:
             embed.set_thumbnail(url=f"http://img.youtube.com/vi/{thumbnail}/0.jpg")
+        embed.set_footer(text=BOT_NAME_TAG_VER)
+        await ctx.followup.send(embed=embed)
+
+        # We don't want to call .play() if the player is playing as that will effectively skip
+        # the current track.
+        if not player.is_playing:
+            await player.play()
+    
+    @slash_command()
+    @option("query", description="SoundCloud에서 찾고싶은 음악의 제목이나 링크를 입력하세요")
+    async def scplay(self, ctx, *, query: str):
+        """ Searches and plays a song from a given query. """
+        await ctx.defer()
+
+        # Get the player for this guild from cache.
+        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+
+        # Remove leading and trailing <>. <> may be used to suppress embedding links in Discord.
+        query = query.strip('<>')
+
+        # Check if the user input might be a URL. If it isn't, we can Lavalink do a YouTube search for it instead.
+        # SoundCloud searching is possible by prefixing "scsearch:" instead.
+        if not url_rx.match(query):
+            query = f'scsearch:{query}'
+
+        nofind = 0
+        while True:
+            # Get the results for the query from Lavalink.
+            results = await player.node.get_tracks(query)
+
+            # Results could be None if Lavalink returns an invalid response (non-JSON/non-200 (OK)).
+            # ALternatively, results['tracks'] could be an empty array if the query yielded no tracks.
+            if not results or not results.tracks:
+                if nofind < 3:
+                    nofind += 1
+                elif nofind == 3:
+                    embed = discord.Embed(title=get_lan(ctx.author.id, "music_can_not_find_anything"), description='', color=COLOR_CODE)
+                    embed.set_footer(text=BOT_NAME_TAG_VER)
+                    return await ctx.followup.send(embed=embed)
+            else:
+                break
+
+        embed = discord.Embed(color=COLOR_CODE)  # discord.Color.blurple()
+
+        # Valid loadTypes are:
+        #   TRACK_LOADED    - single video/direct URL)
+        #   PLAYLIST_LOADED - direct URL to playlist)
+        #   SEARCH_RESULT   - query prefixed with either ytsearch: or scsearch:.
+        #   NO_MATCHES      - query yielded no results
+        #   LOAD_FAILED     - most likely, the video encountered an exception during loading.
+        thumbnail = None
+        if results.load_type == 'PLAYLIST_LOADED':
+            tracks = results.tracks
+
+            trackcount = 0
+
+            for track in tracks:
+                if trackcount != 1:
+                    thumbnail = track.uri
+                    trackcount = 1
+                # Music statistical(for playlist)
+                # Statistics().up(track.identifier)
+
+                # Add all of the tracks from the playlist to the queue.
+                player.add(requester=ctx.author.id, track=track)
+
+            embed.title = get_lan(ctx.author.id, "music_play_playlist")
+            embed.description = f'{results.playlist_info.name} - {len(tracks)} tracks'
+
+        else:
+            track = results.tracks[0]
+            embed.title = get_lan(ctx.author.id, "music_play_music")
+            embed.description = f'[{track.title}]({track.uri})'
+            thumbnail = track.uri
+
+            # Music statistical
+            # Statistics().up(track.identifier)
+
+            # You can attach additional information to audiotracks through kwargs, however this involves
+            # constructing the AudioTrack class yourself.
+            track = lavalink.models.AudioTrack(track, ctx.author.id, recommended=True)
+            player.add(requester=ctx.author.id, track=track)
+
+        embed.add_field(name=get_lan(ctx.author.id, "music_shuffle"), value=get_lan(ctx.author.id, "music_shuffle_already_on") if player.shuffle else get_lan(ctx.author.id, "music_shuffle_already_off"), inline=True)
+        embed.add_field(name=get_lan(ctx.author.id, "music_repeat"), value=[get_lan(ctx.author.id, "music_repeat_already_off"), get_lan(ctx.author.id, "music_repeat_already_one"), get_lan(ctx.author.id, "music_repeat_already_on")][player.loop], inline=True)
+
+        if thumbnail is not None:
+            track = SoundcloudAPI().resolve(thumbnail)
+            embed.set_thumbnail(url=track.artwork_url)
+            print(thumbnail)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
