@@ -3,7 +3,7 @@ import os
 import math
 import difflib
 import traceback
-from sclib import SoundcloudAPI, Track, Playlist
+from sclib import SoundcloudAPI
 
 import discord
 import lavalink
@@ -296,7 +296,7 @@ class Music(commands.Cog):
         # the current track.
         if not player.is_playing:
             await player.play()
-    
+
     @slash_command()
     @option("query", description="SoundCloud에서 찾고싶은 음악의 제목이나 링크를 입력하세요")
     async def scplay(self, ctx, *, query: str):
@@ -378,7 +378,6 @@ class Music(commands.Cog):
         if thumbnail is not None:
             track = SoundcloudAPI().resolve(thumbnail)
             embed.set_thumbnail(url=track.artwork_url)
-            print(thumbnail)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
@@ -834,25 +833,6 @@ class Music(commands.Cog):
                 )
             paginator = pages.Paginator(pages=pages_list)
             await paginator.respond(ctx.interaction, ephemeral=False)
-
-    '''
-    @slash_command()
-    @option("speed", description="재생 속도를 입력해 주세요")
-    async def speed(self, ctx, speed: float):
-        """ Change the music speed """
-        from lavalink.filters import Timescale
-        await ctx.defer()
-
-        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
-
-        if not player.is_playing:
-            return await ctx.followup.send(get_lan(ctx.author.id, "music_not_playing"))
-
-        timescale = Timescale().update(speed=1.5)
-        print(timescale)
-        await player.set_filter(timescale)
-        await ctx.followup.send("test")
-    '''
 
     @slash_command()
     async def equalizer(self, ctx):

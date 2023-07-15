@@ -101,22 +101,22 @@ f.close()
 
 
 # DB 생성
-con = pymysql.connect(host=SQL_HOST,
-                       user=SQL_USER,
-                       password=SQL_PASSWORD,
-                       charset='utf8')
+con = pymysql.connect(host = SQL_HOST,
+                       user = SQL_USER,
+                       password = SQL_PASSWORD,
+                       charset = 'utf8')
 cur = con.cursor()
 
-cur.execute(f"CREATE DATABASE IF NOT EXISTS tkbot")
+cur.execute("CREATE DATABASE IF NOT EXISTS tkbot")
 
 con.commit()
 con.close()
 
-con = pymysql.connect(host=SQL_HOST,
-                        user=SQL_USER,
-                        password=SQL_PASSWORD, 
-                        db=SQL_DB,
-                        charset='utf8')
+con = pymysql.connect(host = SQL_HOST,
+                        user = SQL_USER,
+                        password = SQL_PASSWORD,
+                        db = SQL_DB,
+                        charset = 'utf8')
 cur = con.cursor()
 
 cur.execute("CREATE TABLE IF NOT EXISTS statistics (date date, video_id text, count int)")

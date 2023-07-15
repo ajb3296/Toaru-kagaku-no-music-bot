@@ -22,7 +22,7 @@ class Statistics:
         # 유튜브 비디오 ID가 아닌 링크라면
         if url_rx.match(video_id):
             return
-        
+
         # Set table name
         date = datetime.today().strftime('%Y-%m-%d')
         # Get play count from db

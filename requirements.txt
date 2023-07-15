@@ -8,4 +8,5 @@ chardet
 billboard.py
 koreanbots
 topggpy
+pymysql
 soundcloud-lib

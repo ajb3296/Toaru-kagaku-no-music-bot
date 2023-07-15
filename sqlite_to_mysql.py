@@ -38,7 +38,7 @@ sqlite_con.close()
 sqlite_con = sqlite3.connect("userdata.db")
 sqlite_cur = sqlite_con.cursor()
 
-sqlite_cur.execute(f"SELECT * FROM userdata")
+sqlite_cur.execute("SELECT * FROM userdata")
 userdata = sqlite_cur.fetchall()
 
 sqlite_con.close()
@@ -49,9 +49,9 @@ sqlite_con.close()
 sqlite_con = sqlite3.connect("database.db")
 sqlite_cur = sqlite_con.cursor()
 
-sqlite_cur.execute(f"SELECT * FROM loop")
+sqlite_cur.execute("SELECT * FROM loop")
 loop = sqlite_cur.fetchall()
-sqlite_cur.execute(f"SELECT * FROM shuffle")
+sqlite_cur.execute("SELECT * FROM shuffle")
 shuffle = sqlite_cur.fetchall()
 
 sqlite_con.close()
