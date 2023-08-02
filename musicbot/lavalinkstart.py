@@ -12,9 +12,13 @@ from musicbot import LOGGER, LAVALINK_AUTO_UPDATE
 
 def get_lavalink_ver() -> tuple[str | None, str]:
     """ lavalink 최신버전 가져오기 """
-    # 최신 라바링크 버전
-    latest_lavalink_tag = json.loads(requests.get("https://api.github.com/repos/freyacodes/Lavalink/releases").text)[0][
-        'tag_name']
+    # 최신 안정 라바링크 버전
+    latest_lavalink_tag = ""
+    lavalink_json = json.loads(requests.get("https://api.github.com/repos/freyacodes/Lavalink/releases").text)
+    for i in lavalink_json:
+        if not i['prerelease']:
+            latest_lavalink_tag = i['tag_name']
+            break
 
     # 현재 라바링크 버전
     now_lavalink_ver = None
