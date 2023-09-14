@@ -58,8 +58,8 @@ f.write(f"""server: # REST and WS server
   port: {PORT}
   address: {HOST}
 plugins:
-#  name: # Name of the plugin
-#    some_key: some_value # Some key-value pair for the plugin
+#  name: # 플러그인 이름
+#    some_key: some_value # 플러그인에 대한 일부 키-값 쌍
 #    another_key: another_value
 lavalink:
   plugins:
@@ -76,7 +76,7 @@ lavalink:
       vimeo: true
       http: true
       local: false
-    filters: # All filters are enabled by default
+    filters: # 모든 필터는 기본적으로 활성화되어 있습니다
       volume: true
       equalizer: true
       karaoke: true
@@ -87,31 +87,31 @@ lavalink:
       rotation: true
       channelMix: true
       lowPass: true
-    bufferDurationMs: 400 # The duration of the NAS buffer. Higher values fare better against longer GC pauses. Duration <= 0 to disable JDA-NAS. Minimum of 40ms, lower values may introduce pauses.
-    frameBufferDurationMs: 5000 # How many milliseconds of audio to keep buffered
-    opusEncodingQuality: 10 # Opus encoder quality. Valid values range from 0 to 10, where 10 is best quality but is the most expensive on the CPU.
-    resamplingQuality: MEDIUM # Quality of resampling operations. Valid values are LOW, MEDIUM and HIGH, where HIGH uses the most CPU.
-    trackStuckThresholdMs: 10000 # The threshold for how long a track can be stuck. A track is stuck if does not return any audio data.
-    useSeekGhosting: true # Seek ghosting is the effect where whilst a seek is in progress, the audio buffer is read from until empty, or until seek is ready.
-    youtubePlaylistLoadLimit: 6 # Number of pages at 100 each
-    playerUpdateInterval: 5 # How frequently to send player updates to clients, in seconds
+    bufferDurationMs: 400 # NAS 버퍼의 지속 시간. 값이 높을수록 더 긴 GC 일시 중지에 대해 더 잘 처리됩니다. JDA-NAS를 비활성화하려면 Duration <= 0입니다. 최소 40ms, 값이 낮을수록 일시 중지가 발생할 수 있습니다.
+    frameBufferDurationMs: 5000 # 버퍼링할 오디오 시간(밀리초)
+    opusEncodingQuality: 10 # Opus 인코더 품질. 유효한 값의 범위는 0에서 10까지입니다. 여기서 10은 최상의 품질이지만 CPU를 가장 많이 사용합니다.
+    resamplingQuality: HIGH # 리샘플링 작업의 품질. 유효한 값은 LOW, MEDIUM 및 HIGH입니다. 여기서 HIGH는 CPU를 가장 많이 사용합니다.
+    trackStuckThresholdMs: 10000 # 트랙이 멈출 수 있는 시간에 대한 임계값입니다. 오디오 데이터를 반환하지 않으면 트랙이 멈춥니다.
+    useSeekGhosting: true # 탐색 고스팅은 탐색이 진행되는 동안 오디오 버퍼가 비워질 때까지 또는 탐색이 준비될 때까지 읽히는 효과입니다.
+    youtubePlaylistLoadLimit: 6 # 각 100페이지의 페이지 수
+    playerUpdateInterval: 5 # 플레이어 업데이트를 클라이언트에 보내는 빈도(초)
     youtubeSearchEnabled: true
     soundcloudSearchEnabled: true
     gc-warnings: true
     #ratelimit:
-      #ipBlocks: ["1.0.0.0/8", "..."] # list of ip blocks
-      #excludedIps: ["...", "..."] # ips which should be explicit excluded from usage by lavalink
+      #ipBlocks: ["1.0.0.0/8", "..."] # IP 차단 목록
+      #excludedIps: ["...", "..."] # lavalink의 사용에서 명시적으로 제외되어야 하는 ip들
       #strategy: "RotateOnBan" # RotateOnBan | LoadBalance | NanoSwitch | RotatingNanoSwitch
-      #searchTriggersFail: true # Whether a search 429 should trigger marking the ip as failing
-      #retryLimit: -1 # -1 = use default lavaplayer value | 0 = infinity | >0 = retry will happen this numbers times
-    #youtubeConfig: # Required for avoiding all age restrictions by YouTube, some restricted videos still can be played without.
-      #email: "" # Email of Google account
-      #password: "" # Password of Google account
-    #httpConfig: # Useful for blocking bad-actors from ip-grabbing your music node and attacking it, this way only the http proxy will be attacked
-      #proxyHost: "localhost" # Hostname of the proxy, (ip or domain)
-      #proxyPort: 3128 # Proxy port, 3128 is the default for squidProxy
-      #proxyUser: "" # Optional user for basic authentication fields, leave blank if you don't use basic auth
-      #proxyPassword: "" # Password for basic authentication
+      #searchTriggersFail: true # 429 코드가 발생하는 IP를 실패로 트리거해야 하는지 여부
+      #retryLimit: -1 # -1 = 라바플레이어 기본값 | 0 = 무제한 | >0 = 재시도 최대값
+    #youtubeConfig: # YouTube의 모든 연령 제한을 피하기 위해 필요하지만 일부 제한된 동영상은 연령 제한 없이도 재생할 수 있습니다.
+      #email: "" # 구글 계정 이메일
+      #password: "" # 구글 계정 비밀번호
+    #httpConfig: # 악의적인 행위자가 음악 노드의 IP를 파악하여 공격하는 것을 차단하는 데 유용합니다. 이렇게 하면 http 프록시만 공격받게 됩니다.
+      #proxyHost: "localhost" # 프록시의 호스트네임, (ip 또는 도메인)
+      #proxyPort: 3128 # 프록시 포트, 3128 은 squidProxy 의 기본값입니다.
+      #proxyUser: "" # 기본 인증 필드에 대한 선택적 사용자, 기본 인증을 사용하지 않는 경우 공백으로 두십시오.
+      #proxyPassword: "" # 기본 인증을 위한 비밀번호
 
 metrics:
   prometheus:

@@ -58,8 +58,13 @@ class Other(commands.Cog):
         else:
             now_lavalinkver = "None"
 
-        # 최신 라바링크 버전
-        latest_lavalink_tag = json.loads(requests.get("https://api.github.com/repos/freyacodes/Lavalink/releases").text)[0]['tag_name']
+        # 최신 안정 라바링크 버전
+        latest_lavalink_tag = ""
+        lavalink_json = json.loads(requests.get("https://api.github.com/repos/freyacodes/Lavalink/releases").text)
+        for i in lavalink_json:
+            if not i['prerelease']:
+                latest_lavalink_tag = i['tag_name']
+                break
 
         embed = discord.Embed(title=get_lan(ctx.author.id, "other_soft_ver"), color=COLOR_CODE)
         embed.add_field(name="Python Ver", value=f"{platform.python_implementation()} {platform.python_version()}",
