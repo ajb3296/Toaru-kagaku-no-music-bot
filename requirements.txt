@@ -1,5 +1,5 @@
-py-cord>=2.3.0
-lavalink>=4.0.3
+py-cord
+lavalink
 BeautifulSoup4
 psutil
 requests

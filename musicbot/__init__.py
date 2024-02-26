@@ -6,7 +6,7 @@ import logging
 from musicbot.utils.make_config import make_config
 
 # Bot version
-BOT_VER = "V.3.4"
+BOT_VER = "V.3.5"
 
 # enable logging
 logging.basicConfig(

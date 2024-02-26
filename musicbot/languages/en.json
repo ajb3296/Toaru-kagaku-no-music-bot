@@ -149,6 +149,7 @@
     "music_not_connected_voice_channel": ":warning: | You are not connected to the voice channel!",
     "music_no_permission": ":warning: | Permission Denied! (Give me Connect, Speak permission!)",
     "music_come_in_my_voice_channel": ":warning: | You're on another voice channel! Please come to my voice channel.",
+    "music_voice_channel_is_full": ":warning: | Your voice channel is full!",
 
     "other_invite_title": "**Invite me to the server you own!**",
     "other_invite_description": "Thank you very much! Click [here]({link}) to invite me to your server!",

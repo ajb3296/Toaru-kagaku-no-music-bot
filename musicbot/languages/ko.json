@@ -149,6 +149,7 @@
     "music_not_connected_voice_channel": ":warning: | 음성 채널에 연결되어 있지 않아요!",
     "music_no_permission": ":warning: | 권한이 없어요! (Connect, Speak 권한을 주세요!)",
     "music_come_in_my_voice_channel": ":warning: | 다른 음성 채널에 있어요! 제가 있는 음성 채널로 와주세요.",
+    "music_voice_channel_is_full": ":warning: | 음성 채널 정원이 가득 찼어요!",
 
     "other_invite_title": "**절 당신이 관리하는 서버에 초대해주시다니!**",
     "other_invite_description": "정말 감사합니다! [여기]({link})를 눌러 서버에 초대해주세요!",

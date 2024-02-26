@@ -6,10 +6,13 @@ import traceback
 from sclib import SoundcloudAPI
 
 import discord
-import lavalink
 from discord import option
 from discord.ext import commands, pages
-from discord.commands import slash_command
+
+import lavalink
+from lavalink.events import TrackStartEvent, QueueEndEvent
+from lavalink.errors import ClientError
+from lavalink.server import LoadType
 
 from musicbot.utils.language import get_lan
 from musicbot.utils.volumeicon import volumeicon
@@ -30,22 +33,26 @@ class LavalinkVoiceClient(discord.VoiceClient):
     see the following documentation:
     https://discordpy.readthedocs.io/en/latest/api.html#voiceprotocol
     """
-
+    
     def __init__(self, client: discord.Client, channel: discord.abc.Connectable):
         self.client = client
         self.channel = channel
-        # ensure there exists a client already
-        if hasattr(self.client, 'lavalink'):
-            self.lavalink = self.client.lavalink
-        else:
+        self.guild_id = channel.guild.id
+        self._destroyed = False
+
+        if not hasattr(self.client, 'lavalink'):
+            # Instantiate a client if one doesn't exist.
+            # We store it in `self.client` so that it may persist across cog reloads,
+            # however this is not mandatory.
             self.client.lavalink = lavalink.Client(client.user.id)
-            self.client.lavalink.add_node(
-                    HOST,
-                    PORT,
-                    PSW,
-                    REGION,
-                    'default-node')
-            self.lavalink = self.client.lavalink
+            self.client.lavalink.add_node(host=HOST,
+                                          port=PORT,
+                                          password=PSW,
+                                          region=REGION,
+                                          name='default-node')
+
+        # Create a shortcut to the Lavalink client here.
+        self.lavalink = self.client.lavalink
 
     async def on_voice_server_update(self, data):
         # the data needs to be transformed before being handed down to
@@ -57,12 +64,21 @@ class LavalinkVoiceClient(discord.VoiceClient):
         await self.lavalink.voice_update_handler(lavalink_data)
 
     async def on_voice_state_update(self, data):
+        channel_id = data['channel_id']
+
+        if not channel_id:
+            await self._destroy()
+            return
+
+        self.channel = self.client.get_channel(int(channel_id))
+
         # the data needs to be transformed before being handed down to
         # voice_update_handler
         lavalink_data = {
-                't': 'VOICE_STATE_UPDATE',
-                'd': data
-                }
+            't': 'VOICE_STATE_UPDATE',
+            'd': data
+        }
+
         await self.lavalink.voice_update_handler(lavalink_data)
 
     async def connect(self, *, timeout: float, reconnect: bool, self_deaf: bool = False, self_mute: bool = False) -> None:
@@ -72,7 +88,7 @@ class LavalinkVoiceClient(discord.VoiceClient):
         """
         # ensure there is a player_manager when creating a new voice_client
         self.lavalink.player_manager.create(guild_id=self.channel.guild.id)
-        await self.channel.guild.change_voice_state(channel=self.channel)
+        await self.channel.guild.change_voice_state(channel=self.channel, self_mute=self_mute, self_deaf=self_deaf)
 
     async def disconnect(self, *, force: bool = False) -> None:
         """
@@ -80,6 +96,7 @@ class LavalinkVoiceClient(discord.VoiceClient):
         Cleans up running player and leaves the voice client.
         """
         player = self.lavalink.player_manager.get(self.channel.guild.id)
+
         if player is not None:
             # no need to disconnect if we are not connected
             if not force and not player.is_connected:
@@ -89,11 +106,25 @@ class LavalinkVoiceClient(discord.VoiceClient):
             await self.channel.guild.change_voice_state(channel=None)
 
             # update the channel_id of the player to None
-            # this must be done because the on_voice_state_update that
-            # would set channel_id to None doesn't get dispatched after the
-            # disconnect
+            # this must be done because the on_voice_state_update that would set channel_id
+            # to None doesn't get dispatched after the disconnect
             player.channel_id = None
-            self.cleanup()
+            await self._destroy()
+    
+    async def _destroy(self):
+        self.cleanup()
+
+        if self._destroyed:
+            # Idempotency handling, if `disconnect()` is called, the changed voice state
+            # could cause this to run a second time.
+            return
+
+        self._destroyed = True
+
+        try:
+            await self.lavalink.player_manager.destroy(self.guild_id)
+        except ClientError:
+            pass
 
 
 class Music(commands.Cog):
@@ -102,25 +133,18 @@ class Music(commands.Cog):
 
         if not hasattr(bot, 'lavalink'):  # This ensures the client isn't overwritten during cog reloads.
             bot.lavalink = lavalink.Client(BOT_ID)
-            bot.lavalink.add_node(HOST, PORT, PSW, REGION, "default-node")  # Host, Port, Password, Region, Name
+            bot.lavalink.add_node(host=HOST,
+                                  port=PORT,
+                                  password=PSW,
+                                  region=REGION,
+                                  name='default-node')
 
-        lavalink.add_event_hook(self.track_hook)
+        self.lavalink: lavalink.Client = bot.lavalink
+        self.lavalink.add_event_hooks(self)
 
     def cog_unload(self):
         """ Cog unload handler. This removes any event hooks that were registered. """
         self.bot.lavalink._event_hooks.clear()
-
-    async def cog_before_invoke(self, ctx):
-        """ Command before-invoke handler. """
-        guild_check = ctx.guild is not None
-        #  This is essentially the same as `@commands.guild_only()`
-        #  except it saves us repeating ourselves (and also a few lines).
-
-        if guild_check:
-            await self.ensure_voice(ctx)
-            #  Ensure that the bot and command author share a mutual voicechannel.
-
-        return guild_check
 
     async def cog_command_error(self, ctx, error):
         if isinstance(error, commands.CommandInvokeError):
@@ -134,9 +158,17 @@ class Music(commands.Cog):
         else:
             print(traceback.format_exc())
 
-    async def ensure_voice(self, ctx):
-        """ This check ensures that the bot and command author are in the same voicechannel. """
-        player = self.bot.lavalink.player_manager.create(ctx.guild.id)
+    async def create_player(ctx: commands.Context):
+        """
+        A check that is invoked before any commands marked with `@commands.check(create_player)` can run.
+
+        This function will try to create a player for the guild associated with this Context, or raise
+        an error which will be relayed to the user if one cannot be created.
+        """
+        if ctx.guild is None:
+            raise commands.NoPrivateMessage()
+
+        player = ctx.bot.lavalink.player_manager.create(ctx.guild.id)
         # Create returns a player if one exists, otherwise creates.
         # This line is important because it ensures that a player always exists for a guild.
 
@@ -147,36 +179,32 @@ class Music(commands.Cog):
         # Commands such as volume/skip etc don't require the bot to be in a voicechannel so don't need listing here.
         should_connect = ctx.command.name in ('play', 'scplay', 'connect', 'list', 'chartplay',)
 
+        voice_client = ctx.voice_client
+
         if not ctx.author.voice or not ctx.author.voice.channel:
-            # Our cog_command_error handler catches this and sends it to the voicechannel.
-            # Exceptions allow us to "short-circuit" command invocation via checks so the
-            # execution state of the command goes no further.
             raise commands.CommandInvokeError(get_lan(ctx.author.id, "music_come_in_voice_channel"))
+        
+        voice_channel = ctx.author.voice.channel
 
-        # If it is playing but not connected to the voice channel, stop the music being played and connect to the voice channel
-        if not player.is_connected and ctx.voice_client:
-            try:
-                player.queue.clear()
-                await player.stop()
-                await ctx.voice_client.disconnect(force=True)
-            except AttributeError:
-                pass
-
-        v_client = ctx.voice_client
-        if not v_client:
+        if voice_client is None:
             if not should_connect:
                 raise commands.CommandInvokeError(get_lan(ctx.author.id, "music_not_connected_voice_channel"))
 
-            permissions = ctx.author.voice.channel.permissions_for(ctx.me)
+            permissions = voice_channel.permissions_for(ctx.me)
 
-            if not permissions.connect or not permissions.speak:  # Check user limit too?
+            if not permissions.connect or not permissions.speak:
                 raise commands.CommandInvokeError(get_lan(ctx.author.id, "music_no_permission"))
+
+            if voice_channel.user_limit > 0:
+                # A limit of 0 means no limit. Anything higher means that there is a member limit which we need to check.
+                # If it's full, and we don't have "move members" permissions, then we cannot join it.
+                if len(voice_channel.members) >= voice_channel.user_limit and not ctx.me.guild_permissions.move_members:
+                    raise commands.CommandInvokeError(get_lan(ctx.author.id, "music_voice_channel_is_full"))
 
             player.store('channel', ctx.channel.id)
             await ctx.author.voice.channel.connect(cls=LavalinkVoiceClient)
-        else:
-            if v_client.channel.id != ctx.author.voice.channel.id:
-                raise commands.CommandInvokeError(get_lan(ctx.author.id, "music_come_in_my_voice_channel"))
+        elif voice_client.channel.id != voice_channel.id:
+            raise commands.CommandInvokeError(get_lan(ctx.author.id, "music_come_in_my_voice_channel"))
 
         # 반복 상태 설정
         loop = Database().get_loop(ctx.guild.id)
@@ -188,16 +216,37 @@ class Music(commands.Cog):
         if shuffle is not None:
             player.set_shuffle(shuffle)
 
-    async def track_hook(self, event):
-        if isinstance(event, lavalink.events.QueueEndEvent):
-            # When this track_hook receives a "QueueEndEvent" from lavalink.py
-            # it indicates that there are no tracks left in the player's queue.
-            # To save on resources, we can tell the bot to disconnect from the voicechannel.
-            guild_id = int(event.player.guild_id)
-            guild = self.bot.get_guild(guild_id)
+        return True
+
+
+    @lavalink.listener(TrackStartEvent)
+    async def on_track_start(self, event: TrackStartEvent):
+        guild_id = event.player.guild_id
+        channel_id = event.player.fetch('channel')
+        guild = self.bot.get_guild(guild_id)
+
+        if not guild:
+            return await self.lavalink.player_manager.destroy(guild_id)
+
+        channel = guild.get_channel(channel_id)
+
+        if channel:
+            embed = discord.Embed(title='Now playing: {} by {}'.format(event.track.title, event.track.author), color=COLOR_CODE)
+            embed.set_footer(text=BOT_NAME_TAG_VER)
+            return await channel.send(embed=embed)
+
+
+    @lavalink.listener(QueueEndEvent)
+    async def on_queue_end(self, event: QueueEndEvent):
+        guild_id = event.player.guild_id
+        guild = self.bot.get_guild(guild_id)
+
+        if guild is not None:
             await guild.voice_client.disconnect(force=True)
 
-    @slash_command()
+
+    @commands.slash_command()
+    @commands.check(create_player)
     async def connect(self, ctx):
         """ Connect to voice channel! """
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
@@ -209,8 +258,9 @@ class Music(commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         return await ctx.respond(embed=embed)
 
-    @slash_command()
+    @commands.slash_command()
     @option("query", description="찾고싶은 음악의 제목이나 링크를 입력하세요")
+    @commands.check(create_player)
     async def play(self, ctx, *, query: str):
         """ Searches and plays a song from a given query. """
         await ctx.defer()
@@ -233,7 +283,7 @@ class Music(commands.Cog):
 
             # Results could be None if Lavalink returns an invalid response (non-JSON/non-200 (OK)).
             # ALternatively, results['tracks'] could be an empty array if the query yielded no tracks.
-            if not results or not results.tracks:
+            if results.load_type == LoadType.EMPTY:
                 if nofind < 3:
                     nofind += 1
                 elif nofind == 3:
@@ -245,14 +295,14 @@ class Music(commands.Cog):
 
         embed = discord.Embed(color=COLOR_CODE)  # discord.Color.blurple()
 
-        # Valid loadTypes are:
-        #   TRACK_LOADED    - single video/direct URL)
-        #   PLAYLIST_LOADED - direct URL to playlist)
-        #   SEARCH_RESULT   - query prefixed with either ytsearch: or scsearch:.
-        #   NO_MATCHES      - query yielded no results
-        #   LOAD_FAILED     - most likely, the video encountered an exception during loading.
+        # Valid load_types are:
+        #   TRACK    - direct URL to a track
+        #   PLAYLIST - direct URL to playlist
+        #   SEARCH   - query prefixed with either "ytsearch:" or "scsearch:". This could possibly be expanded with plugins.
+        #   EMPTY    - no results for the query (result.tracks will be empty)
+        #   ERROR    - the track encountered an exception during loading
         thumbnail = None
-        if results.load_type == 'PLAYLIST_LOADED':
+        if results.load_type == LoadType.PLAYLIST:
             tracks = results.tracks
 
             trackcount = 0
@@ -281,7 +331,6 @@ class Music(commands.Cog):
 
             # You can attach additional information to audiotracks through kwargs, however this involves
             # constructing the AudioTrack class yourself.
-            track = lavalink.models.AudioTrack(track, ctx.author.id, recommended=True)
             player.add(requester=ctx.author.id, track=track)
 
         embed.add_field(name=get_lan(ctx.author.id, "music_shuffle"), value=get_lan(ctx.author.id, "music_shuffle_already_on") if player.shuffle else get_lan(ctx.author.id, "music_shuffle_already_off"), inline=True)
@@ -297,8 +346,9 @@ class Music(commands.Cog):
         if not player.is_playing:
             await player.play()
 
-    @slash_command()
+    @commands.slash_command()
     @option("query", description="SoundCloud에서 찾고싶은 음악의 제목이나 링크를 입력하세요")
+    @commands.check(create_player)
     async def scplay(self, ctx, *, query: str):
         """ Searches and plays a song from a given query. """
         await ctx.defer()
@@ -321,7 +371,7 @@ class Music(commands.Cog):
 
             # Results could be None if Lavalink returns an invalid response (non-JSON/non-200 (OK)).
             # ALternatively, results['tracks'] could be an empty array if the query yielded no tracks.
-            if not results or not results.tracks:
+            if results.load_type == LoadType.EMPTY:
                 if nofind < 3:
                     nofind += 1
                 elif nofind == 3:
@@ -333,14 +383,14 @@ class Music(commands.Cog):
 
         embed = discord.Embed(color=COLOR_CODE)  # discord.Color.blurple()
 
-        # Valid loadTypes are:
-        #   TRACK_LOADED    - single video/direct URL)
-        #   PLAYLIST_LOADED - direct URL to playlist)
-        #   SEARCH_RESULT   - query prefixed with either ytsearch: or scsearch:.
-        #   NO_MATCHES      - query yielded no results
-        #   LOAD_FAILED     - most likely, the video encountered an exception during loading.
+        # Valid load_types are:
+        #   TRACK    - direct URL to a track
+        #   PLAYLIST - direct URL to playlist
+        #   SEARCH   - query prefixed with either "ytsearch:" or "scsearch:". This could possibly be expanded with plugins.
+        #   EMPTY    - no results for the query (result.tracks will be empty)
+        #   ERROR    - the track encountered an exception during loading
         thumbnail = None
-        if results.load_type == 'PLAYLIST_LOADED':
+        if results.load_type == LoadType.PLAYLIST:
             tracks = results.tracks
 
             trackcount = 0
@@ -369,7 +419,6 @@ class Music(commands.Cog):
 
             # You can attach additional information to audiotracks through kwargs, however this involves
             # constructing the AudioTrack class yourself.
-            track = lavalink.models.AudioTrack(track, ctx.author.id, recommended=True)
             player.add(requester=ctx.author.id, track=track)
 
         embed.add_field(name=get_lan(ctx.author.id, "music_shuffle"), value=get_lan(ctx.author.id, "music_shuffle_already_on") if player.shuffle else get_lan(ctx.author.id, "music_shuffle_already_off"), inline=True)
@@ -377,7 +426,8 @@ class Music(commands.Cog):
 
         if thumbnail is not None:
             track = SoundcloudAPI().resolve(thumbnail)
-            embed.set_thumbnail(url=track.artwork_url)
+            if track.artwork_url is not None:
+                embed.set_thumbnail(url=track.artwork_url)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
@@ -386,7 +436,8 @@ class Music(commands.Cog):
         if not player.is_playing:
             await player.play()
 
-    @slash_command()
+    @commands.slash_command()
+    @commands.check(create_player)
     async def disconnect(self, ctx):
         """ Disconnects the player from the voice channel and clears its queue. """
         await ctx.defer()
@@ -421,7 +472,8 @@ class Music(commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
-    @slash_command()
+    @commands.slash_command()
+    @commands.check(create_player)
     async def skip(self, ctx):
         """ Skip to the next song! """
         await ctx.defer()
@@ -440,7 +492,8 @@ class Music(commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
-    @slash_command()
+    @commands.slash_command()
+    @commands.check(create_player)
     async def nowplaying(self, ctx):
         """ Sending the currently playing song! """
         await ctx.defer()
@@ -468,7 +521,8 @@ class Music(commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
-    @slash_command()
+    @commands.slash_command()
+    @commands.check(create_player)
     async def queue(self, ctx):
         """ Send music queue! """
         await ctx.defer()
@@ -517,7 +571,8 @@ class Music(commands.Cog):
         paginator = pages.Paginator(pages=pages_list)
         await paginator.respond(ctx.interaction, ephemeral=False)
 
-    @slash_command()
+    @commands.slash_command()
+    @commands.check(create_player)
     async def repeat(self, ctx):
         """ Repeat one song or repeat multiple songs! """
         await ctx.defer()
@@ -549,8 +604,9 @@ class Music(commands.Cog):
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.followup.send(embed=embed)
 
-    @slash_command()
+    @commands.slash_command()
     @option("index", description="Queue에서 제거하고 싶은 음악이 몇 번째 음악인지 입력해 주세요")
+    @commands.check(create_player)
     async def remove(self, ctx, index: int):
         """ Remove music from the playlist! """
         await ctx.defer()
@@ -569,7 +625,8 @@ class Music(commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
-    @slash_command()
+    @commands.slash_command()
+    @commands.check(create_player)
     async def shuffle(self, ctx):
         """ The music in the playlist comes out randomly from the next song! """
         await ctx.defer()
@@ -592,8 +649,9 @@ class Music(commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
-    @slash_command()
+    @commands.slash_command()
     @option("volume", description="볼륨값을 입력하세요", min_value=1, max_value=1000, default=100, required=False)
+    @commands.check(create_player)
     async def volume(self, ctx, volume: int = None):
         """ Changes or display the volume """
         await ctx.defer()
@@ -629,7 +687,8 @@ class Music(commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
-    @slash_command()
+    @commands.slash_command()
+    @commands.check(create_player)
     async def pause(self, ctx):
         """ Pause or resume music! """
         await ctx.defer()
@@ -650,7 +709,7 @@ class Music(commands.Cog):
             embed.set_footer(text=BOT_NAME_TAG_VER)
             await ctx.followup.send(embed=embed)
 
-    @slash_command()
+    @commands.slash_command()
     @option("seconds", description="이동할 초를 입력하세요")
     async def seek(self, ctx, *, seconds: int):
         """ Adjust the music play time in seconds by the number after the command! """
@@ -667,7 +726,8 @@ class Music(commands.Cog):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.followup.send(embed=embed)
 
-    @slash_command()
+    @commands.slash_command()
+    @commands.check(create_player)
     @option("chart", description="Choose chart", choices=["Melon", "Billboard", "Billboard Japan"])
     @option("count", description="Enter the number of chart songs to play", min_value=1, max_value=100, default=10)
     async def chartplay(self, ctx, *, chart: str, count: int):
@@ -726,7 +786,8 @@ class Music(commands.Cog):
             if not player.is_playing:
                 await player.play()
 
-    @slash_command()
+    @commands.slash_command()
+    @commands.check(create_player)
     @option("arg", description="재생할 플레이리스트의 제목을 입력해 주세요")
     async def list(self, ctx, *, arg=None):
         """ Load playlists or play the music from that playlist! """
@@ -834,7 +895,8 @@ class Music(commands.Cog):
             paginator = pages.Paginator(pages=pages_list)
             await paginator.respond(ctx.interaction, ephemeral=False)
 
-    @slash_command()
+    @commands.slash_command()
+    @commands.check(create_player)
     async def equalizer(self, ctx):
         """ Send equalizer dashboard """
         await ctx.defer()
