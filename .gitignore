@@ -12,6 +12,7 @@ start.sh
 *.pyi
 *.build
 *.dist
+plugins/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

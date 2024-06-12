@@ -57,24 +57,111 @@ f = open("application.yml", 'w')
 f.write(f"""server: # REST and WS server
   port: {PORT}
   address: {HOST}
+http2:
+    enabled: false # Whether to enable HTTP/2 support
 plugins:
-#  name: # 플러그인 이름
-#    some_key: some_value # 플러그인에 대한 일부 키-값 쌍
-#    another_key: another_value
+  youtube:
+    enabled: true # Whether this source can be used.
+    allowSearch: true # Whether "ytsearch:" and "ytmsearch:" can be used.
+    allowDirectVideoIds: true # Whether just video IDs can match. If false, only complete URLs will be loaded.
+    allowDirectPlaylistIds: true # Whether just playlist IDs can match. If false, only complete URLs will be loaded.
+    # The clients to use for track loading. See below for a list of valid clients.
+    # Clients are queried in the order they are given (so the first client is queried first and so on...)
+    clients:
+      - MUSIC
+      - ANDROID
+      - WEB
+    # You can configure individual clients with the following.
+    # Any options or clients left unspecified will use their default values,
+    # which enables everything for all clients.
+    WEB: # names are specified as they are written below under "Available Clients".
+      # This will disable using the WEB client for video playback.
+      playback: false
+    TVHTML5EMBEDDED:
+      # The below config disables everything except playback for this client.
+      playlistLoading: false # Disables loading of playlists and mixes for this client.
+      videoLoading: false # Disables loading of videos for this client (playback is still allowed).
+      searching: false # Disables the ability to search for videos for this client.
+  lavasrc:
+    providers: # Custom providers for track loading. This is the default
+    #Youtube
+      - "ytsearch:\\"%ISRC%\\""
+      - "ytsearch:%QUERY%"
+      - "ytmsearch:\\"%ISRC%\\""
+      - "ytmsearch:%QUERY%"
+    #Soundcloud
+      - "scsearch:%QUERY%"
+    #Spotify
+      - "spsearch:%QUERY%"
+      - "sprec:%QUERY%"
+    #Applemusic
+      - "amsearch:%QUERY%"
+    #Deezer
+      - "dzisrc:%ISRC%"
+      - "dzsearch:%QUERY%"
+    #yandexmusic
+      - "ymsearch:%QUERY%"
+      - "ymrec:%QUERY%"
+    sources:
+      spotify: false # Enable Spotify source
+      applemusic: false # Enable Apple Music source
+      deezer: false # Enable Deezer source
+      yandexmusic: false # Enable Yandex Music source
+      flowerytts: false # Enable Flowery TTs source
+      youtube: true # Enable YouTube search source (https://github.com/topi314/LavaSearch)
+    lyrics-sources:
+      spotify: false # Enable Spotify lyrics source
+      deezer: false # Enable Deezer lyrics source
+      youtube: false # Enable YouTube lyrics source
+      yandexmusic: false # Enable Yandex Music lyrics source
+    spotify:
+      clientId: "your client id"
+      clientSecret: "your client secret"
+      spDc: "" # the sp dc cookie used for accessing the spotify lyrics api
+      countryCode: "US" # the country code you want to use for filtering the artists top tracks. See https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+      playlistLoadLimit: 6 # The number of pages at 100 tracks each
+      albumLoadLimit: 6 # The number of pages at 50 tracks each
+    applemusic:
+      countryCode: "US" # the country code you want to use for filtering the artists top tracks and language. See https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+      mediaAPIToken: "your access token" # apple music api token
+      playlistLoadLimit: 6 # The number of pages at 300 tracks each
+      albumLoadLimit: 6 # The number of pages at 300 tracks each
+    deezer:
+      masterDecryptionKey: "your master decryption key" # the master key used for decrypting the deezer tracks. (yes this is not here you need to get it from somewhere else)
+    yandexmusic:
+      accessToken: "your access token" # the token used for accessing the yandex music api. See https://github.com/TopiSenpai/LavaSrc#yandex-music
+      playlistLoadLimit: 1 # The number of pages at 100 tracks each
+      albumLoadLimit: 1 # The number of pages at 50 tracks each
+      artistLoadLimit: 1 # The number of pages at 10 tracks each
+    flowerytts:
+      voice: "default voice" # (case-sensitive) get default voice here https://flowery.pw/docs/flowery/tts-voices-v-1-tts-voices-get
+      translate: false # whether to translate the text to the native language of voice
+      silence: 0 # the silence parameter is in milliseconds. Range is 0 to 10000. The default is 0.
+      speed: 1.0 # the speed parameter is a float between 0.5 and 10. The default is 1.0. (0.5 is half speed, 2.0 is double speed, etc.)
+      audioFormat: "mp3" # supported formats are: mp3, ogg_opus, ogg_vorbis, aac, wav, and flac. Default format is mp3
+    youtube:
+      countryCode: "US" # the country code you want to use for searching lyrics via ISRC. See https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 lavalink:
   plugins:
 #    - dependency: "group:artifact:version"
 #      repository: "repository"
+
+    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.1.1"
+      snapshot: false # set to true if you want to use snapshot builds (see below)
+    - dependency: "dev.lavalink.youtube:youtube-plugin:1.3.0"
+      snapshot: false # set to true if you want to use snapshot builds (see below)
   pluginsDir: "./plugins"
   server:
     password: "{PSW}"
     sources:
-      youtube: true
+      # The default Youtube source is now deprecated and won't receive further updates. Please use https://github.com/lavalink-devs/youtube-source#plugin instead.
+      youtube: false
       bandcamp: true
       soundcloud: true
       twitch: true
       vimeo: true
-      http: true
+      nico: true
+      http: true # warning: keeping HTTP enabled without a proxy configured could expose your server's IP address.
       local: false
     filters: # 모든 필터는 기본적으로 활성화되어 있습니다
       volume: true
