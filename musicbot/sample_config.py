@@ -22,6 +22,10 @@ class Config(object):
     REGION = "eu"  # 리전
     PORT = 2333
     LAVALINK_AUTO_UPDATE = True
+    LAVALINK_PLUGINS = {
+        "com.github.topi314.lavasrc:lavasrc-plugin": "https://api.github.com/repos/topi314/LavaSrc/releases",
+        "dev.lavalink.youtube:youtube-plugin": "https://api.github.com/repos/lavalink-devs/youtube-source/releases"
+    }
 
     # 봇 홍보용 사이트
     KOREANBOT_TOKEN = None
