@@ -1,11 +1,11 @@
 import re
 import discord
 import lavalink
+from lavalink.server import LoadType
 
 from musicbot.utils.language import get_lan
 from musicbot.utils.statistics import Statistics
 from musicbot import COLOR_CODE
-
 url_rx = re.compile(r'https?://(?:www\.)?.+')
 
 
@@ -21,7 +21,7 @@ async def play_list(player, ctx, musics: list, playmsg):
         # ... 개수 변경
         loading_dot = ""
         loading_dot_count += 1
-        if loading_dot_count == 4:
+        if loading_dot_count >= 4:
             loading_dot_count = 1
         for _ in range(0, loading_dot_count):
             loading_dot = loading_dot + "."
@@ -38,7 +38,9 @@ async def play_list(player, ctx, musics: list, playmsg):
         nofind = 0
         while True:
             results = await player.node.get_tracks(query)
-            if results.load_type == 'PLAYLIST_LOADED' or not results or not results.tracks:
+            # Results could be None if Lavalink returns an invalid response (non-JSON/non-200 (OK)).
+            # ALternatively, results['tracks'] could be an empty array if the query yielded no tracks.
+            if results.load_type == LoadType.EMPTY or not results or not results.tracks:
                 if nofind < 3:
                     nofind += 1
                 elif nofind == 3:
@@ -48,6 +50,7 @@ async def play_list(player, ctx, musics: list, playmsg):
                         passmusic = f"{passmusic}\n{music}"
             else:
                 break
+
         track = results.tracks[0]
 
         # Music statistical
@@ -60,7 +63,6 @@ async def play_list(player, ctx, musics: list, playmsg):
         if trackcount != 1:
             thumbnail = track.identifier
             trackcount = 1
-        track = lavalink.models.AudioTrack(track, ctx.author.id, recommended=True)
         player.add(requester=ctx.author.id, track=track)
 
         if not player.is_playing:
