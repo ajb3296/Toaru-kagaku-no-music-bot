@@ -1,6 +1,8 @@
 import re
 import os
 import math
+import yt_dlp
+import asyncio
 import difflib
 import traceback
 from sclib import SoundcloudAPI
@@ -130,6 +132,22 @@ class LavalinkVoiceClient(discord.VoiceClient):
 class Music(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.ydl_opts = {
+            'format': 'bestaudio/best',
+            'extractaudio': True,
+            'audioformat': 'mp3',
+            'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
+            'restrictfilenames': True,
+            'noplaylist': True,
+            'nocheckcertificate': True,
+            'ignoreerrors': False,
+            'logtostderr': False,
+            'quiet': True,
+            'no_warnings': True,
+            'default_search': 'auto',
+            'source_address': '0.0.0.0'
+        }
+
 
         if not hasattr(bot, 'lavalink'):  # This ensures the client isn't overwritten during cog reloads.
             bot.lavalink = lavalink.Client(BOT_ID)
@@ -218,6 +236,22 @@ class Music(commands.Cog):
 
         return True
 
+    async def get_track_info(self, query: str):
+        loop = asyncio.get_event_loop()
+        with yt_dlp.YoutubeDL(self.ydl_opts) as ydl:
+            try:
+                info = await loop.run_in_executor(None, lambda: ydl.extract_info(query, download=False))
+                if 'entries' in info:
+                    info = info['entries'][0]
+                return {
+                    'title': info['title'],
+                    'url': info['webpage_url'],
+                    'duration': info['duration'],
+                    'thumbnail': info['thumbnail'],
+                }
+            except Exception as e:
+                print(f"An error occurred: {str(e)}")
+                return None
 
     @lavalink.listener(TrackStartEvent)
     async def on_track_start(self, event: TrackStartEvent):
@@ -274,7 +308,7 @@ class Music(commands.Cog):
         # Check if the user input might be a URL. If it isn't, we can Lavalink do a YouTube search for it instead.
         # SoundCloud searching is possible by prefixing "scsearch:" instead.
         if not url_rx.match(query):
-            query = f'ytsearch:{query}'
+            query = f'ytmsearch:{query}'
 
         nofind = 0
         while True:

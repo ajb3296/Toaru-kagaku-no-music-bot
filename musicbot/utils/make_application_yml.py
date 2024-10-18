@@ -10,7 +10,7 @@ def make_application_yml(HOST: str, PORT: str, PSW: str, LOGGER: Logger, LAVALIN
     for key, value in LAVALINK_PLUGINS.items():
         plugin_json = json.loads(requests.get(value).text)
         for i in plugin_json:
-            if not i['prerelease']:
+            if not i.get('prerelease'):
                 plugin_tags[key] = i['tag_name']
                 break
     
@@ -38,8 +38,12 @@ plugins:
     # Clients are queried in the order they are given (so the first client is queried first and so on...)
     clients:
       - MUSIC
-      - ANDROID_TESTSUITE
       - WEB
+      - WEBEMBEDDED
+      - ANDROID_MUSIC
+      - TVHTML5EMBEDDED
+      - IOS
+      - MEDIA_CONNECT
     # You can configure individual clients with the following.
     # Any options or clients left unspecified will use their default values,
     # which enables everything for all clients.
@@ -51,65 +55,7 @@ plugins:
       playlistLoading: false # Disables loading of playlists and mixes for this client.
       videoLoading: false # Disables loading of videos for this client (playback is still allowed).
       searching: false # Disables the ability to search for videos for this client.
-  lavasrc:
-    providers: # Custom providers for track loading. This is the default
-    #Youtube
-      - "ytsearch:\\"%ISRC%\\""
-      - "ytsearch:%QUERY%"
-      - "ytmsearch:\\"%ISRC%\\""
-      - "ytmsearch:%QUERY%"
-    #Soundcloud
-      - "scsearch:%QUERY%"
-    #Spotify
-      - "spsearch:%QUERY%"
-      - "sprec:%QUERY%"
-    #Applemusic
-      - "amsearch:%QUERY%"
-    #Deezer
-      - "dzisrc:%ISRC%"
-      - "dzsearch:%QUERY%"
-    #yandexmusic
-      - "ymsearch:%QUERY%"
-      - "ymrec:%QUERY%"
-    sources:
-      spotify: false # Enable Spotify source
-      applemusic: false # Enable Apple Music source
-      deezer: false # Enable Deezer source
-      yandexmusic: false # Enable Yandex Music source
-      flowerytts: false # Enable Flowery TTs source
-      youtube: true # Enable YouTube search source (https://github.com/topi314/LavaSearch)
-    lyrics-sources:
-      spotify: false # Enable Spotify lyrics source
-      deezer: false # Enable Deezer lyrics source
-      youtube: false # Enable YouTube lyrics source
-      yandexmusic: false # Enable Yandex Music lyrics source
-    spotify:
-      clientId: "your client id"
-      clientSecret: "your client secret"
-      spDc: "" # the sp dc cookie used for accessing the spotify lyrics api
-      countryCode: "US" # the country code you want to use for filtering the artists top tracks. See https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
-      playlistLoadLimit: 6 # The number of pages at 100 tracks each
-      albumLoadLimit: 6 # The number of pages at 50 tracks each
-    applemusic:
-      countryCode: "US" # the country code you want to use for filtering the artists top tracks and language. See https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
-      mediaAPIToken: "your access token" # apple music api token
-      playlistLoadLimit: 6 # The number of pages at 300 tracks each
-      albumLoadLimit: 6 # The number of pages at 300 tracks each
-    deezer:
-      masterDecryptionKey: "your master decryption key" # the master key used for decrypting the deezer tracks. (yes this is not here you need to get it from somewhere else)
-    yandexmusic:
-      accessToken: "your access token" # the token used for accessing the yandex music api. See https://github.com/TopiSenpai/LavaSrc#yandex-music
-      playlistLoadLimit: 1 # The number of pages at 100 tracks each
-      albumLoadLimit: 1 # The number of pages at 50 tracks each
-      artistLoadLimit: 1 # The number of pages at 10 tracks each
-    flowerytts:
-      voice: "default voice" # (case-sensitive) get default voice here https://flowery.pw/docs/flowery/tts-voices-v-1-tts-voices-get
-      translate: false # whether to translate the text to the native language of voice
-      silence: 0 # the silence parameter is in milliseconds. Range is 0 to 10000. The default is 0.
-      speed: 1.0 # the speed parameter is a float between 0.5 and 10. The default is 1.0. (0.5 is half speed, 2.0 is double speed, etc.)
-      audioFormat: "mp3" # supported formats are: mp3, ogg_opus, ogg_vorbis, aac, wav, and flac. Default format is mp3
-    youtube:
-      countryCode: "US" # the country code you want to use for searching lyrics via ISRC. See https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+
 lavalink:
   plugins:
 #    - dependency: "group:artifact:version"
