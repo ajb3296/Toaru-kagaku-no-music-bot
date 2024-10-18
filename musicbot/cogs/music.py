@@ -1,8 +1,6 @@
 import re
 import os
 import math
-import yt_dlp
-import asyncio
 import difflib
 import traceback
 from sclib import SoundcloudAPI
@@ -235,23 +233,6 @@ class Music(commands.Cog):
             player.set_shuffle(shuffle)
 
         return True
-
-    async def get_track_info(self, query: str):
-        loop = asyncio.get_event_loop()
-        with yt_dlp.YoutubeDL(self.ydl_opts) as ydl:
-            try:
-                info = await loop.run_in_executor(None, lambda: ydl.extract_info(query, download=False))
-                if 'entries' in info:
-                    info = info['entries'][0]
-                return {
-                    'title': info['title'],
-                    'url': info['webpage_url'],
-                    'duration': info['duration'],
-                    'thumbnail': info['thumbnail'],
-                }
-            except Exception as e:
-                print(f"An error occurred: {str(e)}")
-                return None
 
     @lavalink.listener(TrackStartEvent)
     async def on_track_start(self, event: TrackStartEvent):
