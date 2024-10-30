@@ -289,7 +289,7 @@ class Music(commands.Cog):
         # Check if the user input might be a URL. If it isn't, we can Lavalink do a YouTube search for it instead.
         # SoundCloud searching is possible by prefixing "scsearch:" instead.
         if not url_rx.match(query):
-            query = f'ytmsearch:{query}'
+            query = f'ytsearch:{query}'
 
         nofind = 0
         while True:
