@@ -13,7 +13,7 @@ def make_application_yml(HOST: str, PORT: str, PSW: str, LOGGER: Logger, LAVALIN
             if not i.get('prerelease'):
                 plugin_tags[key] = i['tag_name']
                 break
-    
+
     plugin_str = ""
     for key, value in plugin_tags.items():
         plugin_str += f"    - dependency: \"{key}:{value}\"\n"

@@ -7,12 +7,11 @@ import topgg
 from koreanbots.integrations.discord import DiscordpyKoreanbots
 
 from discord.ext import commands, tasks
-from discord.ext.commands import Context
 
 from musicbot.lavalinkstart import start_lavalink, download_lavalink
 # from musicbot.background.update_cache import update_cache_process
 
-from musicbot import LOGGER, TOKEN, OWNERS, EXTENSIONS, BOT_NAME_TAG_VER, KOREANBOT_TOKEN, TOPGG_TOKEN, LAVALINK_AUTO_UPDATE, DEBUG_SERVER
+from musicbot import LOGGER, TOKEN, OWNERS, EXTENSIONS, BOT_NAME_TAG_VER, KOREANBOT_TOKEN, TOPGG_TOKEN, LAVALINK_AUTO_UPDATE
 
 class ToaruKagakuNoMusicBot(commands.Bot):
     def __init__(self):
@@ -47,7 +46,7 @@ class ToaruKagakuNoMusicBot(commands.Bot):
             )
         except Exception:
             pass
-    
+
     @status_task.before_loop
     async def before_status_task(self) -> None:
         await self.wait_until_ready()

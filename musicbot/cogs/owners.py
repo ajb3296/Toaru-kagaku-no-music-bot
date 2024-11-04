@@ -220,7 +220,7 @@ class Owners(commands.Cog, name="owners"):
             srvr = str()
             for i in self.bot.guilds:
                 srvr = srvr + get_lan(ctx.author.id, "owners_server_list_info").format(
-                    server_name=i, 
+                    server_name=i,
                     server_members_count=i.member_count
                 )
             embed.add_field(name="", value=srvr, inline=False)
@@ -246,7 +246,7 @@ class Owners(commands.Cog, name="owners"):
             for a in range(numa, numb):
                 try:
                     srvr += get_lan(ctx.author.id, "owners_server_list_info").format(
-                        server_name=guilds[a][0], 
+                        server_name=guilds[a][0],
                         server_members_count=guilds[a][1]
                     )
                 except IndexError:

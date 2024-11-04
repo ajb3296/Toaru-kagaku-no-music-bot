@@ -27,7 +27,7 @@ class Language(commands.Cog, name="language"):
         lang="Choose language pack"
     )
     @app_commands.choices(lang=[
-        app_commands.Choice(name=l, value=l) for l in lan_pack
+        app_commands.Choice(name=lng, value=lng) for lng in lan_pack
     ])
     async def language(self, ctx: Context, lang: str):
         """ Apply the language pack. """

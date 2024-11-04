@@ -1,6 +1,5 @@
 import re
 import discord
-import lavalink
 from lavalink.server import LoadType
 
 from musicbot.utils.language import get_lan
