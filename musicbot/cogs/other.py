@@ -9,18 +9,21 @@ import platform
 import datetime
 import subprocess
 from discord.ext import commands
-from discord.commands import slash_command
+from discord.ext.commands import Context
 
 from musicbot.utils.language import get_lan
 from musicbot import LOGGER, BOT_NAME_TAG_VER, COLOR_CODE
 
 
-class Other(commands.Cog):
+class Other(commands.Cog, name="other"):
     def __init__(self, bot):
         self.bot = bot
 
-    @slash_command()
-    async def invite(self, ctx):
+    @commands.hybrid_command(
+        name="invite",
+        description="Send you a link for invite me",
+    )
+    async def invite(self, ctx: Context):
         """ Send you a link for invite me """
         link = f'https://discord.com/api/oauth2/authorize?client_id={self.bot.user.id}&permissions=414501391424&scope=bot%20applications.commands'
         embed = discord.Embed(
@@ -29,10 +32,13 @@ class Other(commands.Cog):
             color=COLOR_CODE
         )
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.respond(embed=embed)
+        await ctx.send(embed=embed)
 
-    @slash_command()
-    async def softver(self, ctx):
+    @commands.hybrid_command(
+        name="softver",
+        description="Let me tell you the version of the modules!",
+    )
+    async def softver(self, ctx: Context):
         """ Let me tell you the version of the modules! """
         await ctx.defer()
         # 최신 py-cord 버전
@@ -76,19 +82,22 @@ class Other(commands.Cog):
         embed.add_field(name="Java Ver", value=now_javaver, inline=False)
         embed.add_field(name="Lavalink Ver", value=f"{now_lavalinkver} (Latest: {latest_lavalink_tag})", inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.followup.send(embed=embed)
+        await ctx.send(embed=embed)
 
-    @slash_command()
-    async def uptime(self, ctx):
+    @commands.hybrid_command(
+        name="uptime",
+        description="Let me tell you the server's uptime!",
+    )
+    async def uptime(self, ctx: Context):
         """ Let me tell you the server's uptime! """
         uptime_string = str(datetime.timedelta(seconds=int(time.time() - psutil.boot_time())))
         embed = discord.Embed(title=get_lan(ctx.author.id, "other_uptime"),
                               description=f"```{uptime_string}```",
                               color=COLOR_CODE)
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.respond(embed=embed)
+        await ctx.send(embed=embed)
 
 
-def setup(bot):
-    bot.add_cog(Other(bot))
+async def setup(bot):
+    await bot.add_cog(Other(bot))
     LOGGER.info('Other loaded!')

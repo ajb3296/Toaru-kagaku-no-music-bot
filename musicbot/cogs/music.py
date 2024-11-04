@@ -6,8 +6,9 @@ import traceback
 from sclib import SoundcloudAPI
 
 import discord
-from discord import option
-from discord.ext import commands, pages
+from discord import app_commands
+from discord.ext import commands
+from discord.ext.commands import Context
 
 import lavalink
 from lavalink.events import TrackStartEvent, QueueEndEvent
@@ -22,9 +23,9 @@ from musicbot.utils.statistics import Statistics
 from musicbot import LOGGER, BOT_ID, COLOR_CODE, BOT_NAME_TAG_VER, HOST, PSW, REGION, PORT
 from musicbot.utils.equalizer import Equalizer, EqualizerButton
 from musicbot.utils.database import Database
+from musicbot.utils.paginator import Paginator
 
 url_rx = re.compile(r'https?://(?:www\.)?.+')
-
 
 class LavalinkVoiceClient(discord.VoiceClient):
     """
@@ -127,25 +128,9 @@ class LavalinkVoiceClient(discord.VoiceClient):
             pass
 
 
-class Music(commands.Cog):
+class Music(commands.Cog, name="music"):
     def __init__(self, bot):
         self.bot = bot
-        self.ydl_opts = {
-            'format': 'bestaudio/best',
-            'extractaudio': True,
-            'audioformat': 'mp3',
-            'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
-            'restrictfilenames': True,
-            'noplaylist': True,
-            'nocheckcertificate': True,
-            'ignoreerrors': False,
-            'logtostderr': False,
-            'quiet': True,
-            'no_warnings': True,
-            'default_search': 'auto',
-            'source_address': '0.0.0.0'
-        }
-
 
         if not hasattr(bot, 'lavalink'):  # This ensures the client isn't overwritten during cog reloads.
             bot.lavalink = lavalink.Client(BOT_ID)
@@ -166,7 +151,7 @@ class Music(commands.Cog):
         if isinstance(error, commands.CommandInvokeError):
             embed = discord.Embed(title=error.original, description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            await ctx.respond(embed=embed)
+            await ctx.send(embed=embed)
             # The above handles errors thrown in this cog and shows them to the user.
             # This shouldn't be a problem as the only errors thrown in this cog are from `ensure_voice`
             # which contain a reason string, such as "Join a voicechannel" etc. You can modify the above
@@ -260,23 +245,33 @@ class Music(commands.Cog):
             await guild.voice_client.disconnect(force=True)
 
 
-    @commands.slash_command()
+    @commands.hybrid_command(
+        name="connect",
+        aliases=['join', '들어와', 'c', 'ㅊ'],
+        description="Connect to voice channel!",
+    )
     @commands.check(create_player)
-    async def connect(self, ctx):
+    async def connect(self, ctx: Context):
         """ Connect to voice channel! """
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         if not player.is_connected:
             embed = discord.Embed(title=get_lan(ctx.author.id, "music_connect_voice_channel"), color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.respond(embed=embed)
+            return await ctx.send(embed=embed)
         embed = discord.Embed(title=get_lan(ctx.author.id, "music_already_connected_voice_channel"), color=COLOR_CODE)
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        return await ctx.respond(embed=embed)
+        return await ctx.send(embed=embed)
 
-    @commands.slash_command()
-    @option("query", description="찾고싶은 음악의 제목이나 링크를 입력하세요")
+    @commands.hybrid_command(
+        name="play",
+        aliases=['p', '재생', 'ㅔ', 'add'],
+        description="Searches and plays a song from a given query.",
+    )
+    @app_commands.describe(
+        query="찾고싶은 음악의 제목이나 링크를 입력하세요"
+    )
     @commands.check(create_player)
-    async def play(self, ctx, *, query: str):
+    async def play(self, ctx: Context, *, query: str):
         """ Searches and plays a song from a given query. """
         await ctx.defer()
 
@@ -304,7 +299,7 @@ class Music(commands.Cog):
                 elif nofind == 3:
                     embed = discord.Embed(title=get_lan(ctx.author.id, "music_can_not_find_anything"), description='', color=COLOR_CODE)
                     embed.set_footer(text=BOT_NAME_TAG_VER)
-                    return await ctx.followup.send(embed=embed)
+                    return await ctx.send(embed=embed)
             else:
                 break
 
@@ -354,17 +349,23 @@ class Music(commands.Cog):
         if thumbnail is not None:
             embed.set_thumbnail(url=f"http://img.youtube.com/vi/{thumbnail}/0.jpg")
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.followup.send(embed=embed)
+        await ctx.send(embed=embed)
 
         # We don't want to call .play() if the player is playing as that will effectively skip
         # the current track.
         if not player.is_playing:
             await player.play()
 
-    @commands.slash_command()
-    @option("query", description="SoundCloud에서 찾고싶은 음악의 제목이나 링크를 입력하세요")
+    @commands.hybrid_command(
+        name="scplay",
+        aliases=['sp', '사클재생', '네', 'addsc'],
+        description="Searches and plays a song from a given query.",
+    )
+    @app_commands.describe(
+        query="SoundCloud에서 찾고싶은 음악의 제목이나 링크를 입력하세요"
+    )
     @commands.check(create_player)
-    async def scplay(self, ctx, *, query: str):
+    async def scplay(self, ctx: Context, *, query: str):
         """ Searches and plays a song from a given query. """
         await ctx.defer()
 
@@ -392,7 +393,7 @@ class Music(commands.Cog):
                 elif nofind == 3:
                     embed = discord.Embed(title=get_lan(ctx.author.id, "music_can_not_find_anything"), description='', color=COLOR_CODE)
                     embed.set_footer(text=BOT_NAME_TAG_VER)
-                    return await ctx.followup.send(embed=embed)
+                    return await ctx.send(embed=embed)
             else:
                 break
 
@@ -444,16 +445,20 @@ class Music(commands.Cog):
             if track.artwork_url is not None:
                 embed.set_thumbnail(url=track.artwork_url)
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.followup.send(embed=embed)
+        await ctx.send(embed=embed)
 
         # We don't want to call .play() if the player is playing as that will effectively skip
         # the current track.
         if not player.is_playing:
             await player.play()
 
-    @commands.slash_command()
+    @commands.hybrid_command(
+        name="disconnect",
+        aliases=['dc', '연결해제', '나가', 'ㅇㅊ'],
+        description="Disconnects the player from the voice channel and clears its queue.",
+    )
     @commands.check(create_player)
-    async def disconnect(self, ctx):
+    async def disconnect(self, ctx: Context):
         """ Disconnects the player from the voice channel and clears its queue. """
         await ctx.defer()
 
@@ -463,7 +468,7 @@ class Music(commands.Cog):
             # We can't disconnect, if we're not connected.
             embed = discord.Embed(title=get_lan(ctx.author.id, "music_dc_not_connect_voice_channel"), color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.followup.send(embed=embed)
+            return await ctx.send(embed=embed)
 
         if not ctx.author.voice or (player.is_connected and ctx.author.voice.channel.id != int(player.channel_id)):
             # Abuse prevention. Users not in voice channels, or not in the same voice channel as the bot
@@ -473,7 +478,7 @@ class Music(commands.Cog):
                 color=COLOR_CODE
             )
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.followup.send(embed=embed)
+            return await ctx.send(embed=embed)
 
         # Clear the queue to ensure old tracks don't start playing
         # when someone else queues something.
@@ -485,11 +490,15 @@ class Music(commands.Cog):
 
         embed = discord.Embed(title=get_lan(ctx.author.id, "music_dc_disconnected"), color=COLOR_CODE)
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.followup.send(embed=embed)
+        await ctx.send(embed=embed)
 
-    @commands.slash_command()
+    @commands.hybrid_command(
+        name="skip",
+        aliases=['스킵', 's', 'ㄴ'],
+        description="Skip to the next song!",
+    )
     @commands.check(create_player)
-    async def skip(self, ctx):
+    async def skip(self, ctx: Context):
         """ Skip to the next song! """
         await ctx.defer()
 
@@ -499,17 +508,21 @@ class Music(commands.Cog):
             # We can't skip, if we're not playing the music.
             embed = discord.Embed(title=get_lan(ctx.author.id, "music_not_playing"), description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.followup.send(embed=embed)
+            return await ctx.send(embed=embed)
 
         await player.skip()
 
         embed = discord.Embed(title=get_lan(ctx.author.id, "music_skip_next"), description='', color=COLOR_CODE)
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.followup.send(embed=embed)
+        await ctx.send(embed=embed)
 
-    @commands.slash_command()
+    @commands.hybrid_command(
+        name="nowplaying",
+        aliases=['np', 'n', 'playing', '현재재생중', 'ㅜ', 'ㅞ', 'ㅜㅔ'],
+        description="Sending the currently playing song!",
+    )
     @commands.check(create_player)
-    async def nowplaying(self, ctx):
+    async def nowplaying(self, ctx: Context):
         """ Sending the currently playing song! """
         await ctx.defer()
 
@@ -517,7 +530,7 @@ class Music(commands.Cog):
         if not player.current:
             embed = discord.Embed(title=get_lan(ctx.author.id, "music_no_playing_music"), description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.followup.send(embed=embed)
+            return await ctx.send(embed=embed)
 
         position = lavalink.utils.format_time(player.position)
         if player.current.stream:
@@ -534,61 +547,78 @@ class Music(commands.Cog):
 
         embed.set_thumbnail(url=f"{player.current.uri.replace('https://www.youtube.com/watch?v=', 'http://img.youtube.com/vi/')}/0.jpg")
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.followup.send(embed=embed)
+        await ctx.send(embed=embed)
 
-    @commands.slash_command()
+    @commands.hybrid_command(
+        name="queue",
+        aliases=['q', '큐', 'ㅂ'],
+        description="Send music queue!",
+    )
     @commands.check(create_player)
-    async def queue(self, ctx):
-        """ Send music queue! """
-        await ctx.defer()
+    async def queue(self, ctx: Context):
+        """Send music queue!"""
+        async with ctx.typing():
+            player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+            if not player.queue:
+                embed = discord.Embed(
+                    title=get_lan(ctx.author.id, "music_no_music_in_the_playlist"),
+                    description='',
+                    color=COLOR_CODE
+                )
+                embed.set_footer(text=BOT_NAME_TAG_VER)
+                return await ctx.send(embed=embed)
 
-        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
-        if not player.queue:
-            embed = discord.Embed(title=get_lan(ctx.author.id, "music_no_music_in_the_playlist"), description='', color=COLOR_CODE)
-            embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.followup.send(embed=embed)
+            # 페이지당 띄울 음악 개수
+            items_per_page = 10
 
-        # 페이지당 띄울 음악 개수
-        items_per_page = 10
+            if len(player.queue) <= items_per_page:
+                queue_list = ''
+                for index, track in enumerate(player.queue):
+                    queue_list += f'`{index + 1}.` [**{track.title}**]({track.uri})\n'
+                embed = discord.Embed(
+                    description=get_lan(ctx.author.id, "music_q").format(
+                        lenQ=len(player.queue),
+                        queue_list=queue_list
+                    ),
+                    color=COLOR_CODE
+                )
+                embed.set_footer(text=BOT_NAME_TAG_VER)
+                return await ctx.send(embed=embed)
 
-        if len(player.queue) <= items_per_page:
-            queue_list = ''
-            for index, track in enumerate(player.queue):
-                queue_list += f'`{index + 1}.` [**{track.title}**]({track.uri})\n'
-            embed = discord.Embed(
-                description=get_lan(ctx.author.id, "music_q").format(lenQ=len(player.queue), queue_list=queue_list),
-                color=COLOR_CODE
-            )
-            embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.followup.send(embed=embed)
+            # 총 페이지수 계산
+            allpage = math.ceil(len(player.queue) / items_per_page)
+            embeds = []
 
-        # 총 페이지수 계산
-        allpage = math.ceil(len(player.queue) / items_per_page)
+            for i in range(1, allpage + 1):
+                queue_list = ''
+                numb = (items_per_page * i)
+                numa = numb - items_per_page
 
-        pages_list = []
+                for index, track in enumerate(player.queue[numa:numb], start=numa):
+                    queue_list += f'`{index + 1}.` [**{track.title}**]({track.uri})\n'
 
-        for i in range(1, allpage+1):
-            queue_list = ''
-            numb = (items_per_page * i)
-            numa = numb - items_per_page
+                embed = discord.Embed(
+                    description=get_lan(ctx.author.id, "music_q").format(
+                        lenQ=len(player.queue),
+                        queue_list=queue_list
+                    ),
+                    color=COLOR_CODE
+                )
+                embed.set_footer(text=f"{get_lan(ctx.author.id, 'music_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
+                embeds.append(embed)
 
-            for index, track in enumerate(player.queue[numa:numb], start=numa):
-                queue_list += f'`{index + 1}.` [**{track.title}**]({track.uri})\n'
+            # Create and send paginator
+            paginator = Paginator(embeds)
+            message = await ctx.send(embed=embeds[0], view=paginator)
+            paginator.message = message
 
-            pages_list.append(
-                [
-                    discord.Embed(
-                        description=get_lan(ctx.author.id, "music_q").format(lenQ=len(player.queue), queue_list=queue_list),
-                        color=COLOR_CODE
-                    ).set_footer(text=f"{get_lan(ctx.author.id, 'music_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
-                ]
-            )
-        paginator = pages.Paginator(pages=pages_list)
-        await paginator.respond(ctx.interaction, ephemeral=False)
-
-    @commands.slash_command()
+    @commands.hybrid_command(
+        name="repeat",
+        aliases=['loop', 'l', '반복', 'ㅣ'],
+        description="Repeat one song or repeat multiple songs!",
+    )
     @commands.check(create_player)
-    async def repeat(self, ctx):
+    async def repeat(self, ctx: Context):
         """ Repeat one song or repeat multiple songs! """
         await ctx.defer()
 
@@ -596,7 +626,7 @@ class Music(commands.Cog):
         if not player.is_playing:
             embed = discord.Embed(title=get_lan(ctx.author.id, "music_not_playing"), description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.followup.send(embed=embed)
+            return await ctx.send(embed=embed)
 
         # 0 = off, 1 = single track, 2 = queue
         if player.loop == 0:
@@ -617,12 +647,18 @@ class Music(commands.Cog):
             embed = discord.Embed(title=get_lan(ctx.author.id, "music_repeat_all"), description='', color=COLOR_CODE)
         if embed is not None:
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            await ctx.followup.send(embed=embed)
+            await ctx.send(embed=embed)
 
-    @commands.slash_command()
-    @option("index", description="Queue에서 제거하고 싶은 음악이 몇 번째 음악인지 입력해 주세요")
+    @commands.hybrid_command(
+        name="remove",
+        aliases=['제거', 'rm'],
+        description="Remove music from the playlist!",
+    )
+    @app_commands.describe(
+        index="Queue에서 제거하고 싶은 음악이 몇 번째 음악인지 입력해 주세요"
+    )
     @commands.check(create_player)
-    async def remove(self, ctx, index: int):
+    async def remove(self, ctx: Context, index: int):
         """ Remove music from the playlist! """
         await ctx.defer()
 
@@ -630,19 +666,23 @@ class Music(commands.Cog):
         if not player.queue:
             embed = discord.Embed(title=get_lan(ctx.author.id, "music_remove_no_wating_music"), description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.followup.send(embed=embed)
+            return await ctx.send(embed=embed)
         if index > len(player.queue) or index < 1:
             embed = discord.Embed(title=get_lan(ctx.author.id, "music_remove_input_over").format(last_queue=len(player.queue)), description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.followup.send(embed=embed)
+            return await ctx.send(embed=embed)
         removed = player.queue.pop(index - 1)  # Account for 0-index.
         embed = discord.Embed(title=get_lan(ctx.author.id, "music_remove_form_playlist").format(remove_music=removed.title), description='', color=COLOR_CODE)
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.followup.send(embed=embed)
+        await ctx.send(embed=embed)
 
-    @commands.slash_command()
+    @commands.hybrid_command(
+        name="shuffle",
+        aliases=['셔플', 'sfl'],
+        description="The music in the playlist comes out randomly from the next song!",
+    )
     @commands.check(create_player)
-    async def shuffle(self, ctx):
+    async def shuffle(self, ctx: Context):
         """ The music in the playlist comes out randomly from the next song! """
         await ctx.defer()
 
@@ -650,7 +690,7 @@ class Music(commands.Cog):
         if not player.is_playing:
             embed = discord.Embed(title=get_lan(ctx.author.id, "music_not_playing"), description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.followup.send(embed=embed)
+            return await ctx.send(embed=embed)
 
         player.set_shuffle(not player.shuffle)
 
@@ -662,12 +702,18 @@ class Music(commands.Cog):
         else:
             embed = discord.Embed(title=get_lan(ctx.author.id, "music_shuffle_off"), description='', color=COLOR_CODE)
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.followup.send(embed=embed)
+        await ctx.send(embed=embed)
 
-    @commands.slash_command()
-    @option("volume", description="볼륨값을 입력하세요", min_value=1, max_value=1000, default=100, required=False)
+    @commands.hybrid_command(
+        name="volume",
+        aliases=['vol', 'v', '볼륨', '음량', 'ㅍ'],
+        description="Changes or display the volume",
+    )
+    @app_commands.describe(
+        volume="볼륨값을 입력하세요"
+    )
     @commands.check(create_player)
-    async def volume(self, ctx, volume: int = None):
+    async def volume(self, ctx: Context, volume: int = None):
         """ Changes or display the volume """
         await ctx.defer()
 
@@ -680,7 +726,7 @@ class Music(commands.Cog):
                 color=COLOR_CODE
             )
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.followup.send(embed=embed)
+            return await ctx.send(embed=embed)
         if volume > 1000 or volume < 1:
             embed = discord.Embed(
                 title=get_lan(ctx.author.id, "music_input_over_vol"),
@@ -688,7 +734,7 @@ class Music(commands.Cog):
                 color=COLOR_CODE
             )
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.followup.send(embed=embed)
+            return await ctx.send(embed=embed)
         # 볼륨 설정
         await player.set_volume(volume)
 
@@ -700,9 +746,13 @@ class Music(commands.Cog):
             color=COLOR_CODE
         )
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.followup.send(embed=embed)
+        await ctx.send(embed=embed)
 
-    @commands.slash_command()
+    @commands.hybrid_command(
+        name="pause",
+        aliases=['resume', '일시정지', '일시중지', '재개'],
+        description="Pause or resume music!",
+    )
     @commands.check(create_player)
     async def pause(self, ctx):
         """ Pause or resume music! """
@@ -712,21 +762,27 @@ class Music(commands.Cog):
         if not player.is_playing:
             embed = discord.Embed(title=get_lan(ctx.author.id, "music_not_playing"), description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.followup.send(embed=embed)
+            return await ctx.send(embed=embed)
         if player.paused:
             await player.set_pause(False)
             embed = discord.Embed(title=get_lan(ctx.author.id, "music_resume"), description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            await ctx.followup.send(embed=embed)
+            await ctx.send(embed=embed)
         else:
             await player.set_pause(True)
             embed = discord.Embed(title=get_lan(ctx.author.id, "music_pause"), description='', color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            await ctx.followup.send(embed=embed)
+            await ctx.send(embed=embed)
 
-    @commands.slash_command()
-    @option("seconds", description="이동할 초를 입력하세요")
-    async def seek(self, ctx, *, seconds: int):
+    @commands.hybrid_command(
+        name="seek",
+        aliases=['탐색'],
+        description="Adjust the music play time in seconds by the number after the command!",
+    )
+    @app_commands.describe(
+        seconds="이동할 초를 입력하세요"
+    )
+    async def seek(self, ctx: Context, *, seconds: int):
         """ Adjust the music play time in seconds by the number after the command! """
         await ctx.defer()
 
@@ -739,13 +795,24 @@ class Music(commands.Cog):
             color=COLOR_CODE
         )
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.followup.send(embed=embed)
+        await ctx.send(embed=embed)
 
-    @commands.slash_command()
+    @commands.hybrid_command(
+        name="chartplay",
+        aliases=['cp', '차트재생', '차트', 'ㅊㅌ', '체'],
+        description="Add the top 10 songs on the selected chart to your playlist!",
+    )
+    @app_commands.describe(
+        chart="Choose chart",
+        count="Enter the number of chart songs to play"
+    )
     @commands.check(create_player)
-    @option("chart", description="Choose chart", choices=["Melon", "Billboard", "Billboard Japan"])
-    @option("count", description="Enter the number of chart songs to play", min_value=1, max_value=100, default=10)
-    async def chartplay(self, ctx, *, chart: str, count: int):
+    @app_commands.choices(chart=[
+        app_commands.Choice(name="Melon", value="Melon"),
+        app_commands.Choice(name="Billboard", value="Billboard"),
+        app_commands.Choice(name="Billboard Japan", value="Billboard Japan")
+    ])
+    async def chartplay(self, ctx: Context, *, chart: str, count: int):
         """ Add the top 10 songs on the selected chart to your playlist! """
         await ctx.defer()
 
@@ -765,21 +832,21 @@ class Music(commands.Cog):
         if chart == "MELON":
             embed = discord.Embed(title=get_lan(ctx.author.id, "music_parsing_melon"), color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            playmsg = await ctx.followup.send(embed=embed)
+            playmsg = await ctx.send(embed=embed)
             title, artist = await get_melon(count)
             embed = discord.Embed(title=get_lan(ctx.author.id, "music_melon_chart_play"), color=COLOR_CODE)
 
         elif chart == "BILLBOARD":
             embed = discord.Embed(title=get_lan(ctx.author.id, "music_parsing_billboard"), color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            playmsg = await ctx.followup.send(embed=embed)
+            playmsg = await ctx.send(embed=embed)
             title, artist = await get_billboard(count)
             embed = discord.Embed(title=get_lan(ctx.author.id, "music_billboard_chart_play"), color=COLOR_CODE)
 
         elif chart == "BILLBOARD JAPAN":
             embed = discord.Embed(title=get_lan(ctx.author.id, "music_parsing_billboardjp"), color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            playmsg = await ctx.followup.send(embed=embed)
+            playmsg = await ctx.send(embed=embed)
             title, artist = await get_billboardjp(count)
             embed = discord.Embed(title=get_lan(ctx.author.id, "music_billboardjp_chart_play"), color=COLOR_CODE)
 
@@ -801,10 +868,16 @@ class Music(commands.Cog):
             if not player.is_playing:
                 await player.play()
 
-    @commands.slash_command()
+    @commands.hybrid_command(
+        name="list",
+        aliases=['li', 'ㅣㅑ', '리스트'],
+        description="Load playlists or play the music from that playlist!",
+    )
+    @app_commands.describe(
+        arg="재생할 플레이리스트의 제목을 입력해 주세요"
+    )
     @commands.check(create_player)
-    @option("arg", description="재생할 플레이리스트의 제목을 입력해 주세요")
-    async def list(self, ctx, *, arg=None):
+    async def list(self, ctx: Context, *, arg=None):
         """ Load playlists or play the music from that playlist! """
         await ctx.defer()
 
@@ -825,7 +898,7 @@ class Music(commands.Cog):
                 color=COLOR_CODE
             )
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            return await ctx.followup.send(embed=embed)
+            return await ctx.send(embed=embed)
 
         if arg is not None:
 
@@ -848,7 +921,7 @@ class Music(commands.Cog):
                     color=COLOR_CODE
                 )
                 embed.set_footer(text=BOT_NAME_TAG_VER)
-                return await ctx.followup.send(embed=embed)
+                return await ctx.send(embed=embed)
 
             player = self.bot.lavalink.player_manager.get(ctx.guild.id)
             music_list = list_str.split('\n')
@@ -861,7 +934,7 @@ class Music(commands.Cog):
             # Play music list
             embed = discord.Embed(title=get_lan(ctx.author.id, "music_list_finding"), color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            playmsg = await ctx.respond(embed=embed)
+            playmsg = await ctx.send(embed=embed)
 
             playmsg, player, thumbnail, playmusic, passmusic = await play_list(player, ctx, music_list, playmsg)
 
@@ -881,16 +954,19 @@ class Music(commands.Cog):
             page = 15
             # 총 리스트 수가 page개 이하일 경우
             if len(files) <= page:
-                embed = discord.Embed(title=get_lan(ctx.author.id, "music_playlist_list"), description="\n".join(files), color=COLOR_CODE)
+                embed = discord.Embed(
+                    title=get_lan(ctx.author.id, "music_playlist_list"),
+                    description="\n".join(files),
+                    color=COLOR_CODE
+                )
                 embed.set_footer(text=BOT_NAME_TAG_VER)
-                return await ctx.followup.send(embed=embed)
+                return await ctx.send(embed=embed)
 
             # 총 페이지수 계산
             allpage = math.ceil(len(files) / page)
+            embeds = []
 
-            pages_list = []
-
-            for i in range(1, allpage+1):
+            for i in range(1, allpage + 1):
                 filelist = ""
                 numb = (page * i)
                 numa = numb - page
@@ -899,20 +975,27 @@ class Music(commands.Cog):
                         filelist = filelist + f"{files[a]}\n"
                     except IndexError:
                         break
-                pages_list.append(
-                    [
-                        discord.Embed(
-                            title=get_lan(ctx.author.id, "music_playlist_list"),
-                            description=filelist, color=COLOR_CODE
-                        ).set_footer(text=f"{get_lan(ctx.author.id, 'music_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
-                    ]
+                
+                embed = discord.Embed(
+                    title=get_lan(ctx.author.id, "music_playlist_list"),
+                    description=filelist,
+                    color=COLOR_CODE
                 )
-            paginator = pages.Paginator(pages=pages_list)
-            await paginator.respond(ctx.interaction, ephemeral=False)
+                embed.set_footer(text=f"{get_lan(ctx.author.id, 'music_page')} {str(i)}/{str(allpage)}\n{BOT_NAME_TAG_VER}")
+                embeds.append(embed)
+            
+            # Create and send paginator
+            paginator = Paginator(embeds)
+            message = await ctx.send(embed=embeds[0], view=paginator)
+            paginator.message = message
 
-    @commands.slash_command()
+    @commands.hybrid_command(
+        name="equalizer",
+        aliases=['eq', 'ㄷㅂ', '이퀄라이저', '이퀄'],
+        description="Send equalizer dashboard",
+    )
     @commands.check(create_player)
-    async def equalizer(self, ctx):
+    async def equalizer(self, ctx: Context):
         """ Send equalizer dashboard """
         await ctx.defer()
 
@@ -920,9 +1003,9 @@ class Music(commands.Cog):
         eq = player.fetch('eq', Equalizer())
 
         selector = f'{" " * 8}^^^'
-        await ctx.respond(f'```diff\n{eq.visualise()}\n{selector}```', view=EqualizerButton(ctx, player, eq, 0))
+        await ctx.send(f'```diff\n{eq.visualise()}\n{selector}```', view=EqualizerButton(ctx, player, eq, 0))
 
 
-def setup(bot):
-    bot.add_cog(Music(bot))
+async def setup(bot):
+    await bot.add_cog(Music(bot))
     LOGGER.info("Music loaded!")

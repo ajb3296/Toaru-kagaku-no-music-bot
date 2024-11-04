@@ -6,37 +6,23 @@ import multiprocessing
 import topgg
 from koreanbots.integrations.discord import DiscordpyKoreanbots
 
-from discord.ext import commands
+from discord.ext import commands, tasks
+from discord.ext.commands import Context
 
 from musicbot.lavalinkstart import start_lavalink, download_lavalink
 # from musicbot.background.update_cache import update_cache_process
 
-from musicbot import LOGGER, TOKEN, EXTENSIONS, BOT_NAME_TAG_VER, KOREANBOT_TOKEN, TOPGG_TOKEN, LAVALINK_AUTO_UPDATE
-
-
-async def status_task():
-    while True:
-        try:
-            await bot.change_presence(
-                activity=discord.Game("/help : 도움말"),
-                status=discord.Status.online,
-            )
-            await asyncio.sleep(10)
-            await bot.change_presence(
-                activity=discord.Game(f"{len(bot.guilds)}개의 서버에서 놀고있어요!"),
-                status=discord.Status.online,
-            )
-            await asyncio.sleep(10)
-        except Exception:
-            pass
-
+from musicbot import LOGGER, TOKEN, OWNERS, EXTENSIONS, BOT_NAME_TAG_VER, KOREANBOT_TOKEN, TOPGG_TOKEN, LAVALINK_AUTO_UPDATE, DEBUG_SERVER
 
 class ToaruKagakuNoMusicBot(commands.Bot):
     def __init__(self):
         super().__init__(
-            intents=intents
+            intents=intents,
+            command_prefix=commands.when_mentioned_or("?"),
+            description="적당히 좋다고 말할 수 있는 봇",
+            help_command=None,
+            owner_ids=set(OWNERS),
         )
-        self.remove_command("help")
 
         # 라바링크 업데이트 확인 및 다운로드
         if LAVALINK_AUTO_UPDATE:
@@ -47,26 +33,40 @@ class ToaruKagakuNoMusicBot(commands.Bot):
         process.start()
         time.sleep(20)
 
-        for i in EXTENSIONS:
-            self.load_extension("musicbot.cogs." + i)
-
-    async def on_ready(self):
+    @tasks.loop(seconds=20)
+    async def status_task(self) -> None:
+        try:
+            await bot.change_presence(
+                activity=discord.Game("/help : 도움말"),
+                status=discord.Status.online,
+            )
+            await asyncio.sleep(10)
+            await bot.change_presence(
+                activity=discord.Game(f"{len(bot.guilds)}개의 서버에서 놀고있어요!"),
+                status=discord.Status.online,
+            )
+        except Exception:
+            pass
+    
+    @status_task.before_loop
+    async def before_status_task(self) -> None:
+        await self.wait_until_ready()
+    
+    async def setup_hook(self):
         LOGGER.info(BOT_NAME_TAG_VER)
-        await self.change_presence(
-            activity=discord.Game("/help : 도움말"),
-            status=discord.Status.online,
-        )
-        bot.loop.create_task(status_task())
-        # bot.loop.create_task(update_cache_process())
 
-    async def on_message(self, message):
+        for i in EXTENSIONS:
+            await self.load_extension("musicbot.cogs." + i)
+        
+        self.status_task.start()
+    
+    async def on_message(self, message: discord.Message):
         if message.author.bot:
             return
         await self.process_commands(message)
 
-
 intents = discord.Intents.default()
-intents.messages = True
+intents.message_content = True
 intents.guilds = True
 
 bot = ToaruKagakuNoMusicBot()

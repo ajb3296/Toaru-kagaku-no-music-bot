@@ -1,17 +1,20 @@
 import discord
 from discord.ext import commands
-from discord.commands import slash_command
+from discord.ext.commands import Context
 
 from musicbot.utils.language import get_lan
 from musicbot import LOGGER, BOT_NAME_TAG_VER, COLOR_CODE, ABOUT_BOT
 
 
-class About(commands.Cog):
+class About(commands.Cog, name="about"):
     def __init__(self, bot):
         self.bot = bot
 
-    @slash_command()
-    async def about(self, ctx):
+    @commands.hybrid_command(
+        name="about",
+        description="Let me tell you about me!",
+    )
+    async def about(self, ctx: Context):
         """ Let me tell you about me! """
         player_server_count = 0
         for i in self.bot.guilds:
@@ -46,9 +49,8 @@ class About(commands.Cog):
             inline=True
         )
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.respond(embed=embed)
+        await ctx.send(embed=embed)
 
-
-def setup(bot):
-    bot.add_cog(About(bot))
-    LOGGER.info('About loaded!')
+async def setup(bot):
+    await bot.add_cog(About(bot))
+    LOGGER.info("About loaded!")

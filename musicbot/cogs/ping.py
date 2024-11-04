@@ -1,36 +1,51 @@
 import time
 import discord
 from discord.ext import commands
-from discord.commands import slash_command
+from discord.ext.commands import Context
+
 from musicbot import LOGGER, BOT_NAME_TAG_VER, COLOR_CODE
 
 
-class Ping(commands.Cog):
+class Ping(commands.Cog, name="ping"):
     def __init__(self, bot):
         self.bot = bot
 
-    @slash_command()
-    async def ping(self, ctx):
-        """ Measure ping speed """
+    @commands.hybrid_command(
+        name="ping",
+        description="Measure ping speed"
+    )
+    async def ping(self, ctx: Context):
+        """Measure ping speed"""
+        await ctx.defer()
+
         latency = self.bot.latency
         before = time.monotonic()
+
         embed = discord.Embed(
             title="**Ping**",
-            description=f'ping_pong: Pong! WebSocket Ping {round(latency * 1000)}ms\n:ping_pong: Pong! Measuring...',
+            description=f'🏓 Pong! WebSocket Ping {round(latency * 1000)}ms\n🏓 Pong! Measuring...',
             color=COLOR_CODE
         )
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        message = await ctx.respond(embed=embed)
+
+        # 첫 메시지 전송
+        message = await ctx.send(embed=embed)
+
+        # 핑 측정
         ping = (time.monotonic() - before) * 1000
+
+        # 수정된 임베드
         embed = discord.Embed(
             title="**Ping**",
-            description=f':ping_pong: Pong! WebSocket Ping {round(latency * 1000)}ms\n:ping_pong: Pong! Message Ping {int(ping)}ms',
+            description=f'🏓 Pong! WebSocket Ping {round(latency * 1000)}ms\n🏓 Pong! Message Ping {int(ping)}ms',
             color=COLOR_CODE
         )
         embed.set_footer(text=BOT_NAME_TAG_VER)
-        await message.edit_original_message(embed=embed)
+
+        # 메시지 수정
+        await message.edit(embed=embed)
 
 
-def setup(bot):
-    bot.add_cog(Ping(bot))
+async def setup(bot):
+    await bot.add_cog(Ping(bot))
     LOGGER.info('Ping loaded!')

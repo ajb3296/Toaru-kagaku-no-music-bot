@@ -1,19 +1,31 @@
 import discord
-from discord import option
 from discord.ext import commands
-from discord.commands import slash_command
+from discord import app_commands
+from discord.ext.commands import Context
 
 from musicbot.utils.language import get_lan
 from musicbot import LOGGER, BOT_NAME_TAG_VER, COLOR_CODE, OWNERS, EXTENSIONS
 
 
-class Help(commands.Cog):
+class Help(commands.Cog, name="help"):
     def __init__(self, bot):
         self.bot = bot
 
-    @slash_command()
-    @option("help_option", description="Choose help menu", choices=["INFO", "GENERAL", "MUSIC", "CHART"])
-    async def help(self, ctx, *, help_option: str):
+    @commands.hybrid_command(
+        name="help",
+        aliases=['도움', '도움말'],
+        description="Send help",
+    )
+    @app_commands.describe(
+        help_option="Choose option"
+    )
+    @app_commands.choices(help_option=[
+        app_commands.Choice(name="INFO", value="INFO"),
+        app_commands.Choice(name="GENERAL", value="GENERAL"),
+        app_commands.Choice(name="MUSIC", value="MUSIC"),
+        app_commands.Choice(name="CHART", value="CHART")
+    ])
+    async def help(self, ctx: Context, *, help_option = None):
         """ Send help """
         if help_option is not None:
             help_option = help_option.upper()
@@ -69,7 +81,7 @@ class Help(commands.Cog):
                 )
 
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            await ctx.respond(embed=embed)
+            await ctx.send(embed=embed)
 
         elif help_option == "MUSIC" or help_option == "음악":
             if "music" in EXTENSIONS:
@@ -144,7 +156,7 @@ class Help(commands.Cog):
                     inline=False
                 )
                 embed.set_footer(text=BOT_NAME_TAG_VER)
-                await ctx.respond(embed=embed)
+                await ctx.send(embed=embed)
 
         elif help_option == "CHART" or help_option == "차트재생" or help_option == "차트":
             embed = discord.Embed(
@@ -175,7 +187,7 @@ class Help(commands.Cog):
                     inline=False
                 )
                 embed.set_footer(text=BOT_NAME_TAG_VER)
-                await ctx.respond(embed=embed)
+                await ctx.send(embed=embed)
 
         else:
             embed = discord.Embed(
@@ -210,9 +222,9 @@ class Help(commands.Cog):
                     inline=False
                 )
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            await ctx.respond(embed=embed)
+            await ctx.send(embed=embed)
 
 
-def setup(bot):
-    bot.add_cog(Help(bot))
+async def setup(bot):
+    await bot.add_cog(Help(bot))
     LOGGER.info('Help loaded!')

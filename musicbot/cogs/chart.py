@@ -1,20 +1,30 @@
 import discord
-from discord import option
 from discord.ext import commands
-from discord.commands import slash_command
+from discord import app_commands
+from discord.ext.commands import Context
 
 from musicbot.utils.language import get_lan
 from musicbot.utils.get_chart import get_melon, get_billboard, get_billboardjp
 from musicbot import LOGGER, BOT_NAME_TAG_VER, COLOR_CODE
 
 
-class Chart(commands.Cog):
+class Chart(commands.Cog, name="chart"):
     def __init__(self, bot):
         self.bot = bot
 
-    @slash_command()
-    @option("chart", description="Choose chart", choices=["Melon", "Billboard", "Billboard Japan"])
-    async def chart(self, ctx, *, chart: str):
+    @commands.hybrid_command(
+        name="chart",
+        description="I will tell you from the 1st to the 10th place on the chart site",
+    )
+    @app_commands.describe(
+        chart="Choose chart"
+    )
+    @app_commands.choices(chart=[
+        app_commands.Choice(name="Melon", value="Melon"),
+        app_commands.Choice(name="Billboard", value="Billboard"),
+        app_commands.Choice(name="Billboard Japan", value="Billboard Japan")
+    ])
+    async def chart(self, ctx: Context, *, chart: str):
         """ I will tell you from the 1st to the 10th place on the chart site """
         await ctx.defer()
 
@@ -39,9 +49,8 @@ class Chart(commands.Cog):
                 for i in range(0, 10):
                     embed.add_field(name=str(i + 1) + ".", value=f"{artist[i]} - {title[i]}", inline=False)
             embed.set_footer(text=BOT_NAME_TAG_VER)
-            await ctx.followup.send(embed=embed)
+            await ctx.send(embed=embed)
 
-
-def setup(bot):
-    bot.add_cog(Chart(bot))
-    LOGGER.info('Chart loaded!')
+async def setup(bot):
+    await bot.add_cog(Chart(bot))
+    LOGGER.info("Chart loaded!")
