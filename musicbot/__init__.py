@@ -62,7 +62,7 @@ for file in os.listdir("musicbot/cogs"):
 BOT_NAME_TAG_VER = "%s%s | %s" % (BOT_NAME, BOT_TAG, BOT_VER)
 
 
-make_application_yml(HOST, PORT, PSW, LOGGER, LAVALINK_PLUGINS)
+make_application_yml(HOST, PORT, PSW, LOGGER, LAVALINK_PLUGINS, USING_IPV6_TUNNELING, IP_BLOCKS, EXCLUDE_IPS, STRATEGY)
 
 
 # DB 생성
