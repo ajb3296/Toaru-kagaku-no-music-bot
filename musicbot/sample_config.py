@@ -15,11 +15,12 @@ class Config(object):
     BOT_ID = 123456789  # 봇 아이디
     ABOUT_BOT = ""  # 봇 정보
     COLOR_CODE = 0xc68e6e  # 색상코드
+    START_WITH_LAVALINK = True  # 라바링크 사용 여부
 
     # Music
     HOST = "localhost"
     PSW = ""  # 컴퓨터 비밀번호
-    REGION = "ko"  # 리전
+    REGION = "US"  # 리전
     PORT = 2333
     LAVALINK_AUTO_UPDATE = True
     LAVALINK_PLUGINS = {
@@ -37,6 +38,11 @@ class Config(object):
     SQL_PASSWORD = ""
     SQL_DB = "tkbot"
 
+    # IPV6
+    USING_IPV6_TUNNELING = False
+    IP_BLOCKS = []
+    EXCLUDE_IPS = []
+    STRATEGY = "RotateOnBan" # RotateOnBan | LoadBalance | NanoSwitch | RotatingNanoSwitch
 
 class Production(Config):
     LOGGER = False

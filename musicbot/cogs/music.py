@@ -26,6 +26,7 @@ from musicbot.utils.database import Database
 from musicbot.utils.paginator import Paginator
 
 url_rx = re.compile(r'https?://(?:www\.)?.+')
+is_youtube = re.compile(r'(youtube.com|youtu.be)')
 
 class LavalinkVoiceClient(discord.VoiceClient):
     """
@@ -262,6 +263,7 @@ class Music(commands.Cog, name="music"):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         return await ctx.send(embed=embed)
 
+    '''
     @commands.hybrid_command(
         name="play",
         aliases=['p', '재생', 'ㅔ', 'add'],
@@ -355,22 +357,31 @@ class Music(commands.Cog, name="music"):
         # the current track.
         if not player.is_playing:
             await player.play()
+        '''
 
     @commands.hybrid_command(
-        name="scplay",
+        name="play",
         aliases=['sp', '사클재생', '네', 'addsc'],
         description="Searches and plays a song from a given query.",
     )
+    # @app_commands.describe(
+    #     query="SoundCloud에서 찾고싶은 음악의 제목이나 링크를 입력하세요"
+    # )
     @app_commands.describe(
-        query="SoundCloud에서 찾고싶은 음악의 제목이나 링크를 입력하세요"
+        query="찾고싶은 음악의 제목이나 링크를 입력하세요"
     )
     @commands.check(create_player)
-    async def scplay(self, ctx: Context, *, query: str):
+    async def play(self, ctx: Context, *, query: str):
         """ Searches and plays a song from a given query. """
         await ctx.defer()
 
         # Get the player for this guild from cache.
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+
+        if is_youtube.search(query):
+            embed = discord.Embed(title="Currently youtube playback is not supported", description='', color=COLOR_CODE)
+            embed.set_footer(text=BOT_NAME_TAG_VER)
+            return await ctx.send(embed=embed)
 
         # Remove leading and trailing <>. <> may be used to suppress embedding links in Discord.
         query = query.strip('<>')

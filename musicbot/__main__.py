@@ -11,7 +11,7 @@ from discord.ext import commands, tasks
 from musicbot.lavalinkstart import start_lavalink, download_lavalink
 # from musicbot.background.update_cache import update_cache_process
 
-from musicbot import LOGGER, TOKEN, OWNERS, EXTENSIONS, BOT_NAME_TAG_VER, KOREANBOT_TOKEN, TOPGG_TOKEN, LAVALINK_AUTO_UPDATE
+from musicbot import LOGGER, TOKEN, OWNERS, EXTENSIONS, BOT_NAME_TAG_VER, KOREANBOT_TOKEN, TOPGG_TOKEN, LAVALINK_AUTO_UPDATE, START_WITH_LAVALINK
 
 class ToaruKagakuNoMusicBot(commands.Bot):
     def __init__(self):
@@ -23,14 +23,16 @@ class ToaruKagakuNoMusicBot(commands.Bot):
             owner_ids=set(OWNERS),
         )
 
-        # 라바링크 업데이트 확인 및 다운로드
-        if LAVALINK_AUTO_UPDATE:
-            download_lavalink()
+        # 라바링크 시작
+        if START_WITH_LAVALINK:
+            # 라바링크 업데이트 확인 및 다운로드
+            if LAVALINK_AUTO_UPDATE:
+                download_lavalink()
 
-        LOGGER.info("Lavalink starting...")
-        process = multiprocessing.Process(target=start_lavalink)
-        process.start()
-        time.sleep(20)
+            LOGGER.info("Lavalink starting...")
+            process = multiprocessing.Process(target=start_lavalink)
+            process.start()
+            time.sleep(20)
 
     @tasks.loop(seconds=20)
     async def status_task(self) -> None:
@@ -65,7 +67,7 @@ class ToaruKagakuNoMusicBot(commands.Bot):
         await self.process_commands(message)
 
 intents = discord.Intents.default()
-intents.message_content = True
+# intents.message_content = True
 intents.guilds = True
 
 bot = ToaruKagakuNoMusicBot()

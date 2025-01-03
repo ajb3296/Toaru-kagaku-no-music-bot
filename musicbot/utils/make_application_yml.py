@@ -2,7 +2,7 @@ import json
 import requests
 from logging import Logger
 
-def make_application_yml(HOST: str, PORT: str, PSW: str, LOGGER: Logger, LAVALINK_PLUGINS: dict) -> None:
+def make_application_yml(HOST: str, PORT: str, PSW: str, LOGGER: Logger, LAVALINK_PLUGINS: dict, USING_IPV6_TUNNELING: bool, IP_BLOCKS: list[str], EXCLUDE_IPS: list[str], STRATEGY: str) -> None:
     print()
     LOGGER.info("Creating application.yml file...")
 
@@ -18,22 +18,34 @@ def make_application_yml(HOST: str, PORT: str, PSW: str, LOGGER: Logger, LAVALIN
     for key, value in plugin_tags.items():
         plugin_str += f"    - dependency: \"{key}:{value}\"\n"
         plugin_str += "      snapshot: false\n"
-    
+
     print(plugin_str)
     print()
+
+    ipv6_config = ""
+    if USING_IPV6_TUNNELING:
+        ipv6_config = f"""
+    ratelimit:
+      ipBlocks: {str(IP_BLOCKS)} # IP 블록 목록
+      excludedIps: {str(EXCLUDE_IPS)} # lavalink의 사용에서 명시적으로 제외되어야 하는 ip들
+      strategy: "{STRATEGY}" # RotateOnBan | LoadBalance | NanoSwitch | RotatingNanoSwitch
+      searchTriggersFail: true # 429 코드가 발생하는 IP를 실패로 트리거해야 하는지 여부
+      retryLimit: -1 # -1 = 라바플레이어 기본값 | 0 = 무제한 | >0 = 재시도 최대값"""
 
     f = open("application.yml", 'w')
     f.write(f"""server: # REST and WS server
   port: {PORT}
   address: {HOST}
 http2:
-    enabled: false # Whether to enable HTTP/2 support
+    enabled: true # Whether to enable HTTP/2 support
 plugins:
   youtube:
     enabled: true # Whether this source can be used.
     allowSearch: true # Whether "ytsearch:" and "ytmsearch:" can be used.
     allowDirectVideoIds: true # Whether just video IDs can match. If false, only complete URLs will be loaded.
     allowDirectPlaylistIds: true # Whether just playlist IDs can match. If false, only complete URLs will be loaded.
+    # oauth:
+      # enabled: true
     # The clients to use for track loading. See below for a list of valid clients.
     # Clients are queried in the order they are given (so the first client is queried first and so on...)
     clients:
@@ -41,8 +53,10 @@ plugins:
       - WEB
       - WEBEMBEDDED
       - ANDROID_MUSIC
-      - TVHTML5EMBEDDED
+      - ANDROID_VR
       - IOS
+      - TV
+      - TVHTML5EMBEDDED
       - MEDIA_CONNECT
     # You can configure individual clients with the following.
     # Any options or clients left unspecified will use their default values,
@@ -98,12 +112,9 @@ lavalink:
     youtubeSearchEnabled: true
     soundcloudSearchEnabled: true
     gc-warnings: true
-    #ratelimit:
-      #ipBlocks: ["1.0.0.0/8", "..."] # IP 차단 목록
-      #excludedIps: ["...", "..."] # lavalink의 사용에서 명시적으로 제외되어야 하는 ip들
-      #strategy: "RotateOnBan" # RotateOnBan | LoadBalance | NanoSwitch | RotatingNanoSwitch
-      #searchTriggersFail: true # 429 코드가 발생하는 IP를 실패로 트리거해야 하는지 여부
-      #retryLimit: -1 # -1 = 라바플레이어 기본값 | 0 = 무제한 | >0 = 재시도 최대값
+
+{ipv6_config}
+
     #youtubeConfig: # YouTube의 모든 연령 제한을 피하기 위해 필요하지만 일부 제한된 동영상은 연령 제한 없이도 재생할 수 있습니다.
       #email: "" # 구글 계정 이메일
       #password: "" # 구글 계정 비밀번호
@@ -150,3 +161,19 @@ logging:
 
     f.close()
 
+"""
+
+sudo ip link set he-ipv6 down
+sudo ip tunnel del he-ipv6
+
+sudo ip tunnel add he-ipv6 mode sit remote 74.82.46.6 local 192.168.50.100 ttl 255
+sudo ip link set he-ipv6 up
+sudo ip addr add 2001:470:fc5e::2/48 dev he-ipv6
+sudo ip route add ::/0 via 2001:470:fc5e::1 dev he-ipv6
+sudo ip -6 route replace local 2001:470:fc5e::/48 dev lo
+
+"""
+
+"""
+ping6 -I 2001:470:fc5e::4 google.com
+"""
