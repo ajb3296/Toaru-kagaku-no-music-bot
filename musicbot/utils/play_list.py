@@ -11,8 +11,8 @@ url_rx = re.compile(r'https?://(?:www\.)?.+')
 async def play_list(player, ctx, musics: list, playmsg):
     """ 음악 리스트의 음악 재생 """
     trackcount = 0
-    playmusic = get_lan(ctx.author.id, "music_none")
-    passmusic = get_lan(ctx.author.id, "music_none")
+    playmusic = get_lan(ctx.author.id, "없음")
+    passmusic = get_lan(ctx.author.id, "없음")
     loading_dot_count = 0
     thumbnail = None
 
@@ -26,7 +26,7 @@ async def play_list(player, ctx, musics: list, playmsg):
             loading_dot = loading_dot + "."
 
         embed = discord.Embed(
-            title=get_lan(ctx.author.id, "music_adding_music").format(loading_dot=loading_dot),
+            title=get_lan(ctx.author.id, "음악 추가중{loading_dot}").format(loading_dot=loading_dot),
             description=music,
             color=COLOR_CODE
         )
@@ -43,7 +43,7 @@ async def play_list(player, ctx, musics: list, playmsg):
                 if nofind < 3:
                     nofind += 1
                 elif nofind == 3:
-                    if passmusic == get_lan(ctx.author.id, "music_none"):
+                    if passmusic == get_lan(ctx.author.id, "없음"):
                         passmusic = music
                     else:
                         passmusic = f"{passmusic}\n{music}"
@@ -55,7 +55,7 @@ async def play_list(player, ctx, musics: list, playmsg):
         # Music statistical
         Statistics().up(track.identifier)
 
-        if playmusic == get_lan(ctx.author.id, "music_none"):
+        if playmusic == get_lan(ctx.author.id, "없음"):
             playmusic = music
         else:
             playmusic = f"{playmusic}\n{music}"

@@ -32,19 +32,19 @@ class About(commands.Cog, name="about"):
             players += stats.players
             playing_players += stats.playing_players
 
-        embed = discord.Embed(title=get_lan(ctx.author.id, "about_bot_info"), description=ABOUT_BOT, color=COLOR_CODE)
+        embed = discord.Embed(title=get_lan(ctx.author.id, "**봇에 대한 정보**"), description=ABOUT_BOT, color=COLOR_CODE)
         embed.add_field(
             name="Github",
             value="[Toaru-kagaku-no-music-bot](https://github.com/ajb3296/Toaru-kagaku-no-music-bot)",
             inline=False
         )
         embed.add_field(
-            name=get_lan(ctx.author.id, "about_guild_count"),
+            name=get_lan(ctx.author.id, "서버 수"),
             value=str(len(self.bot.guilds)),
             inline=True
         )
         embed.add_field(
-            name=get_lan(ctx.author.id, "about_number_of_music_playback_servers"),
+            name=get_lan(ctx.author.id, "음악 재생 서버 수"),
             value=f"lavalink: {players}({playing_players} playing)\nvoice channel count: {player_server_count} playing",
             inline=True
         )

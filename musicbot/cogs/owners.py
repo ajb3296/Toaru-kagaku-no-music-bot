@@ -30,22 +30,22 @@ class Owners(commands.Cog, name="owners"):
     @app_commands.guilds(*DEBUG_SERVER)
     async def dev_help(self, ctx: Context):
         """ 개발자용 도움말 """
-        embed = discord.Embed(title=get_lan(ctx.author.id, "help_dev"),
-                              description=get_lan(ctx.author.id, "help_dev_description"), color=COLOR_CODE)
-        embed.add_field(name=get_lan(ctx.author.id, "help_dev_serverlist_command"),
-                        value=get_lan(ctx.author.id, "help_dev_serverlist_info"), inline=False)
-        embed.add_field(name=get_lan(ctx.author.id, "help_dev_modules_command"),
-                        value=get_lan(ctx.author.id, "help_dev_modules_info"), inline=False)
-        embed.add_field(name=get_lan(ctx.author.id, "help_dev_load_command"),
-                        value=get_lan(ctx.author.id, "help_dev_load_info"), inline=False)
-        embed.add_field(name=get_lan(ctx.author.id, "help_dev_unload_command"),
-                        value=get_lan(ctx.author.id, "help_dev_unload_info"), inline=False)
-        embed.add_field(name=get_lan(ctx.author.id, "help_dev_reload_command"),
-                        value=get_lan(ctx.author.id, "help_dev_reload_info"), inline=False)
-        embed.add_field(name=get_lan(ctx.author.id, "help_dev_serverinfo_command"),
-                        value=get_lan(ctx.author.id, "help_dev_serverinfo_info"), inline=False)
-        embed.add_field(name=get_lan(ctx.author.id, "help_dev_broadcast_command"),
-                        value=get_lan(ctx.author.id, "help_dev_broadcast_info"), inline=False)
+        embed = discord.Embed(title=get_lan(ctx.author.id, "**개발자 명령어**"),
+                              description=get_lan(ctx.author.id, "명령어 뒷쪽의 모든 괄호는 빼주세요!"), color=COLOR_CODE)
+        embed.add_field(name=get_lan(ctx.author.id, "`/serverlist`"),
+                        value=get_lan(ctx.author.id, ">>> 제가 들어가 있는 모든 서버 리스트를 출력해요!"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "`/module_list`"),
+                        value=get_lan(ctx.author.id, ">>> 모든 모듈의 이름을 알려줘요!"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "`/load` [*모듈명*]"),
+                        value=get_lan(ctx.author.id, ">>> 모듈을 로드해요!"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "`/unload` [*모듈명*]"),
+                        value=get_lan(ctx.author.id, ">>> 모듈을 언로드해요!"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "`/reload` [*모듈명*]"),
+                        value=get_lan(ctx.author.id, ">>> 모듈을 리로드해요!"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "`/serverinfo`"),
+                        value=get_lan(ctx.author.id, ">>> 봇 서버의 사양을 알려줘요!"), inline=False)
+        embed.add_field(name=get_lan(ctx.author.id, "`/broadcast` [*공지 내용*]"),
+                        value=get_lan(ctx.author.id, ">>> 공지를 모든 서버에 전송해요!"), inline=False)
         embed.set_footer(text=BOT_NAME_TAG_VER)
         await ctx.send(embed=embed)
 
@@ -68,8 +68,8 @@ class Owners(commands.Cog, name="owners"):
             LOGGER.info(f"로드 성공!\n모듈: {module}")
 
             embed = discord.Embed(
-                title=get_lan(ctx.author.id, "owners_load_success"),
-                description=get_lan(ctx.author.id, "owners_module").format(module=module),
+                title=get_lan(ctx.author.id, "로드 성공!"),
+                description=get_lan(ctx.author.id, "모듈 : {module}").format(module=module),
                 color=self.color
             )
 
@@ -81,8 +81,8 @@ class Owners(commands.Cog, name="owners"):
         except Exception as error:
             LOGGER.error(f"로드 실패!\n에러: {error}")
             embed = discord.Embed(
-                title=get_lan(ctx.author.id, "owners_load_fail"),
-                description=get_lan(ctx.author.id, "owners_error").format(error=error),
+                title=get_lan(ctx.author.id, "로드 실패!"),
+                description=get_lan(ctx.author.id, "에러 : {error}").format(error=error),
                 color=self.error_color
             )
 
@@ -105,14 +105,14 @@ class Owners(commands.Cog, name="owners"):
             self.bot.reload_extension("musicbot.cogs." + module)
             LOGGER.info(f"리로드 성공!\n모듈: {module}")
             embed = discord.Embed(
-                title=get_lan(ctx.author.id, "owners_reload_success"),
-                description=get_lan(ctx.author.id, "owners_module").format(module=module),
+                title=get_lan(ctx.author.id, "리로드 성공!"),
+                description=get_lan(ctx.author.id, "모듈 : {module}").format(module=module),
                 color=self.color
             )
         except Exception as error:
             LOGGER.error(f"리로드 실패!\n에러: {error}")
             embed = discord.Embed(
-                title=get_lan(ctx.author.id, "owners_reload_fail"),
+                title=get_lan(ctx.author.id, "리로드 실패!"),
                 description=f'에러: {error}',
                 color=self.error_color
             )
@@ -137,8 +137,8 @@ class Owners(commands.Cog, name="owners"):
             self.bot.unload_extension("musicbot.cogs." + module)
             LOGGER.info(f"언로드 성공!\n모듈: {module}")
             embed = discord.Embed(
-                title=get_lan(ctx.author.id, "owners_unload_success"),
-                description=get_lan(ctx.author.id, "owners_module").format(module=module),
+                title=get_lan(ctx.author.id, "언로드 성공!"),
+                description=get_lan(ctx.author.id, "모듈 : {module}").format(module=module),
                 color=self.color
             )
             if module in EXTENSIONS:
@@ -146,7 +146,7 @@ class Owners(commands.Cog, name="owners"):
         except Exception as error:
             LOGGER.error(f"언로드 실패!\n에러: {error}")
             embed = discord.Embed(
-                title=get_lan(ctx.author.id, "owners_unload_fail"),
+                title=get_lan(ctx.author.id, "언로드 실패!"),
                 description=f'에러: {error}',
                 color=self.error_color
             )
@@ -211,15 +211,15 @@ class Owners(commands.Cog, name="owners"):
         # 페이지 지정값이 없고, 총 서버수가 10 이하일 경우
         if len(self.bot.guilds) <= page:
             embed = discord.Embed(
-                title=get_lan(ctx.author.id, "owners_server_list_title").format(BOT_NAME=self.bot.user.name),
-                description=get_lan(ctx.author.id, "owners_server_list_description").format(
+                title=get_lan(ctx.author.id, "{BOT_NAME} (이)가 들어가 있는 서버목록").format(BOT_NAME=self.bot.user.name),
+                description=get_lan(ctx.author.id, "**{server_count}개**의 서버, **{members_count}명**의 유저").format(
                     server_count=len(self.bot.guilds),
                     members_count=len(self.bot.users)),
                 color=COLOR_CODE
             )
             srvr = str()
             for i in self.bot.guilds:
-                srvr = srvr + get_lan(ctx.author.id, "owners_server_list_info").format(
+                srvr = srvr + get_lan(ctx.author.id, "**{server_name}** - **{server_members_count}명**\n").format(
                     server_name=i,
                     server_members_count=i.member_count
                 )
@@ -245,7 +245,7 @@ class Owners(commands.Cog, name="owners"):
             numa = numb - page
             for a in range(numa, numb):
                 try:
-                    srvr += get_lan(ctx.author.id, "owners_server_list_info").format(
+                    srvr += get_lan(ctx.author.id, "**{server_name}** - **{server_members_count}명**\n").format(
                         server_name=guilds[a][0],
                         server_members_count=guilds[a][1]
                     )
@@ -253,7 +253,7 @@ class Owners(commands.Cog, name="owners"):
                     break
 
             embed = discord.Embed(
-                title=get_lan(ctx.author.id, "owners_server_list_title").format(BOT_NAME=self.bot.user.name),
+                title=get_lan(ctx.author.id, "{BOT_NAME} (이)가 들어가 있는 서버목록").format(BOT_NAME=self.bot.user.name),
                 description=get_lan(ctx.author.id, "owners_server_list_description2").format(
                     server_count=len(self.bot.guilds),
                     members_count=len(self.bot.users),

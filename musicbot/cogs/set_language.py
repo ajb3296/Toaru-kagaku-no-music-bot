@@ -37,12 +37,12 @@ class Language(commands.Cog, name="language"):
                 if file.endswith(".json"):
                     files = files + file.replace(".json", "") + "\n"
 
-            embed = discord.Embed(title=get_lan(ctx.author.id, "set_language_pack_list"), description=files, color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "아래 언어팩 중 하나를 선택해 주세요"), description=files, color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.send(embed=embed)
 
         if not os.path.exists(f"musicbot/languages/{lang}.json"):
-            embed = discord.Embed(title=get_lan(ctx.author.id, "set_language_pack_not_exist"), color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "해당 언어팩은 존재하지 않아요!"), color=COLOR_CODE)
             embed.set_footer(text=BOT_NAME_TAG_VER)
             return await ctx.send(embed=embed)
 
@@ -54,11 +54,11 @@ class Language(commands.Cog, name="language"):
         if a is None:
             # add user data
             cur.execute(f"INSERT INTO {self.userdata_table} VALUES(%s, %s)", (str(ctx.author.id), lang))
-            embed = discord.Embed(title=get_lan(ctx.author.id, "set_language_complete"), description=f"{lang}", color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "언어팩 설정 완료!"), description=f"{lang}", color=COLOR_CODE)
         else:
             # modify user data
             cur.execute(f"UPDATE {self.userdata_table} SET language=%s WHERE id=%s", (lang, str(ctx.author.id)))
-            embed = discord.Embed(title=get_lan(ctx.author.id, "set_language_complete"), description=f"{a[1]} --> {lang}", color=COLOR_CODE)
+            embed = discord.Embed(title=get_lan(ctx.author.id, "언어팩 설정 완료!"), description=f"{a[1]} --> {lang}", color=COLOR_CODE)
         con.commit()
         con.close()
 

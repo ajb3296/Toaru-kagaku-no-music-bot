@@ -27,8 +27,8 @@ class Other(commands.Cog, name="other"):
         """ Send you a link for invite me """
         link = f'https://discord.com/api/oauth2/authorize?client_id={self.bot.user.id}&permissions=414501391424&scope=bot%20applications.commands'
         embed = discord.Embed(
-            title=get_lan(ctx.author.id, "other_invite_title"),
-            description=get_lan(ctx.author.id, "other_invite_description").format(link=link),
+            title=get_lan(ctx.author.id, "**절 당신이 관리하는 서버에 초대해주시다니!**"),
+            description=get_lan(ctx.author.id, "정말 감사합니다! [여기]({link})를 눌러 서버에 초대해주세요!").format(link=link),
             color=COLOR_CODE
         )
         embed.set_footer(text=BOT_NAME_TAG_VER)
@@ -72,7 +72,7 @@ class Other(commands.Cog, name="other"):
                 latest_lavalink_tag = i['tag_name']
                 break
 
-        embed = discord.Embed(title=get_lan(ctx.author.id, "other_soft_ver"), color=COLOR_CODE)
+        embed = discord.Embed(title=get_lan(ctx.author.id, "**관련 모듈 버전**"), color=COLOR_CODE)
         embed.add_field(name="Python Ver", value=f"{platform.python_implementation()} {platform.python_version()}",
                         inline=False)
         embed.add_field(name="Pycord.py Ver", value=f"{discord.__version__} (Latest: {latest_pycord_tag})",
@@ -91,7 +91,7 @@ class Other(commands.Cog, name="other"):
     async def uptime(self, ctx: Context):
         """ Let me tell you the server's uptime! """
         uptime_string = str(datetime.timedelta(seconds=int(time.time() - psutil.boot_time())))
-        embed = discord.Embed(title=get_lan(ctx.author.id, "other_uptime"),
+        embed = discord.Embed(title=get_lan(ctx.author.id, "**업타임**"),
                               description=f"```{uptime_string}```",
                               color=COLOR_CODE)
         embed.set_footer(text=BOT_NAME_TAG_VER)
