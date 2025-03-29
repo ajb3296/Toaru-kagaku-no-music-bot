@@ -96,7 +96,7 @@ class Help(commands.Cog, name="help"):
                     inline=False
                 )
                 embed.add_field(
-                    name=get_lan(ctx.author.id, ":arrow_forward: | `/play` [*음악 이름 혹은 Youtube 링크*]"),
+                    name=get_lan(ctx.author.id, ":arrow_forward: | `/play` [*음악 이름 혹은 링크*]"),
                     value=get_lan(ctx.author.id, ">>> 음악을 재생해요!"),
                     inline=False
                 )
@@ -174,16 +174,6 @@ class Help(commands.Cog, name="help"):
                 embed.add_field(
                     name=get_lan(ctx.author.id, ":arrow_forward: | `/chartplay` [*차트 사이트*] [재생할 음악 개수]"),
                     value=get_lan(ctx.author.id, ">>> 선택하신 차트사이트에서 1위에서 [재생할 음악 개수]위 까지의 곡을 재생목록에 추가합니다! [재생할 음악 개수]의 기본값은 10 입니다!"),
-                    inline=False
-                )
-                embed.add_field(
-                    name=get_lan(ctx.author.id, ":page_with_curl: | `/list`"),
-                    value=get_lan(ctx.author.id, ">>> 재생목록들을 불러와요!"),
-                    inline=False
-                )
-                embed.add_field(
-                    name=get_lan(ctx.author.id, ":page_with_curl: | `/list` (재생목록 이름)"),
-                    value=get_lan(ctx.author.id, ">>> 해당 재생목록의 음악들을 재생해요!\n애니메이션 OP/ED 가 중점으로 추가돼있어요!"),
                     inline=False
                 )
                 embed.set_footer(text=BOT_NAME_TAG_VER)

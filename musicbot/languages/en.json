@@ -33,7 +33,7 @@
     "소괄호 () 은(는) 옵션인 경우 쓰입니다. 명령어 뒷쪽의 모든 괄호는 빼주세요!": "Parentheses () are used when optional. Remove all parentheses after the command!",
     ":white_check_mark: | `/connect`": ":white_check_mark: | `/connect`",
     ">>> 음성 채널에 접속해요!": ">>> Connect to voice channel!",
-    ":arrow_forward: | `/play` [*음악 이름 혹은 Youtube 링크*]": ":arrow_forward: | `/play` [*Music name or Youtube link*]",
+    ":arrow_forward: | `/play` [*음악 이름 혹은 링크*]": ":arrow_forward: | `/play` [*Music name or link*]",
     ">>> 음악을 재생해요!": ">>> Play the music!",
     ":x: | `/disconnect`": ":x: | `/disconnect`",
     ">>> 음성 채널을 나갑니다.": ">>> Disconnect from voice channel.",

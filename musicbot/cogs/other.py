@@ -75,7 +75,7 @@ class Other(commands.Cog, name="other"):
         embed = discord.Embed(title=get_lan(ctx.author.id, "**관련 모듈 버전**"), color=COLOR_CODE)
         embed.add_field(name="Python Ver", value=f"{platform.python_implementation()} {platform.python_version()}",
                         inline=False)
-        embed.add_field(name="Pycord.py Ver", value=f"{discord.__version__} (Latest: {latest_pycord_tag})",
+        embed.add_field(name="discord.py Ver", value=f"{discord.__version__} (Latest: {latest_pycord_tag})",
                         inline=False)
         embed.add_field(name="Lavalink.py Ver", value=f"{lavalink.__version__} (Latest: {latest_lavalink_py_tag})",
                         inline=False)
