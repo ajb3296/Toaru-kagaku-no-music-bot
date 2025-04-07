@@ -58,6 +58,8 @@ class ToaruKagakuNoMusicBot(commands.Bot):
 
         for i in EXTENSIONS:
             await self.load_extension("musicbot.cogs." + i)
+
+        # await self.tree.sync()
         
         self.status_task.start()
     

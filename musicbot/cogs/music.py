@@ -263,7 +263,7 @@ class Music(commands.Cog, name="music"):
         embed.set_footer(text=BOT_NAME_TAG_VER)
         return await ctx.send(embed=embed)
 
-    '''
+
     @commands.hybrid_command(
         name="play",
         aliases=['p', '재생', 'ㅔ', 'add'],
@@ -357,21 +357,21 @@ class Music(commands.Cog, name="music"):
         # the current track.
         if not player.is_playing:
             await player.play()
-        '''
+
 
     @commands.hybrid_command(
-        name="play",
+        name="scplay",
         aliases=['sp', '사클재생', '네', 'addsc'],
         description="Searches and plays a song from a given query.",
     )
-    # @app_commands.describe(
-    #     query="SoundCloud에서 찾고싶은 음악의 제목이나 링크를 입력하세요"
-    # )
     @app_commands.describe(
-        query="찾고싶은 음악의 제목이나 링크를 입력하세요"
+        query="SoundCloud에서 찾고싶은 음악의 제목이나 링크를 입력하세요"
     )
+    # @app_commands.describe(
+        # query="찾고싶은 음악의 제목이나 링크를 입력하세요"
+    # )
     @commands.check(create_player)
-    async def play(self, ctx: Context, *, query: str):
+    async def scplay(self, ctx: Context, *, query: str):
         """ Searches and plays a song from a given query. """
         await ctx.defer()
 
