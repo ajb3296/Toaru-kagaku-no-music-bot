@@ -1,0 +1,25 @@
+services:
+  tkbot:
+    # local
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tkbot
+    environment:
+      SQL_HOST: ${SQL_HOST:-mysql}
+    env_file:
+      - .env
+
+  mysql:
+    image: mysql:8.0.42-debian
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tkbot
+      MYSQL_USER: tkbot
+      MYSQL_PASSWORD: tkbot_since_20200525
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

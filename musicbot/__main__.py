@@ -18,7 +18,7 @@ class ToaruKagakuNoMusicBot(commands.Bot):
         super().__init__(
             intents=intents,
             command_prefix=commands.when_mentioned_or("?"),
-            description="적당히 좋다고 말할 수 있는 봇",
+            description="간편한 음악 봇",
             help_command=None,
             owner_ids=set(OWNERS),
         )
@@ -59,7 +59,7 @@ class ToaruKagakuNoMusicBot(commands.Bot):
         for i in EXTENSIONS:
             await self.load_extension("musicbot.cogs." + i)
 
-        # await self.tree.sync()
+        await self.tree.sync()
         
         self.status_task.start()
     

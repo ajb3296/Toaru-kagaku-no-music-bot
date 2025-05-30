@@ -10,3 +10,4 @@ koreanbots
 topggpy
 pymysql
 soundcloud-lib
+cryptography
