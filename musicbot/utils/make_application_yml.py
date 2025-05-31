@@ -160,20 +160,3 @@ logging:
 """)
 
     f.close()
-
-"""
-
-sudo ip link set he-ipv6 down
-sudo ip tunnel del he-ipv6
-
-sudo ip tunnel add he-ipv6 mode sit remote 74.82.46.6 local 192.168.50.100 ttl 255
-sudo ip link set he-ipv6 up
-sudo ip addr add 2001:470:fc5e::2/48 dev he-ipv6
-sudo ip route add ::/0 via 2001:470:fc5e::1 dev he-ipv6
-sudo ip -6 route replace local 2001:470:fc5e::/48 dev lo
-
-"""
-
-"""
-ping6 -I 2001:470:fc5e::4 google.com
-"""

@@ -52,7 +52,7 @@ class ToaruKagakuNoMusicBot(commands.Bot):
     @status_task.before_loop
     async def before_status_task(self) -> None:
         await self.wait_until_ready()
-    
+
     async def setup_hook(self):
         LOGGER.info(BOT_NAME_TAG_VER)
 

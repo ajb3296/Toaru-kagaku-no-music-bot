@@ -38,7 +38,7 @@
 
 ## Dashboard
 
-[Github](https://github.com/ajb3296/Toaru-kagaku-no-music-bot-dashboard) -개발 중
+[Github](https://github.com/ajb3296/Toaru-kagaku-no-music-bot-dashboard) - 개발 중
 
 ## 알려진 버그
 

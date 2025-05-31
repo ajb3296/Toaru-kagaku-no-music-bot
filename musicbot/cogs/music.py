@@ -1,7 +1,5 @@
 import re
-import os
 import math
-import difflib
 import traceback
 from sclib import SoundcloudAPI
 
@@ -35,7 +33,7 @@ class LavalinkVoiceClient(discord.VoiceClient):
     see the following documentation:
     https://discordpy.readthedocs.io/en/latest/api.html#voiceprotocol
     """
-    
+
     def __init__(self, client: discord.Client, channel: discord.abc.Connectable):
         self.client = client
         self.channel = channel

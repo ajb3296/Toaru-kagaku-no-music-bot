@@ -47,7 +47,7 @@ if __name__ == "__main__":
                 file.write(line)
         file.close()
 
-    
+
     # 언어파일 저장
     file = open("musicbot/languages/new_ko.json", "w")
     json.dump(new_ko, file, indent=4, ensure_ascii=False)
