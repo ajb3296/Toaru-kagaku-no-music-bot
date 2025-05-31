@@ -45,7 +45,12 @@
 * Equalizer 부동소수점 연산 버그로 그래프가 똑바로 표기되지 않을 수 있음.
 
 ## Docker
-.env 파일을 아래와 같이 작성합니다.
+```bash
+git clone https://github.com/ajb3296/Toaru-kagaku-no-music-bot.git
+```
+명령어를 통해 레포지토리를 클론하고 해당 디렉토리로 이동합니다.
+<br /><br />
+이후 .env 파일을 아래와 같이 작성합니다.
 
 ### .env 파일 예시
 ```bash

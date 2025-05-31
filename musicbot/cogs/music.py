@@ -110,7 +110,7 @@ class LavalinkVoiceClient(discord.VoiceClient):
             # to None doesn't get dispatched after the disconnect
             player.channel_id = None
             await self._destroy()
-    
+
     async def _destroy(self):
         self.cleanup()
 
