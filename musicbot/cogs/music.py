@@ -271,105 +271,105 @@ class Music(commands.Cog, name="music"):
         query="찾고싶은 음악의 제목이나 링크를 입력하세요"
     )
     @commands.check(create_player)
-    async def play(self, ctx: Context, *, query: str):
-        """ Searches and plays a song from a given query. """
-        await ctx.defer()
+    # async def play(self, ctx: Context, *, query: str):
+    #     """ Searches and plays a song from a given query. """
+    #     await ctx.defer()
 
-        # Get the player for this guild from cache.
-        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+    #     # Get the player for this guild from cache.
+    #     player = self.bot.lavalink.player_manager.get(ctx.guild.id)
 
-        # Remove leading and trailing <>. <> may be used to suppress embedding links in Discord.
-        query = query.strip('<>')
+    #     # Remove leading and trailing <>. <> may be used to suppress embedding links in Discord.
+    #     query = query.strip('<>')
 
-        # Check if the user input might be a URL. If it isn't, we can Lavalink do a YouTube search for it instead.
-        # SoundCloud searching is possible by prefixing "scsearch:" instead.
-        if not url_rx.match(query):
-            query = f'ytsearch:{query}'
+    #     # Check if the user input might be a URL. If it isn't, we can Lavalink do a YouTube search for it instead.
+    #     # SoundCloud searching is possible by prefixing "scsearch:" instead.
+    #     if not url_rx.match(query):
+    #         query = f'ytsearch:{query}'
 
-        nofind = 0
-        while True:
-            # Get the results for the query from Lavalink.
-            results = await player.node.get_tracks(query)
+    #     nofind = 0
+    #     while True:
+    #         # Get the results for the query from Lavalink.
+    #         results = await player.node.get_tracks(query)
 
-            # Results could be None if Lavalink returns an invalid response (non-JSON/non-200 (OK)).
-            # ALternatively, results['tracks'] could be an empty array if the query yielded no tracks.
-            if results.load_type == LoadType.EMPTY or not results or not results.tracks:
-                if nofind < 3:
-                    nofind += 1
-                elif nofind == 3:
-                    embed = discord.Embed(title=get_lan(ctx.author.id, "아무것도 찾지 못했어요!"), description='', color=COLOR_CODE)
-                    embed.set_footer(text=BOT_NAME_TAG_VER)
-                    return await ctx.send(embed=embed)
-            else:
-                break
+    #         # Results could be None if Lavalink returns an invalid response (non-JSON/non-200 (OK)).
+    #         # ALternatively, results['tracks'] could be an empty array if the query yielded no tracks.
+    #         if results.load_type == LoadType.EMPTY or not results or not results.tracks:
+    #             if nofind < 3:
+    #                 nofind += 1
+    #             elif nofind == 3:
+    #                 embed = discord.Embed(title=get_lan(ctx.author.id, "아무것도 찾지 못했어요!"), description='', color=COLOR_CODE)
+    #                 embed.set_footer(text=BOT_NAME_TAG_VER)
+    #                 return await ctx.send(embed=embed)
+    #         else:
+    #             break
 
-        embed = discord.Embed(color=COLOR_CODE)  # discord.Color.blurple()
+    #     embed = discord.Embed(color=COLOR_CODE)  # discord.Color.blurple()
 
-        # Valid load_types are:
-        #   TRACK    - direct URL to a track
-        #   PLAYLIST - direct URL to playlist
-        #   SEARCH   - query prefixed with either "ytsearch:" or "scsearch:". This could possibly be expanded with plugins.
-        #   EMPTY    - no results for the query (result.tracks will be empty)
-        #   ERROR    - the track encountered an exception during loading
-        thumbnail = None
-        if results.load_type == LoadType.PLAYLIST:
-            tracks = results.tracks
+    #     # Valid load_types are:
+    #     #   TRACK    - direct URL to a track
+    #     #   PLAYLIST - direct URL to playlist
+    #     #   SEARCH   - query prefixed with either "ytsearch:" or "scsearch:". This could possibly be expanded with plugins.
+    #     #   EMPTY    - no results for the query (result.tracks will be empty)
+    #     #   ERROR    - the track encountered an exception during loading
+    #     thumbnail = None
+    #     if results.load_type == LoadType.PLAYLIST:
+    #         tracks = results.tracks
 
-            trackcount = 0
+    #         trackcount = 0
 
-            for track in tracks:
-                if trackcount != 1:
-                    thumbnail = track.identifier
-                    trackcount = 1
-                # Music statistical(for playlist)
-                Statistics().up(track.identifier)
+    #         for track in tracks:
+    #             if trackcount != 1:
+    #                 thumbnail = track.identifier
+    #                 trackcount = 1
+    #             # Music statistical(for playlist)
+    #             Statistics().up(track.identifier)
 
-                # Add all of the tracks from the playlist to the queue.
-                player.add(requester=ctx.author.id, track=track)
+    #             # Add all of the tracks from the playlist to the queue.
+    #             player.add(requester=ctx.author.id, track=track)
 
-            embed.title = get_lan(ctx.author.id, ":arrow_forward: | 플레이리스트 재생!")
-            embed.description = f'{results.playlist_info.name} - {len(tracks)} tracks'
+    #         embed.title = get_lan(ctx.author.id, ":arrow_forward: | 플레이리스트 재생!")
+    #         embed.description = f'{results.playlist_info.name} - {len(tracks)} tracks'
 
-        else:
-            track = results.tracks[0]
-            embed.title = get_lan(ctx.author.id, ":arrow_forward: | 음악 재생!")
-            embed.description = f'[{track.title}]({track.uri})'
-            thumbnail = track.identifier
+    #     else:
+    #         track = results.tracks[0]
+    #         embed.title = get_lan(ctx.author.id, ":arrow_forward: | 음악 재생!")
+    #         embed.description = f'[{track.title}]({track.uri})'
+    #         thumbnail = track.identifier
 
-            # Music statistical
-            Statistics().up(track.identifier)
+    #         # Music statistical
+    #         Statistics().up(track.identifier)
 
-            # You can attach additional information to audiotracks through kwargs, however this involves
-            # constructing the AudioTrack class yourself.
-            player.add(requester=ctx.author.id, track=track)
+    #         # You can attach additional information to audiotracks through kwargs, however this involves
+    #         # constructing the AudioTrack class yourself.
+    #         player.add(requester=ctx.author.id, track=track)
 
-        embed.add_field(name=get_lan(ctx.author.id, "셔플"), value=get_lan(ctx.author.id, "셔플") if player.shuffle else get_lan(ctx.author.id, "셔플"), inline=True)
-        embed.add_field(name=get_lan(ctx.author.id, "음악 반복"), value=[get_lan(ctx.author.id, "음악 반복"), get_lan(ctx.author.id, "음악 반복"), get_lan(ctx.author.id, "음악 반복")][player.loop], inline=True)
+    #     embed.add_field(name=get_lan(ctx.author.id, "셔플"), value=get_lan(ctx.author.id, "셔플") if player.shuffle else get_lan(ctx.author.id, "셔플"), inline=True)
+    #     embed.add_field(name=get_lan(ctx.author.id, "음악 반복"), value=[get_lan(ctx.author.id, "음악 반복"), get_lan(ctx.author.id, "음악 반복"), get_lan(ctx.author.id, "음악 반복")][player.loop], inline=True)
 
-        if thumbnail is not None:
-            embed.set_thumbnail(url=f"http://img.youtube.com/vi/{thumbnail}/0.jpg")
-        embed.set_footer(text=BOT_NAME_TAG_VER)
-        await ctx.send(embed=embed)
+    #     if thumbnail is not None:
+    #         embed.set_thumbnail(url=f"http://img.youtube.com/vi/{thumbnail}/0.jpg")
+    #     embed.set_footer(text=BOT_NAME_TAG_VER)
+    #     await ctx.send(embed=embed)
 
-        # We don't want to call .play() if the player is playing as that will effectively skip
-        # the current track.
-        if not player.is_playing:
-            await player.play()
+    #     # We don't want to call .play() if the player is playing as that will effectively skip
+    #     # the current track.
+    #     if not player.is_playing:
+    #         await player.play()
 
 
-    @commands.hybrid_command(
-        name="scplay",
-        aliases=['sp', '사클재생', '네', 'addsc'],
-        description="Searches and plays a song from a given query.",
-    )
-    @app_commands.describe(
-        query="SoundCloud에서 찾고싶은 음악의 제목이나 링크를 입력하세요"
-    )
-    # @app_commands.describe(
-        # query="찾고싶은 음악의 제목이나 링크를 입력하세요"
+    # @commands.hybrid_command(
+    #     name="scplay",
+    #     aliases=['sp', '사클재생', '네', 'addsc'],
+    #     description="Searches and plays a song from a given query.",
     # )
-    @commands.check(create_player)
-    async def scplay(self, ctx: Context, *, query: str):
+    # @app_commands.describe(
+    #     query="SoundCloud에서 찾고싶은 음악의 제목이나 링크를 입력하세요"
+    # )
+    # # @app_commands.describe(
+    #     # query="찾고싶은 음악의 제목이나 링크를 입력하세요"
+    # # )
+    # @commands.check(create_player)
+    async def play(self, ctx: Context, *, query: str):
         """ Searches and plays a song from a given query. """
         await ctx.defer()
 
